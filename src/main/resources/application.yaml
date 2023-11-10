@@ -3,3 +3,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/seai?currentSchema=seai
     username: admin
     password: admin
+  servlet:
+    multipart:
+      max-file-size: 30MB
