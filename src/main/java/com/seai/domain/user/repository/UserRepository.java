@@ -75,7 +75,7 @@ public class UserRepository {
                 seaiUser.getDateOfBirth(),
                 seaiUser.getManningAgents(),
                 Optional.ofNullable(seaiUser.getStatus()).map(Enum::toString).orElse(null),
-                seaiUser.getVesselType().toString(),
+                Optional.ofNullable(seaiUser.getVesselType()).map(Enum::toString).orElse(null),
                 seaiUser.getHomeAirport(),
                 seaiUser.getReadinessDate(),
                 seaiUser.getContractDuration());
