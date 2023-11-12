@@ -13,8 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.time.Duration;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -43,14 +45,19 @@ public class UserRepository {
                             rs.getString("password"),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
-                            Rank.valueOf(rs.getString("rank")),
+                            Optional.ofNullable(rs.getString("rank"))
+                                            .map(Rank::valueOf).orElse(null),
                             rs.getString("present_employer"),
-                            new Date(rs.getObject("date_of_birth", java.sql.Date.class).getTime()),
+                            Optional.ofNullable(rs.getObject("date_of_birth", java.sql.Date.class))
+                                    .map(s-> new Date(s.getTime())).orElse(null),
                             rs.getString("manning_agents"),
-                            Status.valueOf(rs.getString("status")),
-                            VesselType.valueOf(rs.getString("vessel_type")),
+                            Optional.ofNullable(rs.getString("status"))
+                                    .map(Status::valueOf).orElse(null),
+                            Optional.ofNullable(rs.getString("vessel_type"))
+                                    .map(VesselType::valueOf).orElse(null),
                             rs.getString("home_airport"),
-                            new Date(rs.getObject("readiness_date", java.sql.Date.class).getTime()),
+                            Optional.ofNullable(rs.getObject("readiness_date", java.sql.Date.class))
+                                    .map(s-> new Date(s.getTime())).orElse(null),
                             rs.getInt("contract_duration")), userId);
         } catch (EmptyResultDataAccessException ex) {
             throw new UsernameNotFoundException("User not found : " + userId);
