@@ -9,10 +9,11 @@ import java.util.UUID;
 
 public class SecurityUser implements UserDetails {
 
+    private final UUID id;
+
     private final String password;
     private final List<GrantedAuthority> authorities;
     private final String userName;
-    private final UUID id;
 
     public SecurityUser(UUID id, String userName, String password, List<GrantedAuthority> authorities) {
         this.userName = userName;

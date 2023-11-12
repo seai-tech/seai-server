@@ -46,7 +46,7 @@ public class DocumentController {
 
     @PostMapping("/users/{userId}/documents/{documentId}/discard")
     public void discard(@PathVariable UUID userId, @PathVariable UUID documentId) {
-        MarineDocument document = documentRepository.findVerifiedDocument(userId, documentId);
+        MarineDocument document = documentRepository.findDocument(userId, documentId);
         documentUploadService.deleteFile(document.getPath());
     }
 

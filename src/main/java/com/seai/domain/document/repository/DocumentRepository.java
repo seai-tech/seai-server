@@ -17,7 +17,8 @@ public class DocumentRepository {
 
     private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and is_verified = true";
 
-    private static final String FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ? and is_verified = true";
+    private static final String FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ? and is_verified = true";
+    private static final String FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ?";
 
     private static final String SAVE_DOCUMENT_QUERY = "INSERT INTO documents (id, name, number, issued_date, expiry_date, is_verified, created_date, user_id, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -25,8 +26,23 @@ public class DocumentRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public MarineDocument findVerifiedDocument(UUID userId, UUID documentId) {
+    public MarineDocument findDocument(UUID userId, UUID documentId) {
         return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
+                (rs, rowNum) -> new MarineDocument(
+                        UUID.fromString(rs.getString("id")),
+                        rs.getString("name"),
+                        rs.getString("number"),
+                        new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
+                        new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
+                        rs.getObject("is_verified", Boolean.class),
+                        rs.getTimestamp("created_date").toInstant(),
+                        rs.getString("path")),
+                userId.toString(),
+                documentId.toString());
+    }
+
+    public MarineDocument findVerifiedDocument(UUID userId, UUID documentId) {
+        return jdbcTemplate.queryForObject(FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
                 (rs, rowNum) -> new MarineDocument(
                         UUID.fromString(rs.getString("id")),
                         rs.getString("name"),

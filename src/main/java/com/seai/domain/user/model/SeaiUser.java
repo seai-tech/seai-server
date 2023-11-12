@@ -1,37 +1,32 @@
-package com.seai.request;
+package com.seai.domain.user.model;
 
-import com.seai.domain.user.model.Status;
-import com.seai.domain.user.model.VesselType;
 import com.seai.domain.voyage.model.Rank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Duration;
-import java.time.Instant;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class UserRegisterRequest {
+public class SeaiUser {
 
-    @NotNull
-    @NotEmpty
+    private UUID id;
+
     private String email;
-    @NotNull
-    @NotEmpty
+
     private String password;
+
     private String firstName;
+
     private String lastName;
 
     private Rank rank;
 
     private String presentEmployer;
 
-    private Instant dateOfBirth;
+    private Date dateOfBirth;
 
     private String manningAgents;
 
@@ -41,7 +36,7 @@ public class UserRegisterRequest {
 
     private String homeAirport;
 
-    private Instant readinessDate;
+    private Date readinessDate;
 
     private Integer contractDuration;
 }

@@ -1,13 +1,15 @@
 package com.seai.controller;
 
 
+import com.seai.domain.user.repository.UserRepository;
+import com.seai.mapper.UserMapper;
 import com.seai.request.AuthRequest;
 import com.seai.request.UserRegisterRequest;
 import com.seai.response.AuthResponse;
 import com.seai.security.model.SecurityUser;
 import com.seai.security.service.JwtService;
 import com.seai.security.service.SecurityUserService;
-import com.seai.domain.model.SeaiUser;
+import com.seai.domain.user.model.SeaiUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +32,10 @@ public class AuthController {
 
     private final SecurityUserService securityUserService;
 
+    private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
+
     @PostMapping("/login")
     public AuthResponse authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
@@ -41,7 +47,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody @Valid UserRegisterRequest authRequest) {
-        securityUserService.save(new SeaiUser(authRequest.getEmail(), authRequest.getPassword(), authRequest.getFirstName(), authRequest.getLastName()));
+    public void register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        SeaiUser user = userMapper.map(userRegisterRequest);
+        userRepository.save(user);
     }
 }
