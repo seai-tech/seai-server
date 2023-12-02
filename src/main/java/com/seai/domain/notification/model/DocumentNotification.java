@@ -14,4 +14,11 @@ public class DocumentNotification {
     private UUID documentId;
     private Instant notifyAt;
     private Date notifyDay;
+
+    public DocumentNotification(UUID documentId, Instant notifyAt, Date notifyDay) {
+        this.id = UUID.randomUUID();
+        this.documentId = documentId;
+        this.notifyAt = notifyAt;
+        this.notifyDay = notifyDay;
+    }
 }

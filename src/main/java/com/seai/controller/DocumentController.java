@@ -2,12 +2,12 @@ package com.seai.controller;
 
 import com.seai.domain.document.model.MarineDocument;
 import com.seai.domain.document.repository.DocumentRepository;
-import com.seai.domain.document.service.DocumentService;
+import com.seai.domain.document.service.DocumentFileService;
 import com.seai.domain.document.service.DocumentUploadService;
+import com.seai.request.VerifyDocumentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +28,14 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class DocumentController {
 
-    private final DocumentService documentService;
+    private final DocumentFileService documentFileService;
     private final DocumentRepository documentRepository;
     private final DocumentUploadService documentUploadService;
+    private final DocumentService documentService;
 
     @PostMapping("/users/{userId}/ocr")
     public MarineDocument handleFileUpload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
-        MarineDocument marineDocument = documentService.processFile(multipartFile);
+        MarineDocument marineDocument = documentFileService.processFile(multipartFile);
         marineDocument.setPath(String.format("%s/%s/%s", userId.toString(), marineDocument.getName(), marineDocument.getId()));
         documentUploadService.upload(multipartFile, marineDocument.getPath());
         documentRepository.save(marineDocument, userId);
@@ -42,8 +43,8 @@ public class DocumentController {
     }
 
     @PostMapping("/users/{userId}/documents/{documentId}/verify")
-    public void saveDocument(@RequestBody MarineDocument marineDocument,@PathVariable UUID userId, @PathVariable UUID documentId) {
-        documentRepository.verify(marineDocument, userId, documentId);
+    public void verifyDocument(@RequestBody VerifyDocumentRequest verifyDocumentRequest, @PathVariable UUID userId, @PathVariable UUID documentId) {
+        documentService.verifyDocument(verifyDocumentRequest, userId, documentId);
     }
 
     @PostMapping("/users/{userId}/documents/{documentId}/discard")
@@ -53,7 +54,7 @@ public class DocumentController {
     }
 
     @GetMapping("/users/{userId}/documents")
-    public List<MarineDocument> saveDocument(@PathVariable UUID userId) {
+    public List<MarineDocument> findAllUserDocuments(@PathVariable UUID userId) {
         return documentRepository.findVerifiedByUserId(userId);
     }
 
