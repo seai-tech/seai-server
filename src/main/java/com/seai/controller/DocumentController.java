@@ -5,6 +5,7 @@ import com.seai.domain.document.repository.DocumentRepository;
 import com.seai.domain.document.service.DocumentService;
 import com.seai.domain.document.service.DocumentUploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("api/v1")
@@ -63,7 +65,12 @@ public class DocumentController {
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);
         httpHeaders.setContentDispositionFormData("attachment", "file");
-
-        return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
+        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
+                .noTransform()
+                .mustRevalidate();
+        return ResponseEntity.ok()
+                .cacheControl(cacheControl)
+                .headers(httpHeaders)
+                .body(bytes);
     }
 }

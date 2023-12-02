@@ -64,7 +64,7 @@ public class JwtService {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         if (isTokenExpired(token)) {
             throw new RuntimeException("JWT token is expired!");
