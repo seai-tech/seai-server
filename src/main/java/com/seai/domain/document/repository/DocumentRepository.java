@@ -3,6 +3,9 @@ package com.seai.domain.document.repository;
 import com.seai.domain.document.model.MarineDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -15,7 +18,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DocumentRepository {
 
-    private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and is_verified = true";
+    private static final String FIND_VERIFIED_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and is_verified = true";
+
+    private static final String FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE ID IN (:ids) and is_verified = true";
 
     private static final String FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ? and is_verified = true";
     private static final String FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ?";
@@ -26,47 +31,32 @@ public class DocumentRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     public MarineDocument findDocument(UUID userId, UUID documentId) {
         return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
-                (rs, rowNum) -> new MarineDocument(
-                        UUID.fromString(rs.getString("id")),
-                        rs.getString("name"),
-                        rs.getString("number"),
-                        new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
-                        new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
-                        rs.getObject("is_verified", Boolean.class),
-                        rs.getTimestamp("created_date").toInstant(),
-                        rs.getString("path")),
+                getMarineDocumentRowMapper(),
+                userId.toString(),
+                documentId.toString());
+    }
+
+    public MarineDocument findAll(UUID userId, UUID documentId) {
+        return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
+                getMarineDocumentRowMapper(),
                 userId.toString(),
                 documentId.toString());
     }
 
     public MarineDocument findVerifiedDocument(UUID userId, UUID documentId) {
         return jdbcTemplate.queryForObject(FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
-                (rs, rowNum) -> new MarineDocument(
-                        UUID.fromString(rs.getString("id")),
-                        rs.getString("name"),
-                        rs.getString("number"),
-                        new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
-                        new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
-                        rs.getObject("is_verified", Boolean.class),
-                        rs.getTimestamp("created_date").toInstant(),
-                        rs.getString("path")),
+                getMarineDocumentRowMapper(),
                 userId.toString(),
                 documentId.toString());
     }
 
     public List<MarineDocument> findVerifiedByUserId(UUID userId) {
-        return jdbcTemplate.query(FIND_DOCUMENTS_BY_USER_ID_QUERY,
-                (rs, rowNum) -> new MarineDocument(
-                        UUID.fromString(rs.getString("id")),
-                        rs.getString("name"),
-                        rs.getString("number"),
-                        new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
-                        new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
-                        rs.getObject("is_verified", Boolean.class),
-                        rs.getTimestamp("created_date").toInstant(),
-                        rs.getString("path")),
+        return jdbcTemplate.query(FIND_VERIFIED_DOCUMENTS_BY_USER_ID_QUERY,
+                getMarineDocumentRowMapper(),
                 userId.toString());
     }
 
@@ -91,5 +81,23 @@ public class DocumentRepository {
                 marineDocument.getExpiryDate(),
                 id.toString(),
                 userId.toString());
+    }
+
+    private static RowMapper<MarineDocument> getMarineDocumentRowMapper() {
+        return (rs, rowNum) -> new MarineDocument(
+                UUID.fromString(rs.getString("id")),
+                rs.getString("name"),
+                rs.getString("number"),
+                new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
+                new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
+                rs.getObject("is_verified", Boolean.class),
+                rs.getTimestamp("created_date").toInstant(),
+                rs.getString("path"));
+    }
+
+    public List<MarineDocument> findByIds(List<UUID> ids) {
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("ids", ids);
+        return namedParameterJdbcTemplate.query(FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS, parameters, getMarineDocumentRowMapper());
     }
 }
