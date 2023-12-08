@@ -41,7 +41,7 @@ public class NotificationRepository {
                 sql,
                 notification.getId(),
                 notification.getDocumentId(),
-                notification.getNotifyAt(),
+                DatabaseUtil.saveInstant(notification.getNotifyAt()),
                 notification.getNotifyDay()
         );
     }
