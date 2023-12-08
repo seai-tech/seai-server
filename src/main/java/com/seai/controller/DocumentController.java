@@ -33,7 +33,7 @@ public class DocumentController {
     private final DocumentUploadService documentUploadService;
     private final DocumentService documentService;
 
-    @PostMapping("/users/{userId}/ocr")
+    @PostMapping(value = "/users/{userId}/ocr", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public MarineDocument handleFileUpload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
         MarineDocument marineDocument = documentFileService.processFile(multipartFile);
         marineDocument.setPath(String.format("%s/%s/%s", userId.toString(), marineDocument.getName(), marineDocument.getId()));
