@@ -58,6 +58,11 @@ public class DocumentController {
         return documentRepository.findVerifiedByUserId(userId);
     }
 
+    @GetMapping("/users/{userId}/documents/{documentId}")
+    public MarineDocument findUserDocument(@PathVariable UUID userId, @PathVariable UUID documentId) {
+       return documentRepository.findDocument(userId, documentId);
+    }
+
     @GetMapping("/users/{userId}/documents/{documentId}/download")
     public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.findVerifiedDocument(userId, documentId);
