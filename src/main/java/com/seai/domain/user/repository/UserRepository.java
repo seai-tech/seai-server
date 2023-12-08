@@ -30,8 +30,8 @@ public class UserRepository {
     private static final String REGISTER_USER_QUERY = "INSERT INTO users (id, email, password, first_name, last_name)" +
             " VALUES (?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_USER_QUERY = "UPDATE users SET first_name=?, last_name=?" +
-            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=?) WHERE id=?";
+    private static final String UPDATE_USER_QUERY = "UPDATE users SET first_name=?, last_name=?," +
+            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=? WHERE id=?";
 
 
     private final PasswordEncoder encoder;
