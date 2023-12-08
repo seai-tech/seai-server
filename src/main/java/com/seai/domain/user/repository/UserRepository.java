@@ -103,7 +103,7 @@ public class UserRepository {
     }
 
     public void update(UUID userId, SeaiUser seaiUser) {
-        jdbcTemplate.update(UPDATE_USER_QUERY, UUID.randomUUID().toString(),
+        jdbcTemplate.update(UPDATE_USER_QUERY,
                 seaiUser.getFirstName(),
                 seaiUser.getLastName(),
                 Optional.ofNullable(seaiUser.getRank()).map(Enum::toString).orElse(null),
