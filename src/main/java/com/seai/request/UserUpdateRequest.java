@@ -1,21 +1,18 @@
-package com.seai.domain.user.model;
+package com.seai.request;
 
+import com.seai.domain.user.model.Status;
+import com.seai.domain.user.model.VesselType;
 import com.seai.domain.voyage.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.UUID;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
-public class SeaiUser {
-
-    private UUID id;
-
-    private String email;
-
-    private String password;
+@NoArgsConstructor
+public class UserUpdateRequest {
 
     private String firstName;
 
@@ -25,7 +22,7 @@ public class SeaiUser {
 
     private String presentEmployer;
 
-    private Date dateOfBirth;
+    private Instant dateOfBirth;
 
     private String manningAgents;
 
@@ -35,7 +32,7 @@ public class SeaiUser {
 
     private String homeAirport;
 
-    private Date readinessDate;
+    private Instant readinessDate;
 
     private Integer contractDuration;
 }

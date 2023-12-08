@@ -24,24 +24,4 @@ public class UserRegisterRequest {
     @NotNull
     @NotEmpty
     private String password;
-    private String firstName;
-    private String lastName;
-
-    private Rank rank;
-
-    private String presentEmployer;
-
-    private Instant dateOfBirth;
-
-    private String manningAgents;
-
-    private Status status;
-
-    private VesselType vesselType;
-
-    private String homeAirport;
-
-    private Instant readinessDate;
-
-    private Integer contractDuration;
 }

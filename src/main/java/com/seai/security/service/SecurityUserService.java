@@ -20,7 +20,7 @@ public class SecurityUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        SeaiUser seaiUser = userRepository.find(userId);
+        SeaiUser seaiUser = userRepository.findByEmail(userId);
         return new SecurityUser(seaiUser.getId(),seaiUser.getEmail(), seaiUser.getPassword(), Collections.emptyList());
     }
 }

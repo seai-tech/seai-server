@@ -1,21 +1,16 @@
-package com.seai.domain.user.model;
+package com.seai.response;
 
+import com.seai.domain.user.model.Status;
+import com.seai.domain.user.model.VesselType;
 import com.seai.domain.voyage.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class SeaiUser {
-
-    private UUID id;
-
-    private String email;
-
-    private String password;
+public class GetUserResponse {
 
     private String firstName;
 
