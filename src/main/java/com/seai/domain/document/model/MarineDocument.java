@@ -30,7 +30,11 @@ public class MarineDocument {
         this.path = path;
     }
 
-    public MarineDocument(String name, String number, Date issueDate, Date expiryDate) {
-        this(UUID.randomUUID(), name, number, issueDate, expiryDate, false, Instant.now(), null);
+    public static MarineDocument createNonVerifiedDocument(String name, String number, Date issueDate, Date expiryDate) {
+        return new MarineDocument(UUID.randomUUID(), name, number, issueDate, expiryDate, false, Instant.now(), null);
+    }
+
+    public static MarineDocument createVerifiedDocument(String name, String number, Date issueDate, Date expiryDate) {
+        return new MarineDocument(UUID.randomUUID(), name, number, issueDate, expiryDate, true, Instant.now(), null);
     }
 }

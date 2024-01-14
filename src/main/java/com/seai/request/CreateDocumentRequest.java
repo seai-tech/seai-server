@@ -2,16 +2,13 @@ package com.seai.request;
 
 import lombok.Data;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Data
-public class VerifyDocumentRequest {
+public class CreateDocumentRequest {
 
     private String name;
     private String number;
     private Date issueDate;
     private Date expiryDate;
-    private Instant notifyAt;
-    private boolean isVerified;
 }

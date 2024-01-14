@@ -29,6 +29,6 @@ public class AdvFireFightingDocumentParser implements DocumentParser {
         String number = DocumentSeekUtil.findMatchFor(w -> w.matches("^\\d{5}$"), lines, 1);
         String issueDate = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 2);
         String validUntil = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 3);
-        return new MarineDocument(documentType, number, DATE_FORMATTER.parse(issueDate), DATE_FORMATTER.parse(validUntil));
+        return MarineDocument.createNonVerifiedDocument(documentType, number, DATE_FORMATTER.parse(issueDate), DATE_FORMATTER.parse(validUntil));
     }
 }

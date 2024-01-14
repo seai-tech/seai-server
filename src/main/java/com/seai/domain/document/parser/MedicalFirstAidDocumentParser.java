@@ -25,6 +25,6 @@ public class MedicalFirstAidDocumentParser implements DocumentParser {
         String number = DocumentSeekUtil.findMatchFor(w -> w.matches("^\\d{5}$"), lines, 1);
         String issueDate = DocumentSeekUtil.getWordAfter(w -> w.contains("issue"), lines);
         String validUntil = DocumentSeekUtil.getWordAfter(w -> w.contains("until"), lines);
-        return new MarineDocument(documentType, number,  DATE_FORMATTER.parse(issueDate), DATE_FORMATTER.parse(validUntil));
+        return MarineDocument.createNonVerifiedDocument(documentType, number,  DATE_FORMATTER.parse(issueDate), DATE_FORMATTER.parse(validUntil));
     }
 }

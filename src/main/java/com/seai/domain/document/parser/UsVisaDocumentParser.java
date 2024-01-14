@@ -33,7 +33,7 @@ public class UsVisaDocumentParser implements DocumentParser {
         String issueDate = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 2);
         String validUntil = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 3);
         String number = DocumentSeekUtil.findMatchFor(w -> DOCUMENT_NUMBER.matcher(w).matches(), lines, 1);
-        return new MarineDocument(documentType, number, DATE_FORMATTER.parse(formatDate(issueDate)), DATE_FORMATTER.parse(formatDate(validUntil)));
+        return MarineDocument.createNonVerifiedDocument(documentType, number, DATE_FORMATTER.parse(formatDate(issueDate)), DATE_FORMATTER.parse(formatDate(validUntil)));
     }
 
     public String formatDate(String str) {
