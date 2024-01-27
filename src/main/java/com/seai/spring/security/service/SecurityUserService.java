@@ -1,7 +1,9 @@
 package com.seai.spring.security.service;
 
 import com.seai.spring.security.model.SecurityUser;
-import com.seai.user.model.Sailor;
+import com.seai.user.model.User;
+import com.seai.user.model.UserAuthentication;
+import com.seai.user.repository.UserAuthenticationRepository;
 import com.seai.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,11 +18,11 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SecurityUserService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final UserAuthenticationRepository userAuthenticationRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        Sailor sailor = userRepository.findByEmail(userId);
-        return new SecurityUser(sailor.getId(), sailor.getEmail(), sailor.getPassword(), Collections.emptyList());
+        UserAuthentication user = userAuthenticationRepository.findByEmail(userId);
+        return new SecurityUser(user.getId(), user.getEmail(), user.getPassword(), Collections.emptyList());
     }
 }

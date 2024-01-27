@@ -3,16 +3,18 @@ package com.seai.user.mapper;
 import com.seai.user.contract.request.UserRegisterRequest;
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
-import com.seai.user.model.Sailor;
+import com.seai.user.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
+
+import java.util.UUID;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    Sailor map(UserRegisterRequest userRegisterRequest);
+    User map(UserRegisterRequest userRegisterRequest, UUID id);
 
-    Sailor map(UserUpdateRequest userRegisterRequest);
+    User map(UserUpdateRequest userRegisterRequest);
 
-    GetUserResponse map(Sailor sailor);
+    GetUserResponse map(User user);
 }

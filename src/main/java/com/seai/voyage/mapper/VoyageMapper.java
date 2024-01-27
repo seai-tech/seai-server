@@ -2,6 +2,7 @@ package com.seai.voyage.mapper;
 
 import com.seai.voyage.contract.request.CreateVoyageRequest;
 import com.seai.voyage.contract.request.UpdateVoyageRequest;
+import com.seai.voyage.contract.response.GetVoyageResponse;
 import com.seai.voyage.model.Voyage;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -12,4 +13,6 @@ public interface VoyageMapper {
     Voyage map(CreateVoyageRequest createVoyageRequest);
 
     Voyage map(UpdateVoyageRequest updateVoyageRequest);
+
+    GetVoyageResponse map(Voyage updateVoyageRequest);
 }

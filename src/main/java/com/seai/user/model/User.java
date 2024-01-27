@@ -9,13 +9,9 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class Sailor {
+public class User {
 
     private UUID id;
-
-    private String email;
-
-    private String password;
 
     private String firstName;
 

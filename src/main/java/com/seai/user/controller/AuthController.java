@@ -1,13 +1,16 @@
-package com.seai.auth.controller;
+package com.seai.user.controller;
 
 
 import com.seai.spring.security.model.SecurityUser;
 import com.seai.spring.security.service.JwtService;
-import com.seai.user.contract.request.AuthRequest;
+import com.seai.user.contract.request.UserAuthentaicationRequest;
 import com.seai.user.contract.request.UserRegisterRequest;
-import com.seai.user.model.Sailor;
+import com.seai.user.mapper.UserAuthenticationMapper;
+import com.seai.user.model.User;
+import com.seai.user.model.UserAuthentication;
+import com.seai.user.repository.UserAuthenticationRepository;
 import com.seai.user.repository.UserRepository;
-import com.seai.voyage.contract.response.AuthResponse;
+import com.seai.user.contract.response.AuthResponse;
 import com.seai.user.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1/users")
 public class AuthController {
 
     private final JwtService jwtService;
@@ -33,11 +38,15 @@ public class AuthController {
 
     private final UserMapper userMapper;
 
+    private final UserAuthenticationRepository userAuthenticationRepository;
+
+    private final UserAuthenticationMapper userAuthenticationMapper;
+
     @PostMapping("/login")
-    public AuthResponse authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
+    public AuthResponse authenticateAndGetToken(@RequestBody @Valid UserAuthentaicationRequest userAuthentaicationRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAuthentaicationRequest.getEmail(), userAuthentaicationRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return new AuthResponse(((SecurityUser)authentication.getPrincipal()).getId().toString(), jwtService.generateToken(authRequest.getEmail()));
+            return new AuthResponse(((SecurityUser)authentication.getPrincipal()).getId().toString(), jwtService.generateToken(userAuthentaicationRequest.getEmail()));
         } else {
             throw new UsernameNotFoundException("invalid user request !");
         }
@@ -45,7 +54,10 @@ public class AuthController {
 
     @PostMapping("/register")
     public void register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
-        Sailor user = userMapper.map(userRegisterRequest);
+        UUID id = UUID.randomUUID();
+        UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest, id);
+        userAuthenticationRepository.save(userAuthentication);
+        User user = userMapper.map(userRegisterRequest, id);
         userRepository.save(user);
     }
 }

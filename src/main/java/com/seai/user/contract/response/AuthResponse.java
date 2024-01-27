@@ -1,4 +1,4 @@
-package com.seai.voyage.contract.response;
+package com.seai.user.contract.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

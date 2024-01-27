@@ -2,7 +2,7 @@ package com.seai.user.controller;
 
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
-import com.seai.user.model.Sailor;
+import com.seai.user.model.User;
 import com.seai.user.repository.UserRepository;
 import com.seai.user.mapper.UserMapper;
 import jakarta.validation.Valid;
@@ -27,13 +27,13 @@ public class UserController {
     @PutMapping("/users/{userId}")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
         userRepository.findById(userId);
-        Sailor user = userMapper.map(userRegisterRequest);
+        User user = userMapper.map(userRegisterRequest);
         userRepository.update(userId, user);
     }
 
     @GetMapping("/users/{userId}")
     public GetUserResponse getUser(@PathVariable UUID userId) {
-        Sailor sailor = userRepository.findById(userId);
-        return userMapper.map(sailor);
+        User user = userRepository.findById(userId);
+        return userMapper.map(user);
     }
 }

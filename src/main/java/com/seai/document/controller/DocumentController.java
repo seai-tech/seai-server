@@ -2,7 +2,7 @@ package com.seai.document.controller;
 
 import com.seai.document.contract.request.CreateDocumentRequest;
 import com.seai.document.contract.request.UpdateDocumentRequest;
-import com.seai.document.contract.response.DocumentResponse;
+import com.seai.document.contract.response.GetDocumentResponse;
 import com.seai.document.mapper.DocumentMapper;
 import com.seai.document.model.MarineDocument;
 import com.seai.document.repository.DocumentRepository;
@@ -36,7 +36,7 @@ public class DocumentController {
 
     //OCR
     @PostMapping(value = "/users/{userId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public DocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
+    public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
         MarineDocument marineDocument = documentScanner.readDocument(multipartFile);
         documentRepository.save(marineDocument, userId);
         documentUploadService.upload(multipartFile, marineDocument.getPath());
@@ -55,7 +55,7 @@ public class DocumentController {
 
     //READ
     @GetMapping("/users/{userId}/documents/{documentId}")
-    public DocumentResponse find(@PathVariable UUID userId, @PathVariable UUID documentId) {
+    public GetDocumentResponse find(@PathVariable UUID userId, @PathVariable UUID documentId) {
         return documentMapper.map(documentRepository.find(userId, documentId));
     }
 
@@ -75,7 +75,7 @@ public class DocumentController {
 
     //FIND ALL
     @GetMapping("/users/{userId}/documents")
-    public List<DocumentResponse> findAll(@PathVariable UUID userId) {
+    public List<GetDocumentResponse> findAll(@PathVariable UUID userId) {
         return documentRepository.findAll(userId).stream().map(documentMapper::map).toList();
     }
 }
