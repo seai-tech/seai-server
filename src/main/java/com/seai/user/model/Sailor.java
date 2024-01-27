@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class SeaiUser {
+public class Sailor {
 
     private UUID id;
 

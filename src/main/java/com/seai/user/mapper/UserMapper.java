@@ -1,18 +1,18 @@
-package com.seai.voyage.mapper;
+package com.seai.user.mapper;
 
 import com.seai.user.contract.request.UserRegisterRequest;
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
-import com.seai.user.model.SeaiUser;
+import com.seai.user.model.Sailor;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    SeaiUser map(UserRegisterRequest userRegisterRequest);
+    Sailor map(UserRegisterRequest userRegisterRequest);
 
-    SeaiUser map(UserUpdateRequest userRegisterRequest);
+    Sailor map(UserUpdateRequest userRegisterRequest);
 
-    GetUserResponse map(SeaiUser seaiUser);
+    GetUserResponse map(Sailor sailor);
 }

@@ -1,15 +1,14 @@
-package com.seai.user.controller;
+package com.seai.auth.controller;
 
 
 import com.seai.spring.security.model.SecurityUser;
 import com.seai.spring.security.service.JwtService;
-import com.seai.spring.security.service.SecurityUserService;
 import com.seai.user.contract.request.AuthRequest;
 import com.seai.user.contract.request.UserRegisterRequest;
-import com.seai.user.model.SeaiUser;
+import com.seai.user.model.Sailor;
 import com.seai.user.repository.UserRepository;
 import com.seai.voyage.contract.response.AuthResponse;
-import com.seai.voyage.mapper.UserMapper;
+import com.seai.user.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,8 +29,6 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
 
-    private final SecurityUserService securityUserService;
-
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
@@ -48,7 +45,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public void register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
-        SeaiUser user = userMapper.map(userRegisterRequest);
+        Sailor user = userMapper.map(userRegisterRequest);
         userRepository.save(user);
     }
 }

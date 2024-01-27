@@ -2,9 +2,9 @@ package com.seai.user.controller;
 
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
-import com.seai.user.model.SeaiUser;
+import com.seai.user.model.Sailor;
 import com.seai.user.repository.UserRepository;
-import com.seai.voyage.mapper.UserMapper;
+import com.seai.user.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,22 +18,22 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 public class UserController {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
-    @PutMapping("/{userId}")
+    @PutMapping("/users/{userId}")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
         userRepository.findById(userId);
-        SeaiUser user = userMapper.map(userRegisterRequest);
+        Sailor user = userMapper.map(userRegisterRequest);
         userRepository.update(userId, user);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/users/{userId}")
     public GetUserResponse getUser(@PathVariable UUID userId) {
-        SeaiUser seaiUser = userRepository.findById(userId);
-        return userMapper.map(seaiUser);
+        Sailor sailor = userRepository.findById(userId);
+        return userMapper.map(sailor);
     }
 }

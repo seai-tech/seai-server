@@ -1,6 +1,6 @@
 package com.seai.user.repository;
 
-import com.seai.user.model.SeaiUser;
+import com.seai.user.model.Sailor;
 import com.seai.user.model.Status;
 import com.seai.user.model.VesselType;
 import com.seai.voyage.model.Rank;
@@ -39,10 +39,10 @@ public class UserRepository {
     private final JdbcTemplate jdbcTemplate;
 
 
-    public SeaiUser findByEmail(String email) throws UsernameNotFoundException {
+    public Sailor findByEmail(String email) throws UsernameNotFoundException {
         try {
             return jdbcTemplate.queryForObject(FIND_USER_BY_EMAIL_QUERY,
-                    (rs, rowNum) -> new SeaiUser(UUID.fromString(rs.getString("id")),
+                    (rs, rowNum) -> new Sailor(UUID.fromString(rs.getString("id")),
                             rs.getString("email"),
                             rs.getString("password"),
                             rs.getString("first_name"),
@@ -67,10 +67,10 @@ public class UserRepository {
     }
 
 
-    public SeaiUser findById(UUID id) throws UsernameNotFoundException {
+    public Sailor findById(UUID id) throws UsernameNotFoundException {
         try {
             return jdbcTemplate.queryForObject(FIND_USER_BY_ID_QUERY,
-                    (rs, rowNum) -> new SeaiUser(UUID.fromString(rs.getString("id")),
+                    (rs, rowNum) -> new Sailor(UUID.fromString(rs.getString("id")),
                             rs.getString("email"),
                             rs.getString("password"),
                             rs.getString("first_name"),
@@ -94,26 +94,26 @@ public class UserRepository {
         }
     }
 
-    public void save(SeaiUser seaiUser) {
+    public void save(Sailor sailor) {
         jdbcTemplate.update(REGISTER_USER_QUERY, UUID.randomUUID().toString(),
-                seaiUser.getEmail(),
-                encoder.encode(seaiUser.getPassword()),
-                seaiUser.getFirstName(),
-                seaiUser.getLastName());
+                sailor.getEmail(),
+                encoder.encode(sailor.getPassword()),
+                sailor.getFirstName(),
+                sailor.getLastName());
     }
 
-    public void update(UUID userId, SeaiUser seaiUser) {
+    public void update(UUID userId, Sailor sailor) {
         jdbcTemplate.update(UPDATE_USER_QUERY,
-                seaiUser.getFirstName(),
-                seaiUser.getLastName(),
-                Optional.ofNullable(seaiUser.getRank()).map(Enum::toString).orElse(null),
-                seaiUser.getPresentEmployer(),
-                seaiUser.getDateOfBirth(),
-                seaiUser.getManningAgents(),
-                Optional.ofNullable(seaiUser.getStatus()).map(Enum::toString).orElse(null),
-                Optional.ofNullable(seaiUser.getVesselType()).map(Enum::toString).orElse(null),
-                seaiUser.getHomeAirport(),
-                seaiUser.getReadinessDate(),
-                seaiUser.getContractDuration(), userId.toString());
+                sailor.getFirstName(),
+                sailor.getLastName(),
+                Optional.ofNullable(sailor.getRank()).map(Enum::toString).orElse(null),
+                sailor.getPresentEmployer(),
+                sailor.getDateOfBirth(),
+                sailor.getManningAgents(),
+                Optional.ofNullable(sailor.getStatus()).map(Enum::toString).orElse(null),
+                Optional.ofNullable(sailor.getVesselType()).map(Enum::toString).orElse(null),
+                sailor.getHomeAirport(),
+                sailor.getReadinessDate(),
+                sailor.getContractDuration(), userId.toString());
     }
 }
