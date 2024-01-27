@@ -1,9 +1,9 @@
 package com.seai.voyage.mapper;
 
-import com.seai.user.model.SeaiUser;
-import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.request.UserRegisterRequest;
+import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
+import com.seai.user.model.SeaiUser;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

@@ -1,15 +1,15 @@
 package com.seai.user.controller;
 
 
-import com.seai.user.repository.UserRepository;
-import com.seai.voyage.mapper.UserMapper;
-import com.seai.user.contract.request.AuthRequest;
-import com.seai.user.contract.request.UserRegisterRequest;
-import com.seai.voyage.contract.response.AuthResponse;
 import com.seai.spring.security.model.SecurityUser;
 import com.seai.spring.security.service.JwtService;
 import com.seai.spring.security.service.SecurityUserService;
+import com.seai.user.contract.request.AuthRequest;
+import com.seai.user.contract.request.UserRegisterRequest;
 import com.seai.user.model.SeaiUser;
+import com.seai.user.repository.UserRepository;
+import com.seai.voyage.contract.response.AuthResponse;
+import com.seai.voyage.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -1,12 +1,12 @@
 package com.seai.document.controller;
 
+import com.seai.document.contract.request.CreateDocumentRequest;
+import com.seai.document.contract.request.VerifyDocumentRequest;
 import com.seai.document.model.MarineDocument;
 import com.seai.document.repository.DocumentRepository;
 import com.seai.document.service.DocumentFileService;
 import com.seai.document.service.DocumentService;
 import com.seai.document.service.DocumentUploadService;
-import com.seai.document.contract.request.CreateDocumentRequest;
-import com.seai.document.contract.request.VerifyDocumentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;

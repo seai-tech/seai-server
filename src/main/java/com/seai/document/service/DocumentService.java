@@ -1,11 +1,11 @@
 package com.seai.document.service;
 
+import com.seai.document.contract.request.VerifyDocumentRequest;
+import com.seai.document.mapper.DocumentMapper;
 import com.seai.document.model.MarineDocument;
 import com.seai.document.repository.DocumentRepository;
 import com.seai.notification.model.DocumentNotification;
 import com.seai.notification.repository.NotificationRepository;
-import com.seai.document.mapper.DocumentMapper;
-import com.seai.document.contract.request.VerifyDocumentRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

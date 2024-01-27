@@ -1,7 +1,7 @@
 package com.seai.spring.security.config;
 
-import com.seai.spring.security.service.SecurityUserService;
 import com.seai.spring.security.filter.JwtAuthFilter;
+import com.seai.spring.security.service.SecurityUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
