@@ -1,8 +1,8 @@
 package com.seai.job;
 
-import com.seai.domain.document.repository.DocumentRepository;
-import com.seai.domain.notification.model.DocumentNotification;
-import com.seai.domain.notification.repository.NotificationRepository;
+import com.seai.document.repository.DocumentRepository;
+import com.seai.notification.model.DocumentNotification;
+import com.seai.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
