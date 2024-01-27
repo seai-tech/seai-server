@@ -34,7 +34,7 @@ public class FileController {
     }
 
     @DeleteMapping("/users/{userId}/documents/{documentId}/files")
-    public void delete(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId, @PathVariable UUID documentId) {
+    public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         documentUploadService.delete(document.getPath());
     }

@@ -1,14 +1,19 @@
 package com.seai.user.controller;
 
+import com.seai.user.contract.request.UserRegisterRequest;
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
+import com.seai.user.mapper.UserAuthenticationMapper;
 import com.seai.user.mapper.UserMapper;
 import com.seai.user.model.User;
+import com.seai.user.model.UserAuthentication;
+import com.seai.user.repository.UserAuthenticationRepository;
 import com.seai.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +29,10 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
+    private final UserAuthenticationRepository userAuthenticationRepository;
+
+    private final UserAuthenticationMapper userAuthenticationMapper;
+
     @PutMapping("/users/{userId}")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
         userRepository.findById(userId);
@@ -35,5 +44,14 @@ public class UserController {
     public GetUserResponse getUser(@PathVariable UUID userId) {
         User user = userRepository.findById(userId);
         return userMapper.map(user);
+    }
+
+    @PostMapping("/users")
+    public void createUser(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        UUID id = UUID.randomUUID();
+        UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest);
+        userAuthenticationRepository.save(userAuthentication, id);
+        User user = userMapper.map(userRegisterRequest);
+        userRepository.save(user, id);
     }
 }
