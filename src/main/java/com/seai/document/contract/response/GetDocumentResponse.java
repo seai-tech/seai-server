@@ -1,9 +1,12 @@
 package com.seai.document.contract.response;
 
+import lombok.Data;
+
 import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
+@Data
 public class GetDocumentResponse {
 
     private UUID id;

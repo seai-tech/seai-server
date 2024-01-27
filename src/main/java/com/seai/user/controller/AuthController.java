@@ -55,9 +55,9 @@ public class AuthController {
     @PostMapping
     public void register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         UUID id = UUID.randomUUID();
-        UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest, id);
-        userAuthenticationRepository.save(userAuthentication);
-        User user = userMapper.map(userRegisterRequest, id);
-        userRepository.save(user);
+        UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest);
+        userAuthenticationRepository.save(userAuthentication, id);
+        User user = userMapper.map(userRegisterRequest);
+        userRepository.save(user, id);
     }
 }

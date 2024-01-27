@@ -14,4 +14,9 @@ public class GlobalExceptionHandler {
         log.error("Error", e);
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handle(NotFoundException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

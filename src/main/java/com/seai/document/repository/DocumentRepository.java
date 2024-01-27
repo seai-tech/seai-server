@@ -1,6 +1,7 @@
 package com.seai.document.repository;
 
 import com.seai.document.model.MarineDocument;
+import com.seai.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -18,32 +19,42 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DocumentRepository {
 
-    private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ?";
+    private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, user_id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ?";
 
     private static final String FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE ID IN (:ids) and is_verified = true";
 
     private static final String FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ? and is_verified = true";
-    private static final String FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ?";
+    private static final String FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY = "SELECT id, user_id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and id= ?";
 
     private static final String SAVE_DOCUMENT_QUERY = "INSERT INTO documents (id, name, number, issued_date, expiry_date, is_verified, created_date, user_id, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String VERIFY_DOCUMENT_QUERY = "UPDATE documents SET name = ?, number = ?, issued_date = ?, expiry_date = ?, is_verified = ? where id = ? and user_id = ?";
+
+    private static final String DELETE_DOCUMENT_QUERY = "DELETE FROM documents WHERE id = ? and user_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MarineDocument find(UUID userId, UUID documentId) {
-        return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
-                getMarineDocumentRowMapper(),
-                userId.toString(),
-                documentId.toString());
+        try {
+            return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
+                    getMarineDocumentRowMapper(),
+                    userId.toString(),
+                    documentId.toString());
+        } catch (Exception e) {
+            throw new NotFoundException(String.format("Document with id %s not found", documentId.toString()));
+        }
     }
 
     public List<MarineDocument> findAll(UUID userId) {
         return jdbcTemplate.query(FIND_DOCUMENTS_BY_USER_ID_QUERY,
                 getMarineDocumentRowMapper(),
                 userId.toString());
+    }
+
+    public void delete(UUID documentId, UUID userId) {
+        jdbcTemplate.update(DELETE_DOCUMENT_QUERY, documentId.toString(), userId.toString());
     }
 
     public void save(MarineDocument marineDocument, UUID userId) {

@@ -7,12 +7,10 @@ import com.seai.user.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-import java.util.UUID;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
-    User map(UserRegisterRequest userRegisterRequest, UUID id);
+    User map(UserRegisterRequest userRegisterRequest);
 
     User map(UserUpdateRequest userRegisterRequest);
 

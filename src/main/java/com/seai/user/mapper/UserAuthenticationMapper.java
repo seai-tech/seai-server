@@ -5,10 +5,8 @@ import com.seai.user.model.UserAuthentication;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 
-import java.util.UUID;
-
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserAuthenticationMapper {
 
-    UserAuthentication map(UserRegisterRequest userRegisterRequest, UUID id);
+    UserAuthentication map(UserRegisterRequest userRegisterRequest);
 }

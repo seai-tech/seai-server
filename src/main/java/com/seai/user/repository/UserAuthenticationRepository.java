@@ -1,5 +1,6 @@
 package com.seai.user.repository;
 
+import com.seai.exception.NotFoundException;
 import com.seai.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public class UserAuthenticationRepository {
 
     private static final String REGISTER_USER_QUERY = "INSERT INTO users (id, email, password)" +
-            " VALUES (?, ?, ?, ?, ?)";
+            " VALUES (?, ?, ?)";
 
     private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT id, email, password FROM users WHERE email= ?";
 
@@ -23,8 +24,8 @@ public class UserAuthenticationRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void save(UserAuthentication userAuthentication) {
-        jdbcTemplate.update(REGISTER_USER_QUERY, UUID.randomUUID().toString(),
+    public void save(UserAuthentication userAuthentication, UUID id) {
+        jdbcTemplate.update(REGISTER_USER_QUERY, id,
                 userAuthentication.getEmail(),
                 encoder.encode(userAuthentication.getPassword()));
     }
@@ -36,7 +37,7 @@ public class UserAuthenticationRepository {
                             rs.getString("email"),
                             rs.getString("password")), email);
         } catch (EmptyResultDataAccessException ex) {
-            throw new UsernameNotFoundException("User with email not found : " + email);
+            throw new NotFoundException("User with email not found : " + email);
         }
     }
 }

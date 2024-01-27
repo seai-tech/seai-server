@@ -71,6 +71,7 @@ public class DocumentController {
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         documentUploadService.delete(document.getPath());
+        documentRepository.delete(documentId, userId);
     }
 
     //FIND ALL

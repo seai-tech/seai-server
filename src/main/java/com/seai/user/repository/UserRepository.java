@@ -1,5 +1,6 @@
 package com.seai.user.repository;
 
+import com.seai.exception.NotFoundException;
 import com.seai.user.model.Status;
 import com.seai.user.model.User;
 import com.seai.user.model.VesselType;
@@ -8,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -19,25 +19,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRepository {
 
-    private static final String FIND_USER_BY_ID_QUERY = "SELECT first_name, last_name,rank," +
+    private static final String FIND_USER_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank," +
             " present_employer, date_of_birth, manning_agents, status," +
             " vessel_type, home_airport, readiness_date, contract_duration FROM sailors WHERE user_id= ?";
 
-    private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, email, password, first_name, last_name)" +
-            " VALUES (?, ?, ?, ?, ?)";
+    private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
+            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_QUERY = "UPDATE sailors SET first_name=?, last_name=?," +
             " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=? WHERE user_id=?";
-
-
-    private final PasswordEncoder encoder;
 
     private final JdbcTemplate jdbcTemplate;
 
     public User findById(UUID id) throws UsernameNotFoundException {
         try {
             return jdbcTemplate.queryForObject(FIND_USER_BY_ID_QUERY,
-                    (rs, rowNum) -> new User(UUID.fromString(rs.getString("id")),
+                    (rs, rowNum) -> new User(UUID.fromString(rs.getString("user_id")),
                             rs.getString("first_name"),
                             rs.getString("last_name"),
                             Optional.ofNullable(rs.getString("rank"))
@@ -55,14 +53,23 @@ public class UserRepository {
                                     .map(s-> new Date(s.getTime())).orElse(null),
                             rs.getInt("contract_duration")), id.toString());
         } catch (EmptyResultDataAccessException ex) {
-            throw new UsernameNotFoundException("User with id not found : " + id);
+            throw new NotFoundException("User with id not found : " + id);
         }
     }
 
-    public void save(User user) {
-        jdbcTemplate.update(REGISTER_USER_QUERY, user.getId(),
+    public void save(User user, UUID id) {
+        jdbcTemplate.update(REGISTER_USER_QUERY, id,
                 user.getFirstName(),
-                user.getLastName());
+                user.getLastName(),
+                Optional.ofNullable(user.getRank()).map(Enum::toString).orElse(null),
+                user.getPresentEmployer(),
+                user.getDateOfBirth(),
+                user.getManningAgents(),
+                Optional.ofNullable(user.getStatus()).map(Enum::toString).orElse(null),
+                Optional.ofNullable(user.getVesselType()).map(Enum::toString).orElse(null),
+                user.getHomeAirport(),
+                user.getReadinessDate(),
+                user.getContractDuration());
     }
 
     public void update(UUID userId, User user) {

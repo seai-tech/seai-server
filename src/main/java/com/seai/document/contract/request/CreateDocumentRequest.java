@@ -11,4 +11,5 @@ public class CreateDocumentRequest {
     private String number;
     private Date issueDate;
     private Date expiryDate;
+    private boolean isVerified;
 }
