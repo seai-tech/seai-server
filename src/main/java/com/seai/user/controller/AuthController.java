@@ -42,7 +42,7 @@ public class AuthController {
 
     private final UserAuthenticationMapper userAuthenticationMapper;
 
-    @PostMapping("/login")
+    @PostMapping("/authentication")
     public UserAuthenticationResponse authenticateAndGetToken(@RequestBody @Valid UserAuthentaicationRequest userAuthentaicationRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAuthentaicationRequest.getEmail(), userAuthentaicationRequest.getPassword()));
         if (authentication.isAuthenticated()) {
@@ -52,7 +52,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping
     public void register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         UUID id = UUID.randomUUID();
         UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest, id);

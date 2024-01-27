@@ -26,11 +26,9 @@ public class VoyageRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public Voyage save(Voyage voyage, UUID userId) {
-        UUID id = UUID.randomUUID();
-        voyage.setId(id);
+    public void save(Voyage voyage, UUID userId) {
         jdbcTemplate.update(SAVE_VOYAGE_QUERY,
-                id,
+                UUID.randomUUID(),
                 userId,
                 voyage.getVesselName(),
                 voyage.getRank().toString(),
@@ -40,7 +38,6 @@ public class VoyageRepository {
                 voyage.getLeavingPort(),
                 Timestamp.from(voyage.getLeavingDate().toInstant()),
                 voyage.getRemarks());
-        return voyage;
     }
 
 
