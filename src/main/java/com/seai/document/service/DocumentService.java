@@ -1,6 +1,6 @@
 package com.seai.document.service;
 
-import com.seai.document.contract.request.VerifyDocumentRequest;
+import com.seai.document.contract.request.UpdateDocumentRequest;
 import com.seai.document.mapper.DocumentMapper;
 import com.seai.document.model.MarineDocument;
 import com.seai.document.repository.DocumentRepository;
@@ -20,8 +20,8 @@ public class DocumentService {
     private final NotificationRepository notificationRepository;
     private final DocumentMapper documentMapper;
 
-    public void verifyDocument(VerifyDocumentRequest verifyDocumentRequest, UUID userId, UUID documentId) {
-        MarineDocument marineDocument = documentMapper.map(verifyDocumentRequest);
+    public void verifyDocument(UpdateDocumentRequest updateDocumentRequest, UUID userId, UUID documentId) {
+        MarineDocument marineDocument = documentMapper.map(updateDocumentRequest);
         documentRepository.verify(marineDocument, userId, documentId);
 //        List<DocumentNotification> notifications = createNotifications(verifyDocumentRequest, documentId);
 //
@@ -30,7 +30,7 @@ public class DocumentService {
 //        }
     }
 
-    private List<DocumentNotification> createNotifications(VerifyDocumentRequest verifyDocumentRequest, UUID documentId) {
+    private List<DocumentNotification> createNotifications(UpdateDocumentRequest updateDocumentRequest, UUID documentId) {
 //        List<DocumentNotification> documentNotifications = new ArrayList<>();
 //        for (Integer daysBefore : verifyDocumentRequest.getNotifyBefore()) {
 //            Date toNotifyDate = DateUtils.addDays(verifyDocumentRequest.getExpiryDate(), -daysBefore);

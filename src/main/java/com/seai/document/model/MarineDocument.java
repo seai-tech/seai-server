@@ -11,6 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class MarineDocument {
     private UUID id;
+    private UUID userId;
     private String name;
     private String number;
     private Date issueDate;
@@ -19,8 +20,9 @@ public class MarineDocument {
     private String path;
     private boolean isVerified;
 
-    public MarineDocument(UUID id, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
+    public MarineDocument(UUID id, UUID userId, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
         this.id = id;
+        this.userId = userId;
         this.name = name;
         this.number = number;
         this.issueDate = issueDate;
@@ -31,10 +33,10 @@ public class MarineDocument {
     }
 
     public static MarineDocument createNonVerifiedDocument(String name, String number, Date issueDate, Date expiryDate) {
-        return new MarineDocument(UUID.randomUUID(), name, number, issueDate, expiryDate, false, Instant.now(), null);
+        return new MarineDocument(UUID.randomUUID(), null, name, number, issueDate, expiryDate, false, Instant.now(), null);
     }
 
     public static MarineDocument createVerifiedDocument(String name, String number, Date issueDate, Date expiryDate) {
-        return new MarineDocument(UUID.randomUUID(), name, number, issueDate, expiryDate, true, Instant.now(), null);
+        return new MarineDocument(UUID.randomUUID(), null, name, number, issueDate, expiryDate, true, Instant.now(), null);
     }
 }

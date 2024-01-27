@@ -1,17 +1,16 @@
 package com.seai.document.controller;
 
 import com.seai.document.contract.request.CreateDocumentRequest;
-import com.seai.document.contract.request.VerifyDocumentRequest;
+import com.seai.document.contract.request.UpdateDocumentRequest;
+import com.seai.document.contract.response.DocumentResponse;
+import com.seai.document.mapper.DocumentMapper;
 import com.seai.document.model.MarineDocument;
 import com.seai.document.repository.DocumentRepository;
-import com.seai.document.service.DocumentFileService;
-import com.seai.document.service.DocumentService;
+import com.seai.document.service.DocumentScanner;
 import com.seai.document.service.DocumentUploadService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,50 +23,29 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("api/v1")
 @RequiredArgsConstructor
 public class DocumentController {
 
-    private final DocumentFileService documentFileService;
+    private final DocumentScanner documentScanner;
     private final DocumentRepository documentRepository;
     private final DocumentUploadService documentUploadService;
-    private final DocumentService documentService;
+    private final DocumentMapper documentMapper;
 
+    //OCR
     @PostMapping(value = "/users/{userId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public MarineDocument handleFileUpload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
-        MarineDocument marineDocument = documentFileService.readDocument(multipartFile);
-        marineDocument.setPath(String.format("%s/%s/%s", userId.toString(), marineDocument.getName(), marineDocument.getId()));
-        documentUploadService.upload(multipartFile, marineDocument.getPath());
+    public DocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
+        MarineDocument marineDocument = documentScanner.readDocument(multipartFile);
         documentRepository.save(marineDocument, userId);
-        return marineDocument;
+        documentUploadService.upload(multipartFile, marineDocument.getPath());
+        return documentMapper.map(marineDocument);
     }
 
-    //TODO edit document endpoint
-    //TODO upload photo endpoint
-    //TODO delete document endpoint
-
-    @PutMapping("/users/{userId}/documents/{documentId}")
-    public void verifyDocument(@RequestBody VerifyDocumentRequest verifyDocumentRequest, @PathVariable UUID userId, @PathVariable UUID documentId) {
-        documentService.verifyDocument(verifyDocumentRequest, userId, documentId);
-    }
-
-    @PostMapping("/users/{userId}/documents/{documentId}/discard")
-    public void discard(@PathVariable UUID userId, @PathVariable UUID documentId) {
-        MarineDocument document = documentRepository.findDocument(userId, documentId);
-        documentUploadService.deleteFile(document.getPath());
-    }
-
-    @GetMapping("/users/{userId}/documents")
-    public List<MarineDocument> findAllUserDocuments(@PathVariable UUID userId) {
-        return documentRepository.findVerifiedByUserId(userId);
-    }
-
-    //TODO create document endpoint
+    //CREATE
     @PostMapping("/users/{userId}/documents")
-    public void createDocument(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
+    public void create(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
         MarineDocument verifiedDocument = MarineDocument.createVerifiedDocument(createDocumentRequest.getName(),
                 createDocumentRequest.getNumber(),
                 createDocumentRequest.getIssueDate(),
@@ -75,25 +53,29 @@ public class DocumentController {
         documentRepository.save(verifiedDocument, userId);
     }
 
+    //READ
     @GetMapping("/users/{userId}/documents/{documentId}")
-    public MarineDocument findUserDocument(@PathVariable UUID userId, @PathVariable UUID documentId) {
-        return documentRepository.findDocument(userId, documentId);
+    public DocumentResponse find(@PathVariable UUID userId, @PathVariable UUID documentId) {
+        return documentMapper.map(documentRepository.find(userId, documentId));
     }
 
-    @GetMapping("/users/{userId}/documents/{documentId}/download")
-    public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
-        MarineDocument document = documentRepository.findVerifiedDocument(userId, documentId);
-        byte[] bytes = documentUploadService.downloadDocument(document.getPath());
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.IMAGE_JPEG);
-        httpHeaders.setContentLength(bytes.length);
-        httpHeaders.setContentDispositionFormData("attachment", "file");
-        CacheControl cacheControl = CacheControl.maxAge(1, TimeUnit.DAYS)
-                .noTransform()
-                .mustRevalidate();
-        return ResponseEntity.ok()
-                .cacheControl(cacheControl)
-                .headers(httpHeaders)
-                .body(bytes);
+    //UPDATE
+    @PutMapping("/users/{userId}/documents/{documentId}")
+    public void update(@RequestBody UpdateDocumentRequest updateDocumentRequest, @PathVariable UUID userId, @PathVariable UUID documentId) {
+        MarineDocument marineDocument = documentMapper.map(updateDocumentRequest);
+        documentRepository.update(marineDocument, userId, documentId);
+    }
+
+    //DELETE
+    @DeleteMapping("/users/{userId}/documents/{documentId}")
+    public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
+        MarineDocument document = documentRepository.find(userId, documentId);
+        documentUploadService.delete(document.getPath());
+    }
+
+    //FIND ALL
+    @GetMapping("/users/{userId}/documents")
+    public List<DocumentResponse> findAll(@PathVariable UUID userId) {
+        return documentRepository.findVerifiedByUserId(userId).stream().map(documentMapper::map).toList();
     }
 }

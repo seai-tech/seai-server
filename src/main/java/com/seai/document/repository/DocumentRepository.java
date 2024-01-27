@@ -27,13 +27,13 @@ public class DocumentRepository {
 
     private static final String SAVE_DOCUMENT_QUERY = "INSERT INTO documents (id, name, number, issued_date, expiry_date, is_verified, created_date, user_id, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String VERIFY_DOCUMENT_QUERY = "UPDATE documents SET name = ?, number = ?, issued_date = ?, expiry_date = ?, is_verified = true where id = ? and user_id = ?";
+    private static final String VERIFY_DOCUMENT_QUERY = "UPDATE documents SET name = ?, number = ?, issued_date = ?, expiry_date = ?, is_verified = ? where id = ? and user_id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public MarineDocument findDocument(UUID userId, UUID documentId) {
+    public MarineDocument find(UUID userId, UUID documentId) {
         return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
                 getMarineDocumentRowMapper(),
                 userId.toString(),
@@ -61,24 +61,26 @@ public class DocumentRepository {
     }
 
     public void save(MarineDocument marineDocument, UUID userId) {
+        marineDocument.setPath(String.format("%s/%s/%s", userId, marineDocument.getName(), marineDocument.getId()));
         jdbcTemplate.update(SAVE_DOCUMENT_QUERY,
                 marineDocument.getId(),
                 marineDocument.getName(),
                 marineDocument.getNumber(),
                 marineDocument.getIssueDate(),
                 marineDocument.getExpiryDate(),
-                false,
+                marineDocument.isVerified(),
                 Timestamp.from(Instant.now()),
                 userId.toString(),
                 marineDocument.getPath());
     }
 
-    public void verify(MarineDocument marineDocument, UUID userId, UUID id) {
+    public void update(MarineDocument marineDocument, UUID userId, UUID id) {
         jdbcTemplate.update(VERIFY_DOCUMENT_QUERY,
                 marineDocument.getName(),
                 marineDocument.getNumber(),
                 marineDocument.getIssueDate(),
                 marineDocument.getExpiryDate(),
+                marineDocument.isVerified(),
                 id.toString(),
                 userId.toString());
     }
@@ -86,6 +88,7 @@ public class DocumentRepository {
     private static RowMapper<MarineDocument> getMarineDocumentRowMapper() {
         return (rs, rowNum) -> new MarineDocument(
                 UUID.fromString(rs.getString("id")),
+                UUID.fromString(rs.getString("user_id")),
                 rs.getString("name"),
                 rs.getString("number"),
                 new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),

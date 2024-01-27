@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DocumentFileService {
+public class DocumentScanner {
 
     private final AmazonTextract amazonTextract;
     private final DelegatingDocumentParser delegatingDocumentParser;

@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.UUID;
 
-public class MarineDocumentResponse {
+public class DocumentResponse {
 
     private UUID id;
     private String name;

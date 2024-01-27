@@ -27,12 +27,12 @@ public class DocumentUploadService {
         s3client.putObject(BUCKET, path, multipartFile.getInputStream(), data);
     }
 
-    public void deleteFile(String path) {
+    public void delete(String path) {
         s3client.deleteObject(BUCKET, path);
     }
 
     @SneakyThrows
-    public byte[] downloadDocument(String path) {
+    public byte[] download(String path) {
 
         GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKET, path);
 
