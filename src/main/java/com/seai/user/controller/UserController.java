@@ -2,9 +2,9 @@ package com.seai.user.controller;
 
 import com.seai.user.contract.request.UserUpdateRequest;
 import com.seai.user.contract.response.GetUserResponse;
+import com.seai.user.mapper.UserMapper;
 import com.seai.user.model.User;
 import com.seai.user.repository.UserRepository;
-import com.seai.user.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

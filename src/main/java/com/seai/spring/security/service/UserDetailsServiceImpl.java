@@ -1,10 +1,8 @@
 package com.seai.spring.security.service;
 
 import com.seai.spring.security.model.SecurityUser;
-import com.seai.user.model.User;
 import com.seai.user.model.UserAuthentication;
 import com.seai.user.repository.UserAuthenticationRepository;
-import com.seai.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,7 +14,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
-public class SecurityUserService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserAuthenticationRepository userAuthenticationRepository;
 

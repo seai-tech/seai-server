@@ -1,7 +1,7 @@
 package com.seai.spring.security.config;
 
 import com.seai.spring.security.filter.JwtAuthFilter;
-import com.seai.spring.security.service.SecurityUserService;
+import com.seai.spring.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class SecurityConfig {
 
     private final JwtAuthFilter authFilter;
 
-    private final SecurityUserService securityUserService;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -61,7 +61,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(securityUserService);
+        authenticationProvider.setUserDetailsService(userDetailsServiceImpl);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }

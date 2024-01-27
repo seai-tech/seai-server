@@ -1,7 +1,7 @@
 package com.seai.user.repository;
 
-import com.seai.user.model.User;
 import com.seai.user.model.Status;
+import com.seai.user.model.User;
 import com.seai.user.model.VesselType;
 import com.seai.voyage.model.Rank;
 import lombok.RequiredArgsConstructor;
