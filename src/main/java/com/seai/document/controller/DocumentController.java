@@ -76,6 +76,6 @@ public class DocumentController {
     //FIND ALL
     @GetMapping("/users/{userId}/documents")
     public List<DocumentResponse> findAll(@PathVariable UUID userId) {
-        return documentRepository.findVerifiedByUserId(userId).stream().map(documentMapper::map).toList();
+        return documentRepository.findAll(userId).stream().map(documentMapper::map).toList();
     }
 }

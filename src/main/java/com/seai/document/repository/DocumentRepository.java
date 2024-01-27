@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class DocumentRepository {
 
-    private static final String FIND_VERIFIED_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ? and is_verified = true";
+    private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ?";
 
     private static final String FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE ID IN (:ids) and is_verified = true";
 
@@ -40,22 +40,8 @@ public class DocumentRepository {
                 documentId.toString());
     }
 
-    public MarineDocument findAll(UUID userId, UUID documentId) {
-        return jdbcTemplate.queryForObject(FIND_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
-                getMarineDocumentRowMapper(),
-                userId.toString(),
-                documentId.toString());
-    }
-
-    public MarineDocument findVerifiedDocument(UUID userId, UUID documentId) {
-        return jdbcTemplate.queryForObject(FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
-                getMarineDocumentRowMapper(),
-                userId.toString(),
-                documentId.toString());
-    }
-
-    public List<MarineDocument> findVerifiedByUserId(UUID userId) {
-        return jdbcTemplate.query(FIND_VERIFIED_DOCUMENTS_BY_USER_ID_QUERY,
+    public List<MarineDocument> findAll(UUID userId) {
+        return jdbcTemplate.query(FIND_DOCUMENTS_BY_USER_ID_QUERY,
                 getMarineDocumentRowMapper(),
                 userId.toString());
     }
@@ -102,5 +88,12 @@ public class DocumentRepository {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("ids", ids);
         return namedParameterJdbcTemplate.query(FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS, parameters, getMarineDocumentRowMapper());
+    }
+
+    public MarineDocument findVerifiedDocument(UUID userId, UUID documentId) {
+        return jdbcTemplate.queryForObject(FIND_VERIFIED_DOCUMENT_BY_USER_ID_AND_DOCUMENT_ID_QUERY,
+                getMarineDocumentRowMapper(),
+                userId.toString(),
+                documentId.toString());
     }
 }
