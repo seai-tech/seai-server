@@ -1,7 +1,7 @@
-package com.seai.training_center.user.mapper;
+package com.seai.training_center.training_center.mapper;
 
 import com.seai.marine.user.model.UserAuthentication;
-import com.seai.training_center.user.contract.request.CreateTrainingCenterRequest;
+import com.seai.training_center.training_center.contract.request.CreateTrainingCenterRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

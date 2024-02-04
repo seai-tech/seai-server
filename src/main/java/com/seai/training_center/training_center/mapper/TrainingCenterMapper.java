@@ -1,8 +1,8 @@
-package com.seai.training_center.user.mapper;
+package com.seai.training_center.training_center.mapper;
 
-import com.seai.training_center.user.contract.request.CreateTrainingCenterRequest;
-import com.seai.training_center.user.contract.response.GetTrainingCenterResponse;
-import com.seai.training_center.user.model.TrainingCenter;
+import com.seai.training_center.training_center.contract.request.CreateTrainingCenterRequest;
+import com.seai.training_center.training_center.contract.response.GetTrainingCenterResponse;
+import com.seai.training_center.training_center.model.TrainingCenter;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

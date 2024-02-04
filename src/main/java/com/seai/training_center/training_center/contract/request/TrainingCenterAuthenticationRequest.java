@@ -1,4 +1,4 @@
-package com.seai.marine.user.contract.request;
+package com.seai.training_center.training_center.contract.request;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserAuthentaicationRequest {
+public class TrainingCenterAuthenticationRequest {
 
     @NotNull
     @NotEmpty

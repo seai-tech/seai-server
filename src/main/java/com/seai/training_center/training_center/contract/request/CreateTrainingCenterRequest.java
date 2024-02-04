@@ -1,4 +1,4 @@
-package com.seai.training_center.user.contract.request;
+package com.seai.training_center.training_center.contract.request;
 
 import lombok.Data;
 

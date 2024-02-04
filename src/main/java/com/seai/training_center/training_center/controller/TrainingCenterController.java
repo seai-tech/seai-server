@@ -1,13 +1,14 @@
-package com.seai.training_center.user.controller;
+package com.seai.training_center.training_center.controller;
 
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.training_center.user.contract.request.CreateTrainingCenterRequest;
-import com.seai.training_center.user.contract.response.GetTrainingCenterResponse;
-import com.seai.training_center.user.mapper.TrainingCenterAuthenticationMapper;
-import com.seai.training_center.user.mapper.TrainingCenterMapper;
-import com.seai.training_center.user.model.TrainingCenter;
-import com.seai.training_center.user.repository.TrainingCenterRepository;
+import com.seai.training_center.training_center.contract.request.CreateTrainingCenterRequest;
+import com.seai.training_center.training_center.contract.response.GetTrainingCenterResponse;
+import com.seai.training_center.training_center.mapper.TrainingCenterAuthenticationMapper;
+import com.seai.training_center.training_center.mapper.TrainingCenterMapper;
+import com.seai.training_center.training_center.model.TrainingCenter;
+import com.seai.training_center.training_center.repository.TrainingCenterAuthenticationRepository;
+import com.seai.training_center.training_center.repository.TrainingCenterRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class TrainingCenterController {
 
     private final TrainingCenterMapper trainingCenterMapper;
     private final TrainingCenterRepository trainingCenterRepository;
-    private final UserAuthenticationRepository userAuthenticationRepository;
+    private final TrainingCenterAuthenticationRepository trainingCenterAuthenticationRepository;
     private final TrainingCenterAuthenticationMapper trainingCenterAuthenticationMapper;
 
     @GetMapping("/training-centers/{trainingCenterId}")
@@ -39,7 +40,7 @@ public class TrainingCenterController {
     public void createTrainingCenter(@RequestBody @Valid CreateTrainingCenterRequest createTrainingCenterRequest) {
         UUID id = UUID.randomUUID();
         UserAuthentication userAuthentication = trainingCenterAuthenticationMapper.map(createTrainingCenterRequest);
-        userAuthenticationRepository.save(userAuthentication, id);
+        trainingCenterAuthenticationRepository.save(userAuthentication, id);
         TrainingCenter trainingCenter = trainingCenterMapper.map(createTrainingCenterRequest);
         trainingCenterRepository.save(trainingCenter, id);
     }

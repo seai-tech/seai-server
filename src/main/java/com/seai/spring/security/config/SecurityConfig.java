@@ -1,15 +1,18 @@
 package com.seai.spring.security.config;
 
-import com.seai.spring.security.filter.JwtAuthFilter;
+import com.seai.spring.security.filter.TrainingCentersAuthFilter;
+import com.seai.spring.security.filter.UsersAuthFilter;
+import com.seai.spring.security.service.TrainingCenterDetailsServiceImpl;
 import com.seai.spring.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,26 +31,53 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthFilter authFilter;
+    private final UsersAuthFilter usersAuthFilter;
+
+    private final TrainingCentersAuthFilter trainingCentersAuthFilter;
 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+
+    private final TrainingCenterDetailsServiceImpl trainingCenterDetailsService;
 
     private final PasswordEncoder passwordEncoder;
 
     // Configuring HttpSecurity
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+    @Order(1)
+    public SecurityFilterChain usersFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/v1/users/**").csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST,"/api/v1/users", "/api/v1/users/authentication")
                         .permitAll()
                         .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                        .anyRequest().authenticated())
+                        .requestMatchers(HttpMethod.OPTIONS,"/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/users/**")
+                        .authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        authFilter, UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(usersAuthenticationProvider()).addFilterBefore(
+                        usersAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    // Configuring HttpSecurity
+    @Bean
+    @Order(2)
+    public SecurityFilterChain trainingCentersFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/v1/training-centers/**").csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST,"/api/v1/training-centers", "/api/v1/training-centers/authentication")
+                        .permitAll()
+                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS,"/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/training-centers/**")
+                        .authenticated())
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(trainingCentersAuthenticationProvider()).addFilterBefore(
+                        trainingCentersAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -62,7 +92,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider() {
+    public AuthenticationProvider usersAuthenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsServiceImpl);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
@@ -70,7 +100,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+    public AuthenticationProvider trainingCentersAuthenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(trainingCenterDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder config) throws Exception {
+        return config.authenticationProvider(trainingCentersAuthenticationProvider())
+                .authenticationProvider(usersAuthenticationProvider()).build();
     }
 }

@@ -1,4 +1,4 @@
-package com.seai.training_center.user.model;
+package com.seai.training_center.training_center.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

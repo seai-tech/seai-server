@@ -1,6 +1,6 @@
-package com.seai.training_center.user.repository;
+package com.seai.training_center.training_center.repository;
 
-import com.seai.training_center.user.model.TrainingCenter;
+import com.seai.training_center.training_center.model.TrainingCenter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -14,7 +14,7 @@ public class TrainingCenterRepository {
 
     private static final String SAVE_TRAINING_CENTER_QUERY = "INSERT INTO training_centers (id, organization_name, telephone_1, telephone_2, telephone_3) VALUES (?, ?, ?, ?, ?)";
 
-    private static final String FIND_TRAINING_CENTER_QUERY = "SELECT id, organization_name, telephone_1, telephone_2, telephone_3 FROM training_centers WHERE id=?";
+    private static final String FIND_TRAINING_CENTER_QUERY = "SELECT user_id, organization_name, telephone_1, telephone_2, telephone_3 FROM training_centers WHERE user_id=?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -32,7 +32,7 @@ public class TrainingCenterRepository {
     }
 
     private RowMapper<TrainingCenter> getTrainingCenterRowMapper() {
-        return (rs, rowNum) -> new TrainingCenter(UUID.fromString(rs.getString("id")),
+        return (rs, rowNum) -> new TrainingCenter(UUID.fromString(rs.getString("user_id")),
                 rs.getString("organization_name"),
                 rs.getString("telephone_1"),
                 rs.getString("telephone_2"),

@@ -1,4 +1,4 @@
-package com.seai.marine.user.repository;
+package com.seai.training_center.training_center.repository;
 
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
@@ -13,26 +13,26 @@ import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
-public class UserAuthenticationRepository {
+public class TrainingCenterAuthenticationRepository {
 
-    private static final String REGISTER_USER_QUERY = "INSERT INTO users_auth (id, email, password)" +
+    private static final String REGISTER_TRAINING_CENTER_QUERY = "INSERT INTO training_centers_auth (id, email, password)" +
             " VALUES (?, ?, ?)";
 
-    private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT id, email, password FROM users_auth WHERE email= ?";
+    private static final String FIND_TRAINING_CENTER_BY_EMAIL_QUERY = "SELECT id, email, password FROM training_centers_auth WHERE email= ?";
 
     private final PasswordEncoder encoder;
 
     private final JdbcTemplate jdbcTemplate;
 
     public void save(UserAuthentication userAuthentication, UUID id) {
-        jdbcTemplate.update(REGISTER_USER_QUERY, id,
+        jdbcTemplate.update(REGISTER_TRAINING_CENTER_QUERY, id,
                 userAuthentication.getEmail(),
                 encoder.encode(userAuthentication.getPassword()));
     }
 
     public UserAuthentication findByEmail(String email) throws UsernameNotFoundException {
         try {
-            return jdbcTemplate.queryForObject(FIND_USER_BY_EMAIL_QUERY,
+            return jdbcTemplate.queryForObject(FIND_TRAINING_CENTER_BY_EMAIL_QUERY,
                     (rs, rowNum) -> new UserAuthentication(UUID.fromString(rs.getString("id")),
                             rs.getString("email"),
                             rs.getString("password")), email);
