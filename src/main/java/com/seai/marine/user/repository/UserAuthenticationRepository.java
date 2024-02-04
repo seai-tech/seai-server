@@ -1,6 +1,6 @@
 package com.seai.marine.user.repository;
 
-import com.seai.exception.NotFoundException;
+import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -37,7 +37,7 @@ public class UserAuthenticationRepository {
                             rs.getString("email"),
                             rs.getString("password")), email);
         } catch (EmptyResultDataAccessException ex) {
-            throw new NotFoundException("User with email not found : " + email);
+            throw new ResourceNotFoundException("User with email not found : " + email);
         }
     }
 }

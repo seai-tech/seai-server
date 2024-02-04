@@ -1,7 +1,7 @@
 package com.seai.marine.document.repository;
 
 import com.seai.marine.document.model.MarineDocument;
-import com.seai.exception.NotFoundException;
+import com.seai.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,7 +43,7 @@ public class DocumentRepository {
                     userId.toString(),
                     documentId.toString());
         } catch (Exception e) {
-            throw new NotFoundException(String.format("Document with id %s not found", documentId.toString()));
+            throw new ResourceNotFoundException(String.format("Document with id %s not found", documentId.toString()));
         }
     }
 

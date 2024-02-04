@@ -3,5 +3,5 @@ package com.seai.exception;
 import lombok.experimental.StandardException;
 
 @StandardException
-public class NotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 }

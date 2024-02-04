@@ -1,13 +1,17 @@
 package com.seai.training_center.onlinecourse.model;
 
-import java.util.Date;
+import java.util.UUID;
 
 public class OnlineCourse {
 
+    private UUID id;
+
     private String name;
 
-    private Date startDate;
+    private String details;
 
-    private Date endDate;
+    private String description;
+
+    private String pathToFile;
 
 }

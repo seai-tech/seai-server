@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -36,10 +37,9 @@ public class VoyageRepository {
                 voyage.getJoiningPort(),
                 Timestamp.from(voyage.getJoiningDate().toInstant()),
                 voyage.getLeavingPort(),
-                Timestamp.from(voyage.getLeavingDate().toInstant()),
+                Optional.ofNullable(voyage.getLeavingDate()).map(v -> Timestamp.from(v.toInstant())).orElse(null),
                 voyage.getRemarks());
     }
-
 
 
     public void update(Voyage voyage, UUID userId, UUID id) {

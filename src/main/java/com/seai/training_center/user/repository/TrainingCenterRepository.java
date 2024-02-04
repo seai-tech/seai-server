@@ -1,17 +1,11 @@
 package com.seai.training_center.user.repository;
 
-import com.seai.marine.user.model.Status;
-import com.seai.marine.user.model.User;
-import com.seai.marine.user.model.VesselType;
-import com.seai.marine.voyage.model.Rank;
 import com.seai.training_center.user.model.TrainingCenter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

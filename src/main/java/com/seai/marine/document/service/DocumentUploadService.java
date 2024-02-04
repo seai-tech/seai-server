@@ -1,11 +1,13 @@
 package com.seai.marine.document.service;
 
+import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
+import com.seai.marine.document.model.MarineDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -32,13 +34,15 @@ public class DocumentUploadService {
     }
 
     @SneakyThrows
-    public byte[] download(String path) {
+    public byte[] download(MarineDocument marineDocument) {
 
-        GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKET, path);
-
-        S3Object s3Object = s3client.getObject(getObjectRequest);
-        S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-
-        return IOUtils.toByteArray(objectInputStream);
+        GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKET, marineDocument.getPath());
+        try {
+            S3Object s3Object = s3client.getObject(getObjectRequest);
+            S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+            return IOUtils.toByteArray(objectInputStream);
+        } catch (Exception e) {
+            throw new NotFoundException("File for document not found: " + marineDocument.getId());
+        }
     }
 }

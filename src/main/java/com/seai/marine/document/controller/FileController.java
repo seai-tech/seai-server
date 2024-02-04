@@ -42,7 +42,7 @@ public class FileController {
     @GetMapping("/users/{userId}/documents/{documentId}/files")
     public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        byte[] bytes = documentUploadService.download(document.getPath());
+        byte[] bytes = documentUploadService.download(document);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);

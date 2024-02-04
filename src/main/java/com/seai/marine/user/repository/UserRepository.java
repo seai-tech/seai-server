@@ -1,6 +1,6 @@
 package com.seai.marine.user.repository;
 
-import com.seai.exception.NotFoundException;
+import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.VesselType;
 import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.User;
@@ -38,7 +38,7 @@ public class UserRepository {
             return jdbcTemplate.queryForObject(FIND_USER_BY_ID_QUERY,
                     getUserRowMapper(), id.toString());
         } catch (EmptyResultDataAccessException ex) {
-            throw new NotFoundException("User with id not found : " + id);
+            throw new ResourceNotFoundException("User with id not found : " + id);
         }
     }
 
