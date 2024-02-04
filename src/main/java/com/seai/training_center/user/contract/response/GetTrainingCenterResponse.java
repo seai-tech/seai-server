@@ -1,13 +1,11 @@
-package com.seai.training_center.user.model;
+package com.seai.training_center.user.contract.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-@AllArgsConstructor
-public class TrainingCenter {
+public class GetTrainingCenterResponse {
 
     private UUID id;
 

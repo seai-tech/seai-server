@@ -36,8 +36,7 @@ public class CourseRepository {
     }
 
     public List<Course> findAll() {
-        List<Course> allCourses = jdbcTemplate.query(FIND_ALL_COURSES_QUERY, getCourseRowMapper());
-        return allCourses;
+        return jdbcTemplate.query(FIND_ALL_COURSES_QUERY, getCourseRowMapper());
     }
 
 
