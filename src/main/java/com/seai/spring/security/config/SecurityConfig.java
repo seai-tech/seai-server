@@ -108,8 +108,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationManagerBuilder config) throws Exception {
-        return config.authenticationProvider(trainingCentersAuthenticationProvider())
-                .authenticationProvider(usersAuthenticationProvider()).build();
+    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(usersAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(trainingCentersAuthenticationProvider());
+        return authenticationManagerBuilder.build();
     }
 }

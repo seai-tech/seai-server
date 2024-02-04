@@ -23,11 +23,11 @@ public class UsersAuthController {
 
     private final JwtService jwtService;
 
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager usersAuthenticationProvider;
 
     @PostMapping("/authentication")
     public UserAuthenticationResponse authenticateAndGetToken(@RequestBody @Valid UserAuthenticationRequest userAuthentaicationRequest) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userAuthentaicationRequest.getEmail(), userAuthentaicationRequest.getPassword()));
+        Authentication authentication = usersAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(userAuthentaicationRequest.getEmail(), userAuthentaicationRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             return new UserAuthenticationResponse(((SecurityUser)authentication.getPrincipal()).getId().toString(), jwtService.generateToken(userAuthentaicationRequest.getEmail()));
         } else {
