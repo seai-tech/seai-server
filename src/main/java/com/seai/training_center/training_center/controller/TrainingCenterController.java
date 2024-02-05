@@ -1,7 +1,6 @@
 package com.seai.training_center.training_center.controller;
 
 import com.seai.marine.user.model.UserAuthentication;
-import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.training_center.training_center.contract.request.CreateTrainingCenterRequest;
 import com.seai.training_center.training_center.contract.response.GetTrainingCenterResponse;
 import com.seai.training_center.training_center.mapper.TrainingCenterAuthenticationMapper;

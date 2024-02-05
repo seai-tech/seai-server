@@ -1,10 +1,10 @@
 package com.seai.marine.voyage.controller;
 
+import com.seai.marine.voyage.contract.request.CreateVoyageRequest;
+import com.seai.marine.voyage.contract.request.UpdateVoyageRequest;
 import com.seai.marine.voyage.contract.response.GetVoyageResponse;
 import com.seai.marine.voyage.mapper.VoyageMapper;
 import com.seai.marine.voyage.model.Voyage;
-import com.seai.marine.voyage.contract.request.CreateVoyageRequest;
-import com.seai.marine.voyage.contract.request.UpdateVoyageRequest;
 import com.seai.marine.voyage.repository.VoyageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

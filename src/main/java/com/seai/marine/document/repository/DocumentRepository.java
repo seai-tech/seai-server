@@ -1,7 +1,7 @@
 package com.seai.marine.document.repository;
 
-import com.seai.marine.document.model.MarineDocument;
 import com.seai.exception.ResourceNotFoundException;
+import com.seai.marine.document.model.MarineDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

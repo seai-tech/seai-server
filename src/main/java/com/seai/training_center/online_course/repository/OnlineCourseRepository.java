@@ -1,18 +1,13 @@
 package com.seai.training_center.online_course.repository;
 
 import com.seai.exception.ResourceNotFoundException;
-import com.seai.training_center.course.model.Course;
 import com.seai.training_center.online_course.model.OnlineCourse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.sql.Time;
 import java.time.Duration;
-import java.util.Currency;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

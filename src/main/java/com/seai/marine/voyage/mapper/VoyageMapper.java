@@ -1,9 +1,9 @@
 package com.seai.marine.voyage.mapper;
 
-import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.contract.request.CreateVoyageRequest;
 import com.seai.marine.voyage.contract.request.UpdateVoyageRequest;
 import com.seai.marine.voyage.contract.response.GetVoyageResponse;
+import com.seai.marine.voyage.model.Voyage;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 

@@ -1,10 +1,10 @@
 package com.seai.marine.user.controller;
 
 
+import com.seai.marine.user.contract.request.UserAuthenticationRequest;
 import com.seai.marine.user.contract.response.UserAuthenticationResponse;
 import com.seai.spring.security.model.SecurityUser;
 import com.seai.spring.security.service.JwtService;
-import com.seai.marine.user.contract.request.UserAuthenticationRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

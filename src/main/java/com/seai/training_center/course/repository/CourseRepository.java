@@ -1,6 +1,5 @@
 package com.seai.training_center.course.repository;
 
-import com.seai.marine.document.model.MarineDocument;
 import com.seai.training_center.course.model.Course;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

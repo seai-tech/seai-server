@@ -1,7 +1,7 @@
 package com.seai.marine.user.contract.request;
 
-import com.seai.marine.user.model.VesselType;
 import com.seai.marine.user.model.Status;
+import com.seai.marine.user.model.VesselType;
 import com.seai.marine.voyage.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

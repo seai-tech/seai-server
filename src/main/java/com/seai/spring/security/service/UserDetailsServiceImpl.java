@@ -1,8 +1,8 @@
 package com.seai.spring.security.service;
 
-import com.seai.spring.security.model.SecurityUser;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
+import com.seai.spring.security.model.SecurityUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
