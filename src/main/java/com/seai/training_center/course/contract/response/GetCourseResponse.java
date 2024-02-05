@@ -25,4 +25,6 @@ public class GetCourseResponse {
     private LocalTime endTime;
 
     private BigDecimal price;
+
+    private String currency;
 }

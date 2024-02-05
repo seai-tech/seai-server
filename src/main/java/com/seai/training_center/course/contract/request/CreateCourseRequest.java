@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.Currency;
 import java.util.Date;
 
 @Data
@@ -20,4 +21,6 @@ public class CreateCourseRequest {
     private LocalTime endTime;
 
     private BigDecimal price;
+
+    private Currency currency;
 }

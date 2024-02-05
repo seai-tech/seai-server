@@ -9,17 +9,19 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Time;
+import java.util.Currency;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
 public class CourseRepository {
 
-    private static final String SAVE_COURSE_QUERY = "INSERT INTO courses (id, training_center_id, name, start_date, end_date, start_time, end_time, price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_COURSE_QUERY = "INSERT INTO courses (id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price FROM courses";
+    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency FROM courses";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,9 +32,10 @@ public class CourseRepository {
                 course.getName(),
                 course.getStartDate(),
                 course.getEndDate(),
-                Time.valueOf(course.getStartTime()),
-                Time.valueOf(course.getEndTime()),
-                course.getPrice());
+                Optional.ofNullable(course.getStartTime()).map(Time::valueOf).orElse(null),
+                Optional.ofNullable(course.getEndTime()).map(Time::valueOf).orElse(null),
+                course.getPrice(),
+                Optional.ofNullable(course.getCurrency()).map(Currency::getCurrencyCode).orElse(null));
     }
 
     public List<Course> findAll() {
@@ -47,8 +50,9 @@ public class CourseRepository {
                 rs.getString("name"),
                 new Date(rs.getObject("start_date", java.sql.Date.class).getTime()),
                 new Date(rs.getObject("end_date", java.sql.Date.class).getTime()),
-                rs.getTime("start_date").toLocalTime(),
-                rs.getTime("end_date").toLocalTime(),
-                rs.getObject("price", BigDecimal.class));
+                rs.getTime("start_time").toLocalTime(),
+                rs.getTime("end_time").toLocalTime(),
+                rs.getObject("price", BigDecimal.class),
+                Optional.ofNullable(rs.getString("currency")).map(Currency::getInstance).orElse(null));
     }
 }

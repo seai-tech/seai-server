@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
+import java.util.Currency;
 import java.util.Date;
 import java.util.UUID;
 
@@ -29,5 +30,7 @@ public class Course {
     private LocalTime endTime;
 
     private BigDecimal price;
+
+    private Currency currency;
 
 }
