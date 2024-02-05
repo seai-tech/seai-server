@@ -7,7 +7,7 @@ import com.seai.marine.document.mapper.DocumentMapper;
 import com.seai.marine.document.model.MarineDocument;
 import com.seai.marine.document.repository.DocumentRepository;
 import com.seai.marine.document.service.DocumentScanner;
-import com.seai.marine.document.service.DocumentUploadService;
+import com.seai.marine.document.service.DocumentFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +31,7 @@ public class DocumentController {
 
     private final DocumentScanner documentScanner;
     private final DocumentRepository documentRepository;
-    private final DocumentUploadService documentUploadService;
+    private final DocumentFileService documentFileService;
     private final DocumentMapper documentMapper;
 
     //OCR
@@ -39,7 +39,7 @@ public class DocumentController {
     public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
         MarineDocument marineDocument = documentScanner.readDocument(multipartFile);
         documentRepository.save(marineDocument, userId);
-        documentUploadService.upload(multipartFile, marineDocument.getPath());
+        documentFileService.upload(multipartFile, marineDocument.getPath());
         return documentMapper.map(marineDocument);
     }
 
@@ -70,7 +70,7 @@ public class DocumentController {
     @DeleteMapping("/users/{userId}/documents/{documentId}")
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        documentUploadService.delete(document.getPath());
+        documentFileService.delete(document.getPath());
         documentRepository.delete(documentId, userId);
     }
 

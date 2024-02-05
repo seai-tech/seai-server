@@ -1,13 +1,12 @@
-package com.seai.marine.document.service;
+package com.seai.training_center.online_course.service;
 
-import com.amazonaws.services.kms.model.NotFoundException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.util.IOUtils;
-import com.seai.marine.document.model.MarineDocument;
+import com.seai.exception.ResourceNotFoundException;
+import com.seai.training_center.online_course.model.OnlineCourse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentUploadService {
+public class OnlineCourseFileService {
 
-    private static final String BUCKET = "marine-docs1";
+    private static final String BUCKET = "training-center-online-courses";
 
     private final AmazonS3 s3client;
 
@@ -34,15 +33,15 @@ public class DocumentUploadService {
     }
 
     @SneakyThrows
-    public byte[] download(MarineDocument marineDocument) {
-
-        GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKET, marineDocument.getPath());
+    public S3ObjectInputStream download(OnlineCourse onlineCourse) {
+        GetObjectRequest getObjectRequest = new GetObjectRequest(BUCKET, onlineCourse.getPath());
         try {
             S3Object s3Object = s3client.getObject(getObjectRequest);
             S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
-            return IOUtils.toByteArray(objectInputStream);
+
+            return objectInputStream;
         } catch (Exception e) {
-            throw new NotFoundException("File for document not found: " + marineDocument.getId());
+            throw new ResourceNotFoundException("File for online course not found: " + onlineCourse.getId());
         }
     }
 }

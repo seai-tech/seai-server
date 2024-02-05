@@ -2,7 +2,7 @@ package com.seai.marine.document.controller;
 
 import com.seai.marine.document.model.MarineDocument;
 import com.seai.marine.document.repository.DocumentRepository;
-import com.seai.marine.document.service.DocumentUploadService;
+import com.seai.marine.document.service.DocumentFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
@@ -25,24 +25,24 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class FileController {
     private final DocumentRepository documentRepository;
-    private final DocumentUploadService documentUploadService;
+    private final DocumentFileService documentFileService;
 
     @PostMapping("/users/{userId}/documents/{documentId}/files")
     public void upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        documentUploadService.upload(multipartFile, document.getPath());
+        documentFileService.upload(multipartFile, document.getPath());
     }
 
     @DeleteMapping("/users/{userId}/documents/{documentId}/files")
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        documentUploadService.delete(document.getPath());
+        documentFileService.delete(document.getPath());
     }
 
     @GetMapping("/users/{userId}/documents/{documentId}/files")
     public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        byte[] bytes = documentUploadService.download(document);
+        byte[] bytes = documentFileService.download(document);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);
