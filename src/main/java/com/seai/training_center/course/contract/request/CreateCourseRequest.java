@@ -1,5 +1,6 @@
 package com.seai.training_center.course.contract.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,8 +17,10 @@ public class CreateCourseRequest {
 
     private Date endDate;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime startTime;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime endTime;
 
     private BigDecimal price;

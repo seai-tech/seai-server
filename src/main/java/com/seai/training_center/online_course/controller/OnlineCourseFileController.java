@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -41,17 +42,18 @@ public class OnlineCourseFileController {
     @GetMapping("/{trainingCenterId}/online-courses/{courseId}/files")
     public ResponseEntity<StreamingResponseBody> download(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
         OnlineCourse onlineCourse = onlineCourseRepository.find(trainingCenterId, courseId);
-        S3ObjectInputStream video = onlineCourseFileService.download(onlineCourse);
-
-        final StreamingResponseBody body = outputStream -> {
-            int numberOfBytesToWrite = 0;
-            byte[] data = new byte[1024];
-            while ((numberOfBytesToWrite = video.read(data, 0, data.length)) != -1) {
-                outputStream.write(data, 0, numberOfBytesToWrite);
-            }
-            video.close();
-        };
-        return ResponseEntity.ok()
-                .body(body);
+        try (S3ObjectInputStream video = onlineCourseFileService.download(onlineCourse)) {
+            final StreamingResponseBody body = outputStream -> {
+                int numberOfBytesToWrite = 0;
+                byte[] data = new byte[1024];
+                while ((numberOfBytesToWrite = video.read(data, 0, data.length)) != -1) {
+                    outputStream.write(data, 0, numberOfBytesToWrite);
+                }
+            };
+            return ResponseEntity.ok()
+                    .body(body);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

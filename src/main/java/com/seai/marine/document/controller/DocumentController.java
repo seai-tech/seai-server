@@ -2,6 +2,7 @@ package com.seai.marine.document.controller;
 
 import com.seai.marine.document.contract.request.CreateDocumentRequest;
 import com.seai.marine.document.contract.request.UpdateDocumentRequest;
+import com.seai.marine.document.contract.response.CreateDocumentResponse;
 import com.seai.marine.document.contract.response.GetDocumentResponse;
 import com.seai.marine.document.mapper.DocumentMapper;
 import com.seai.marine.document.model.MarineDocument;
@@ -45,12 +46,12 @@ public class DocumentController {
 
     //CREATE
     @PostMapping("/users/{userId}/documents")
-    public void create(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
+    public CreateDocumentResponse create(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
         MarineDocument verifiedDocument = MarineDocument.createVerifiedDocument(createDocumentRequest.getName(),
                 createDocumentRequest.getNumber(),
                 createDocumentRequest.getIssueDate(),
                 createDocumentRequest.getExpiryDate());
-        documentRepository.save(verifiedDocument, userId);
+        return documentMapper.mapCreate(documentRepository.save(verifiedDocument, userId));
     }
 
     //READ

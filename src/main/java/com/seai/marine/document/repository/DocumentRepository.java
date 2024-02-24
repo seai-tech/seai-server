@@ -57,7 +57,7 @@ public class DocumentRepository {
         jdbcTemplate.update(DELETE_DOCUMENT_QUERY, documentId.toString(), userId.toString());
     }
 
-    public void save(MarineDocument marineDocument, UUID userId) {
+    public MarineDocument save(MarineDocument marineDocument, UUID userId) {
         marineDocument.setPath(String.format("%s/%s/%s", userId, marineDocument.getName(), marineDocument.getId()));
         jdbcTemplate.update(SAVE_DOCUMENT_QUERY,
                 marineDocument.getId(),
@@ -69,6 +69,7 @@ public class DocumentRepository {
                 Timestamp.from(Instant.now()),
                 userId.toString(),
                 marineDocument.getPath());
+        return marineDocument;
     }
 
     public void update(MarineDocument marineDocument, UUID userId, UUID id) {
