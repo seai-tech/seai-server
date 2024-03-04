@@ -1,7 +1,10 @@
 package com.seai.marine.user.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
+
+import java.util.Arrays;
 
 @Getter
 public enum VesselType {
@@ -29,5 +32,12 @@ public enum VesselType {
 
     VesselType(String label) {
         this.label = label;
+    }
+
+    @JsonCreator
+    public static VesselType fromName(String name) {
+        return Arrays.stream(values())
+                .filter(f-> f.name().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
     }
 }
