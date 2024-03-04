@@ -1,7 +1,7 @@
 package com.seai.marine.voyage.repository;
 
 
-import com.seai.marine.voyage.model.Rank;
+import com.seai.marine.user.model.Rank;
 import com.seai.marine.voyage.model.Voyage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -1,5 +1,6 @@
 package com.seai.marine.voyage.model;
 
+import com.seai.marine.user.model.Rank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

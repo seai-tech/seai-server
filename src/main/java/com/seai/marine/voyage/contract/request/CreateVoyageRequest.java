@@ -1,6 +1,6 @@
 package com.seai.marine.voyage.contract.request;
 
-import com.seai.marine.voyage.model.Rank;
+import com.seai.marine.user.model.Rank;
 import lombok.Data;
 
 import java.time.Instant;
