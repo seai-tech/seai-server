@@ -66,7 +66,9 @@ public class VoyageRepository {
                         rs.getString("joining_port"),
                         new Date(rs.getObject("joining_date", java.sql.Date.class).getTime()),
                         rs.getString("leaving_port"),
-                        new Date(rs.getObject("leaving_date", java.sql.Date.class).getTime()),
+                        Optional.ofNullable(rs.getObject("leaving_date", java.sql.Date.class))
+                                .map(d -> new Date(d.getTime()))
+                                .orElse(null),
                         rs.getString("remarks")),
                 userId.toString());
 
