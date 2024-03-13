@@ -1,6 +1,7 @@
 package com.seai.marine.voyage.contract.request;
 
 import com.seai.marine.user.model.Rank;
+import com.seai.marine.user.model.VesselType;
 import lombok.Data;
 
 import java.time.Instant;
@@ -10,6 +11,8 @@ import java.time.Instant;
 public class UpdateVoyageRequest {
 
     private String vesselName;
+
+    private VesselType vesselType;
 
     private Rank rank;
 

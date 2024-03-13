@@ -1,6 +1,7 @@
 package com.seai.marine.voyage.model;
 
 import com.seai.marine.user.model.Rank;
+import com.seai.marine.user.model.VesselType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,8 @@ public class Voyage {
     private UUID id;
 
     private String vesselName;
+
+    private VesselType vesselType;
 
     private Rank rank;
 

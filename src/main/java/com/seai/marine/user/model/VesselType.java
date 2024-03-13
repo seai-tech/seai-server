@@ -2,6 +2,7 @@ package com.seai.marine.user.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public enum VesselType {
     CRUDE_OIL("Crude Oil"),
     PRODUCT_OIL("Product Oil"),
     LPG("LPG (Liquefied Petroleum Gas)"),
-    LNG("LNG (Liquefied Natural Gas"),
+    LNG("LNG (Liquefied Natural Gas)"),
     REEFER("Reefer"),
     RO_RO("Ro-Ro (Roll-On/Roll-Off)"),
     GENERAL_CARGO("General Cargo"),
