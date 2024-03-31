@@ -32,6 +32,8 @@ public class DocumentRepository {
 
     private static final String DELETE_DOCUMENT_QUERY = "DELETE FROM documents WHERE id = ? and user_id = ?";
 
+    private static final String DELETE_ALL_DOCUMENT_QUERY = "DELETE FROM documents WHERE user_id = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -55,6 +57,10 @@ public class DocumentRepository {
 
     public void delete(UUID documentId, UUID userId) {
         jdbcTemplate.update(DELETE_DOCUMENT_QUERY, documentId.toString(), userId.toString());
+    }
+
+    public void deleteAll(UUID userId) {
+        jdbcTemplate.update(DELETE_ALL_DOCUMENT_QUERY, userId.toString());
     }
 
     public MarineDocument save(MarineDocument marineDocument, UUID userId) {

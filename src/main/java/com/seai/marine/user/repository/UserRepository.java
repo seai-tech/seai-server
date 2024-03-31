@@ -31,6 +31,8 @@ public class UserRepository {
     private static final String UPDATE_USER_QUERY = "UPDATE sailors SET first_name=?, last_name=?," +
             " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=? WHERE user_id=?";
 
+    private static final String DELETE_USER_QUERY = "DELETE FROM sailors WHERE user_id=?";
+
     private final JdbcTemplate jdbcTemplate;
 
     public User findById(UUID id) throws UsernameNotFoundException {
@@ -90,5 +92,9 @@ public class UserRepository {
                 user.getHomeAirport(),
                 user.getReadinessDate(),
                 user.getContractDuration(), userId.toString());
+    }
+
+    public void delete(UUID uuid) {
+        jdbcTemplate.update(DELETE_USER_QUERY, uuid.toString());
     }
 }

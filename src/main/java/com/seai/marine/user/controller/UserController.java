@@ -1,5 +1,6 @@
 package com.seai.marine.user.controller;
 
+import com.seai.marine.user.UserService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.GetUserResponse;
@@ -11,6 +12,7 @@ import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,16 +30,20 @@ public class UserController {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
-
     private final UserAuthenticationRepository userAuthenticationRepository;
-
     private final UserAuthenticationMapper userAuthenticationMapper;
+    private final UserService userService;
 
     @PutMapping("/users/{userId}")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
         userRepository.findById(userId);
         User user = userMapper.map(userRegisterRequest);
         userRepository.update(userId, user);
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public void deleteUser(@PathVariable UUID userId) {
+        userService.delete(userId);
     }
 
     @GetMapping("/users/{userId}")

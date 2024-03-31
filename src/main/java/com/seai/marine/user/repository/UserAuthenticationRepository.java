@@ -20,6 +20,8 @@ public class UserAuthenticationRepository {
 
     private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT id, email, password FROM users_auth WHERE email= ?";
 
+    private static final String DELETE_USER = "DELETE FROM users_auth WHERE id= ?";
+
     private final PasswordEncoder encoder;
 
     private final JdbcTemplate jdbcTemplate;
@@ -39,5 +41,9 @@ public class UserAuthenticationRepository {
         } catch (EmptyResultDataAccessException ex) {
             throw new ResourceNotFoundException("User with email not found : " + email);
         }
+    }
+
+    public void delete(UUID uuid) {
+        jdbcTemplate.update(DELETE_USER, uuid.toString());
     }
 }

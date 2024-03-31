@@ -20,11 +20,13 @@ public class VoyageRepository {
 
     private static final String SAVE_VOYAGE_QUERY = "INSERT INTO voyages (id, user_id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_VOYAGE_QUERY = "UPDATE voyages SET vessel_name=?, vessel_type=?, rank=?, imo_number=?, joining_port=?, joining_date=?, leaving_port=?, leaving_date=?, remarks=? WHERE id=? AND user_id=?";
+    private static final String UPDATE_VOYAGE_QUERY = "UPDATE voyages SET vessel_name=?, vessel_type=?, rank=?, imo_number=?, joining_port=?, joining_date=?, leaving_port=?, leaving_date=?, remarks=? WHERE user_id=? AND id=?";
 
     private static final String FIND_VOYAGES_BY_USER_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks FROM voyages WHERE user_id= ?";
 
     private static final String DELETE_VOYAGES_QUERY = "DELETE FROM voyages WHERE user_id=?  AND id=?";
+
+    private static final String DELETE_ALL_VOYAGES_QUERY = "DELETE FROM voyages WHERE user_id=?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -55,8 +57,8 @@ public class VoyageRepository {
                 voyage.getLeavingPort(),
                 voyage.getLeavingDate(),
                 voyage.getRemarks(),
-                id.toString(),
-                userId.toString());
+                userId.toString(),
+                id.toString());
     }
 
     public List<Voyage> findByUserId(UUID userId) {
@@ -80,5 +82,9 @@ public class VoyageRepository {
 
     public void delete(UUID userId, UUID voyageId) {
         jdbcTemplate.update(DELETE_VOYAGES_QUERY, userId.toString(), voyageId.toString());
+    }
+
+    public void deleteAll(UUID userId) {
+        jdbcTemplate.update(DELETE_ALL_VOYAGES_QUERY, userId.toString());
     }
 }
