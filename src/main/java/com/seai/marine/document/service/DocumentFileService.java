@@ -66,7 +66,5 @@ public class DocumentFileService {
             deleteRequest.setKeys(objectsToDelete);
             s3client.deleteObjects(deleteRequest);
         }
-
-        s3client.deleteObject(BUCKET, uuid.toString());
     }
 }
