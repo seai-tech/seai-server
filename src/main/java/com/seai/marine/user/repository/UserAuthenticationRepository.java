@@ -1,8 +1,10 @@
 package com.seai.marine.user.repository;
 
+import com.seai.exception.DuplicatedResourceException;
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,9 +29,13 @@ public class UserAuthenticationRepository {
     private final JdbcTemplate jdbcTemplate;
 
     public void save(UserAuthentication userAuthentication, UUID id) {
-        jdbcTemplate.update(REGISTER_USER_QUERY, id,
-                userAuthentication.getEmail(),
-                encoder.encode(userAuthentication.getPassword()));
+        try {
+            jdbcTemplate.update(REGISTER_USER_QUERY, id,
+                    userAuthentication.getEmail(),
+                    encoder.encode(userAuthentication.getPassword()));
+        } catch (DuplicateKeyException e) {
+            throw new DuplicatedResourceException("User with email %s already exists", userAuthentication.getEmail());
+        }
     }
 
     public UserAuthentication findByEmail(String email) throws UsernameNotFoundException {

@@ -1,7 +1,8 @@
 package com.seai.exception;
 
-import lombok.experimental.StandardException;
+public class ResourceNotFoundException extends GeneralException {
 
-@StandardException
-public class ResourceNotFoundException extends RuntimeException {
+    public ResourceNotFoundException(String message, Object... args) {
+        super(message, args);
+    }
 }

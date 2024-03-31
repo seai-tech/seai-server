@@ -1,6 +1,7 @@
 package com.seai.marine.user;
 
 import com.seai.marine.document.repository.DocumentRepository;
+import com.seai.marine.document.service.DocumentFileService;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.repository.VoyageRepository;
@@ -21,10 +22,13 @@ public class UserService {
 
     private final UserAuthenticationRepository userAuthenticationRepository;
 
+    private final DocumentFileService documentFileService;
+
     public void delete(UUID uuid) {
         voyageRepository.deleteAll(uuid);
         documentRepository.deleteAll(uuid);
         userRepository.delete(uuid);
         userAuthenticationRepository.delete(uuid);
+        documentFileService.deleteAllForUser(uuid);
     }
 }
