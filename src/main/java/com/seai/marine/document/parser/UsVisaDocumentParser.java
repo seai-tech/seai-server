@@ -6,6 +6,8 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +24,7 @@ public class UsVisaDocumentParser implements DocumentParser {
             "[A-Z]{2}\\d{4}$");
 
     private static final Pattern DOCUMENT_NUMBER = Pattern.compile(
-            "^\\d{9}$");
+            "^[A-Z]\\d{7}$");
 
     @Override
     public boolean canParseDocument(List<String> lines) {
@@ -35,8 +37,15 @@ public class UsVisaDocumentParser implements DocumentParser {
         String documentType = "US VISA";
         UsVisaDate issueDate = new UsVisaDate(DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN_2.matcher(w).find(), lines, 2));
         UsVisaDate validUntil = new UsVisaDate(DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN_2.matcher(w).find(), lines, 3));
-        String number = DocumentSeekUtil.findMatchFor(w -> DOCUMENT_NUMBER.matcher(w).matches(), lines, 1);
+        String number = DocumentSeekUtil.findMatchFor(w -> DOCUMENT_NUMBER.matcher(w).matches(), reverse(lines), 1);
         return MarineDocument.createNonVerifiedDocument(documentType, number, issueDate.asDate(), validUntil.asDate());
+    }
+
+    //Used to reverse and get first occurrence as we can have multiple matches for doc number regex
+    private List<String> reverse(List<String> lines) {
+        ArrayList<String> words = new ArrayList<>(lines);
+        Collections.reverse(words);
+        return words;
     }
 
     private static String formatDate(String str) {

@@ -19,7 +19,7 @@ public class DelegatingDocumentParser {
         return documentParsers.stream()
                 .filter(d -> d.canParseDocument(words))
                 .findFirst()
-                .orElseThrow(() -> new ReadDocumentException("Could not find parser for document"))
+                .orElseThrow(() -> new ReadDocumentException("Could not recognize document"))
                 .parseDocument(words);
     }
 }
