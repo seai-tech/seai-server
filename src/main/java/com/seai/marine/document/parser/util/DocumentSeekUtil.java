@@ -1,5 +1,6 @@
 package com.seai.marine.document.parser.util;
 
+import com.seai.exception.ReadDocumentException;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class DocumentSeekUtil {
                 }
             }
         }
-        throw new RuntimeException("Could not find match for predicate");
+        throw new ReadDocumentException("Could not extract document data");
     }
 
     public static String getWordAfter(Predicate<String> predicate, List<String> words) {
@@ -28,6 +29,6 @@ public class DocumentSeekUtil {
                 return words.get(i + 1);
             }
         }
-        throw new RuntimeException("Could not find match for predicate");
+        throw new ReadDocumentException("Could not extract document data");
     }
 }

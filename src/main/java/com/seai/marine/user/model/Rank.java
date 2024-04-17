@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.Arrays;
 
 @Getter
-public enum Rank {
+public enum Rank implements AsyncApiEnum {
 
     CAPTAIN("Master/Captain (CPT)"),
     CHIEF_OFFICER("Chief Officer (C/O)"),
@@ -39,9 +39,11 @@ public enum Rank {
 
     @JsonValue
     private final String label;
+    private final String name;
 
     Rank(String label) {
         this.label = label;
+        this.name = name();
     }
 
     @JsonCreator

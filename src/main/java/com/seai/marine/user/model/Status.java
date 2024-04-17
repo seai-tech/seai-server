@@ -1,6 +1,16 @@
 package com.seai.marine.user.model;
 
-public enum Status {
+public enum Status implements AsyncApiEnum {
 
-    ONBOARD, HOME
+    ONBOARD, HOME;
+
+    @Override
+    public String getName() {
+        return name();
+    }
+
+    @Override
+    public String getLabel() {
+        return name();
+    }
 }

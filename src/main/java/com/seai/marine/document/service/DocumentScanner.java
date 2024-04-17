@@ -25,6 +25,7 @@ public class DocumentScanner {
     private final AmazonTextract amazonTextract;
     private final DelegatingDocumentParser delegatingDocumentParser;
 
+
     @SneakyThrows
     public MarineDocument readDocument(MultipartFile file) {
 

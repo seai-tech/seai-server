@@ -1,5 +1,6 @@
 package com.seai.marine.document.parser;
 
+import com.seai.exception.ReadDocumentException;
 import com.seai.marine.document.model.MarineDocument;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class DelegatingDocumentParser {
         return documentParsers.stream()
                 .filter(d -> d.canParseDocument(words))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Could not find parser for document"))
+                .orElseThrow(() -> new ReadDocumentException("Could not find parser for document"))
                 .parseDocument(words);
     }
 }

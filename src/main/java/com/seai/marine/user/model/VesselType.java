@@ -2,13 +2,12 @@ package com.seai.marine.user.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.util.Arrays;
 
 @Getter
-public enum VesselType {
+public enum VesselType implements AsyncApiEnum {
     BULK_CARRIER("Bulk Carrier"),
     CONTAINER("Container"),
     CRUDE_OIL("Crude Oil"),
@@ -30,9 +29,12 @@ public enum VesselType {
 
     @JsonValue
     private final String label;
+    private final String name;
+
 
     VesselType(String label) {
         this.label = label;
+        this.name = name();
     }
 
     @JsonCreator
