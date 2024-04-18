@@ -1,13 +1,12 @@
 package com.seai.marine.user.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
 import java.util.Arrays;
 
 @Getter
-public enum Rank implements AsyncApiEnum {
+public enum Rank {
 
     CAPTAIN("Master/Captain (CPT)"),
     CHIEF_OFFICER("Chief Officer (C/O)"),
@@ -37,13 +36,10 @@ public enum Rank implements AsyncApiEnum {
     TRAINEE_OFFICER("Trainee Officer"),
     RADIO_OFFICER("Radio Officer/Radio Operator");
 
-    @JsonValue
     private final String label;
-    private final String name;
 
     Rank(String label) {
         this.label = label;
-        this.name = name();
     }
 
     @JsonCreator

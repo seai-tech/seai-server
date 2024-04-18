@@ -12,6 +12,7 @@ import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,7 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/users/{userId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
         userRepository.findById(userId);
         User user = userMapper.map(userRegisterRequest);
@@ -42,11 +44,13 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{userId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void deleteUser(@PathVariable UUID userId) {
         userService.delete(userId);
     }
 
     @GetMapping("/users/{userId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetUserResponse getUser(@PathVariable UUID userId) {
         User user = userRepository.findById(userId);
         return userMapper.map(user);

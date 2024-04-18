@@ -1,10 +1,10 @@
 package com.seai.marine.user.repository;
 
 import com.seai.exception.ResourceNotFoundException;
+import com.seai.marine.user.model.Rank;
 import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.User;
 import com.seai.marine.user.model.VesselType;
-import com.seai.marine.user.model.Rank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

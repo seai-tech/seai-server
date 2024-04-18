@@ -8,6 +8,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,18 +29,21 @@ public class FileController {
     private final DocumentFileService documentFileService;
 
     @PostMapping("/users/{userId}/documents/{documentId}/files")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         documentFileService.upload(multipartFile, document.getPath());
     }
 
     @DeleteMapping("/users/{userId}/documents/{documentId}/files")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         documentFileService.delete(document.getPath());
     }
 
     @GetMapping("/users/{userId}/documents/{documentId}/files")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         byte[] bytes = documentFileService.download(document);

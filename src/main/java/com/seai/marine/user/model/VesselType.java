@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.util.Arrays;
 
 @Getter
-public enum VesselType implements AsyncApiEnum {
+public enum VesselType {
     BULK_CARRIER("Bulk Carrier"),
     CONTAINER("Container"),
     CRUDE_OIL("Crude Oil"),
@@ -27,14 +27,10 @@ public enum VesselType implements AsyncApiEnum {
     EXPLORER_YACHT("Explorer Yacht"),
     SPORT_FISHING_YACHT("Sport Fishing Yacht");
 
-    @JsonValue
     private final String label;
-    private final String name;
-
 
     VesselType(String label) {
         this.label = label;
-        this.name = name();
     }
 
     @JsonCreator

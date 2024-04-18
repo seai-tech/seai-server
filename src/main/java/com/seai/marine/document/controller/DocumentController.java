@@ -11,6 +11,7 @@ import com.seai.marine.document.service.DocumentFileService;
 import com.seai.marine.document.service.DocumentScanner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class DocumentController {
 
     //OCR
     @PostMapping(value = "/users/{userId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
         MarineDocument marineDocument = documentScanner.readDocument(multipartFile);
         documentRepository.save(marineDocument, userId);
@@ -46,6 +48,7 @@ public class DocumentController {
 
     //CREATE
     @PostMapping("/users/{userId}/documents")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public CreateDocumentResponse create(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
         MarineDocument verifiedDocument = MarineDocument.createVerifiedDocument(createDocumentRequest.getName(),
                 createDocumentRequest.getNumber(),
@@ -56,12 +59,14 @@ public class DocumentController {
 
     //READ
     @GetMapping("/users/{userId}/documents/{documentId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetDocumentResponse find(@PathVariable UUID userId, @PathVariable UUID documentId) {
         return documentMapper.map(documentRepository.find(userId, documentId));
     }
 
     //UPDATE
     @PutMapping("/users/{userId}/documents/{documentId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void update(@RequestBody UpdateDocumentRequest updateDocumentRequest, @PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument marineDocument = documentMapper.map(updateDocumentRequest);
         documentRepository.update(marineDocument, userId, documentId);
@@ -69,6 +74,7 @@ public class DocumentController {
 
     //DELETE
     @DeleteMapping("/users/{userId}/documents/{documentId}")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
         documentFileService.delete(document.getPath());
@@ -77,6 +83,7 @@ public class DocumentController {
 
     //FIND ALL
     @GetMapping("/users/{userId}/documents")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
     public List<GetDocumentResponse> findAll(@PathVariable UUID userId) {
         return documentRepository.findAll(userId).stream().map(documentMapper::map).toList();
     }

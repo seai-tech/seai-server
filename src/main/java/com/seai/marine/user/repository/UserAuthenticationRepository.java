@@ -45,7 +45,7 @@ public class UserAuthenticationRepository {
                             rs.getString("email"),
                             rs.getString("password")), email);
         } catch (EmptyResultDataAccessException ex) {
-            throw new ResourceNotFoundException("User with email not found : " + email);
+            throw new ResourceNotFoundException("Invalid email or password : " + email);
         }
     }
 
