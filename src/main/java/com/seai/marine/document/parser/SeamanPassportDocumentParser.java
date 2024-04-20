@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 @Component
-public class PassportDocumentParser implements DocumentParser {
+public class SeamanPassportDocumentParser implements DocumentParser {
 
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -19,13 +19,13 @@ public class PassportDocumentParser implements DocumentParser {
 
     @Override
     public boolean canParseDocument(List<String> lines) {
-        return lines.stream().anyMatch(l -> l.contains("PASSPORT")) && lines.stream().noneMatch(l -> l.contains("SEAMAN"));
+        return lines.stream().anyMatch(l -> l.contains("PASSPORT")) && lines.stream().anyMatch(l -> l.contains("SEAMAN"));
     }
 
     @SneakyThrows
     @Override
     public MarineDocument parseDocument(List<String> lines) {
-        String documentType = "PASSPORT";
+        String documentType = "SEAMAN'S PASSPORT";
         String number = DocumentSeekUtil.findMatchFor(w -> w.matches("^\\d{9}$"), lines, 1);
         String issueDate = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 2);
         String validUntil = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 3);

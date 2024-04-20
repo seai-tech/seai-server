@@ -18,11 +18,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class VoyageRepository {
 
-    private static final String SAVE_VOYAGE_QUERY = "INSERT INTO voyages (id, user_id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_VOYAGE_QUERY = "INSERT INTO voyages (id, user_id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks, flag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String UPDATE_VOYAGE_QUERY = "UPDATE voyages SET vessel_name=?, vessel_type=?, rank=?, imo_number=?, joining_port=?, joining_date=?, leaving_port=?, leaving_date=?, remarks=? WHERE user_id=? AND id=?";
+    private static final String UPDATE_VOYAGE_QUERY = "UPDATE voyages SET vessel_name=?, vessel_type=?, rank=?, imo_number=?, joining_port=?, joining_date=?, leaving_port=?, leaving_date=?, remarks=?, flag=? WHERE user_id=? AND id=?";
 
-    private static final String FIND_VOYAGES_BY_USER_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks FROM voyages WHERE user_id= ?";
+    private static final String FIND_VOYAGES_BY_USER_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks, flag FROM voyages WHERE user_id= ?";
 
     private static final String DELETE_VOYAGES_QUERY = "DELETE FROM voyages WHERE user_id=?  AND id=?";
 
@@ -42,7 +42,8 @@ public class VoyageRepository {
                 Timestamp.from(voyage.getJoiningDate().toInstant()),
                 voyage.getLeavingPort(),
                 Optional.ofNullable(voyage.getLeavingDate()).map(v -> Timestamp.from(v.toInstant())).orElse(null),
-                voyage.getRemarks());
+                voyage.getRemarks(),
+                voyage.getFlag());
     }
 
 
@@ -57,6 +58,7 @@ public class VoyageRepository {
                 voyage.getLeavingPort(),
                 voyage.getLeavingDate(),
                 voyage.getRemarks(),
+                voyage.getFlag(),
                 userId.toString(),
                 id.toString());
     }
@@ -75,7 +77,8 @@ public class VoyageRepository {
                         Optional.ofNullable(rs.getObject("leaving_date", java.sql.Date.class))
                                 .map(d -> new Date(d.getTime()))
                                 .orElse(null),
-                        rs.getString("remarks")),
+                        rs.getString("remarks"),
+                        rs.getString("flag")),
                 userId.toString());
 
     }

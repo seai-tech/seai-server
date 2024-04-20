@@ -33,4 +33,6 @@ public class Voyage {
     private Date leavingDate;
 
     private String remarks;
+
+    private String flag;
 }

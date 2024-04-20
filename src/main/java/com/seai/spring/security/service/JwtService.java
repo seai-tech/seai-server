@@ -29,7 +29,7 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 12))
+                .setExpiration(new Date(System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 365L)))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

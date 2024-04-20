@@ -35,4 +35,6 @@ public class UserUpdateRequest {
     private Instant readinessDate;
 
     private Integer contractDuration;
+
+    private String phone;
 }

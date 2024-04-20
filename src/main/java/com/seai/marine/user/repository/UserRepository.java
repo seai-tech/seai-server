@@ -22,14 +22,14 @@ public class UserRepository {
 
     private static final String FIND_USER_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank," +
             " present_employer, date_of_birth, manning_agents, status," +
-            " vessel_type, home_airport, readiness_date, contract_duration FROM sailors WHERE user_id= ?";
+            " vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE user_id= ?";
 
     private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
-            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration)" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_QUERY = "UPDATE sailors SET first_name=?, last_name=?," +
-            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=? WHERE user_id=?";
+            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=?, phone=? WHERE user_id=?";
 
     private static final String DELETE_USER_QUERY = "DELETE FROM sailors WHERE user_id=?";
 
@@ -61,7 +61,8 @@ public class UserRepository {
                 rs.getString("home_airport"),
                 Optional.ofNullable(rs.getObject("readiness_date", java.sql.Date.class))
                         .map(s -> new Date(s.getTime())).orElse(null),
-                rs.getInt("contract_duration"));
+                rs.getInt("contract_duration"),
+                rs.getString("phone"));
     }
 
     public void save(User user, UUID id) {
@@ -76,7 +77,8 @@ public class UserRepository {
                 Optional.ofNullable(user.getVesselType()).map(Enum::toString).orElse(null),
                 user.getHomeAirport(),
                 user.getReadinessDate(),
-                user.getContractDuration());
+                user.getContractDuration(),
+                user.getPhone());
     }
 
     public void update(UUID userId, User user) {
@@ -91,7 +93,9 @@ public class UserRepository {
                 Optional.ofNullable(user.getVesselType()).map(Enum::toString).orElse(null),
                 user.getHomeAirport(),
                 user.getReadinessDate(),
-                user.getContractDuration(), userId.toString());
+                user.getContractDuration(),
+                user.getPhone(),
+                userId.toString());
     }
 
     public void delete(UUID uuid) {

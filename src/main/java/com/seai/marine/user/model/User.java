@@ -33,4 +33,6 @@ public class User {
     private Date readinessDate;
 
     private Integer contractDuration;
+
+    private String phone;
 }

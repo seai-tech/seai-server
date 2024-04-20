@@ -26,4 +26,6 @@ public class CreateVoyageRequest {
     private Instant leavingDate;
 
     private String remarks;
+
+    private String flag;
 }

@@ -33,4 +33,6 @@ public class GetUserResponse {
     private Date readinessDate;
 
     private Integer contractDuration;
+
+    private String phone;
 }

@@ -29,4 +29,6 @@ public class GetVoyageResponse {
     private Date leavingDate;
 
     private String remarks;
+
+    private String flag;
 }
