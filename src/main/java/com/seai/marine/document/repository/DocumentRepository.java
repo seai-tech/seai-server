@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -96,7 +97,8 @@ public class DocumentRepository {
                 rs.getString("name"),
                 rs.getString("number"),
                 new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
-                new Date(rs.getObject("expiry_date", java.sql.Date.class).getTime()),
+                Optional.ofNullable(rs.getObject("expiry_date", java.sql.Date.class))
+                        .map(d -> new Date(d.getTime())).orElse(null),
                 rs.getObject("is_verified", Boolean.class),
                 rs.getTimestamp("created_date").toInstant(),
                 rs.getString("path"));
