@@ -36,7 +36,7 @@ public abstract class AbstractBmtcDocumentParser implements DocumentParser {
     @SneakyThrows
     @Override
     public MarineDocument parseDocument(List<String> lines) {
-        String number = DocumentSeekUtil.findMatchFor(w -> w.matches("^\\d{3}$"), lines, 1);
+        String number = DocumentSeekUtil.findMatchForReversed(w -> w.matches("^\\d{3}$"), lines, 1);
         String issueDate = DocumentSeekUtil.findMatchForReversed(w -> DATE_PATTERN.matcher(w).matches(), lines, 1);
         return MarineDocument.createNonVerifiedDocument(documentType, number,  DATE_FORMATTER.parse(issueDate), null);
     }

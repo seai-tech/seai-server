@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class LiquidCargoAndBallastDocumentParser extends AbstractBmtcDocumentParser {
 
     public LiquidCargoAndBallastDocumentParser() {
-        super("LIQUID CARGO AND BALLAST HANDLING ON OIl TANKERS SIMULATOR TRAINING", "BALLAST", "HANDLING");
+        super("LIQUID CARGO AND BALLAST HANDLING ON OIL TANKERS SIMULATOR TRAINING", "BALLAST", "HANDLING");
     }
 }
