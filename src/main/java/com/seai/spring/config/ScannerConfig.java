@@ -1,24 +1,21 @@
 package com.seai.spring.config;
 
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.textract.AmazonTextract;
-import com.amazonaws.services.textract.AmazonTextractClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.textract.TextractClient;
 
 @Configuration
 public class ScannerConfig {
 
     @Bean
-    public AmazonTextract amazonTextract() {
-        return AmazonTextractClient.builder()
-                .withRegion(Regions.EU_CENTRAL_1).build();
+    public TextractClient amazonTextract() {
+        return TextractClient.builder().region(Region.EU_CENTRAL_1).build();
     }
 
     @Bean
-    public AmazonS3 amazonS3Client() {
-        return AmazonS3ClientBuilder.standard().withRegion(Regions.EU_CENTRAL_1).build();
+    public S3Client amazonS3Client() {
+        return S3Client.builder().region(Region.EU_CENTRAL_1).build();
     }
 }

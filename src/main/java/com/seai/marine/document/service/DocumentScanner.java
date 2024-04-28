@@ -1,10 +1,5 @@
 package com.seai.marine.document.service;
 
-import com.amazonaws.services.textract.AmazonTextract;
-import com.amazonaws.services.textract.model.Block;
-import com.amazonaws.services.textract.model.DetectDocumentTextRequest;
-import com.amazonaws.services.textract.model.DetectDocumentTextResult;
-import com.amazonaws.services.textract.model.Document;
 import com.seai.marine.document.model.MarineDocument;
 import com.seai.marine.document.parser.DelegatingDocumentParser;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +7,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.SdkBytes;
+import software.amazon.awssdk.services.textract.TextractClient;
+import software.amazon.awssdk.services.textract.model.Block;
+import software.amazon.awssdk.services.textract.model.BlockType;
+import software.amazon.awssdk.services.textract.model.DetectDocumentTextRequest;
+import software.amazon.awssdk.services.textract.model.DetectDocumentTextResponse;
+import software.amazon.awssdk.services.textract.model.Document;
 
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,22 +23,21 @@ import java.util.stream.Collectors;
 @Service
 public class DocumentScanner {
 
-    private final AmazonTextract amazonTextract;
+    private final TextractClient amazonTextract;
     private final DelegatingDocumentParser delegatingDocumentParser;
 
 
     @SneakyThrows
     public MarineDocument readDocument(MultipartFile file) {
 
-        Document myDoc = new Document().withBytes(ByteBuffer.wrap(file.getInputStream().readAllBytes()));
+        Document document = Document.builder().bytes(SdkBytes.fromByteArray(file.getBytes())).build();
 
-        DetectDocumentTextRequest analyzeDocumentRequest = new DetectDocumentTextRequest()
-                .withDocument(myDoc);
-        DetectDocumentTextResult detectDocumentTextResult = amazonTextract.detectDocumentText(analyzeDocumentRequest);
-        List<String> lines = detectDocumentTextResult.getBlocks()
+        DetectDocumentTextRequest analyzeDocumentRequest = DetectDocumentTextRequest.builder().document(document).build();
+        DetectDocumentTextResponse detectDocumentTextResult = amazonTextract.detectDocumentText(analyzeDocumentRequest);
+        List<String> lines = detectDocumentTextResult.blocks()
                 .stream()
-                .filter(b-> b.getBlockType().equals("WORD"))
-                .map(Block::getText)
+                .filter(b-> b.blockType().equals(BlockType.WORD))
+                .map(Block::text)
                 .collect(Collectors.toList());
 
         return delegatingDocumentParser.parseDocument(lines);

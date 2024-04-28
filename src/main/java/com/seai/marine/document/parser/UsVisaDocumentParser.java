@@ -18,8 +18,6 @@ public class UsVisaDocumentParser implements DocumentParser {
 
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
 
-    private static final Pattern DATE_PATTERN = Pattern.compile(
-            "^\\d{2}[A-Z]{3}\\d{4}$");
     private static final Pattern DATE_PATTERN_2 = Pattern.compile(
             "[A-Z]{2}\\d{4}$");
 
