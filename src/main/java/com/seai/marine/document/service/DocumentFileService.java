@@ -4,6 +4,7 @@ import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.document.model.MarineDocument;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
@@ -27,7 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DocumentFileService {
 
-    private static final String BUCKET = "marine-docs1";
+    @Value("${scanner.aws.bucket.name}")
+    private String bucketName;
 
     private final S3Client s3client;
 
@@ -35,7 +37,7 @@ public class DocumentFileService {
     public void upload(MultipartFile multipartFile, String path) {
         RequestBody requestBody = RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize());
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(BUCKET)
+                .bucket(bucketName)
                 .contentType(multipartFile.getContentType())
                 .contentLength(multipartFile.getSize())
                 .key(path)
@@ -44,14 +46,14 @@ public class DocumentFileService {
     }
 
     public void delete(String path) {
-        s3client.deleteObject(b-> b.bucket(BUCKET).key(path));
+        s3client.deleteObject(b-> b.bucket(bucketName).key(path));
     }
 
     @SneakyThrows
     public byte[] download(MarineDocument marineDocument) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket(BUCKET)
+                    .bucket(bucketName)
                     .key(marineDocument.getPath())
                     .build();
             ResponseBytes<GetObjectResponse> bytes = s3client.getObject(getObjectRequest, ResponseTransformer.toBytes());
@@ -63,7 +65,7 @@ public class DocumentFileService {
 
     public void deleteAllForUser(UUID uuid) {
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
-                .bucket(BUCKET)
+                .bucket(bucketName)
                 .prefix(uuid.toString() + "/")
                 .build();
 
@@ -75,7 +77,7 @@ public class DocumentFileService {
         // Delete objects
         if (!objectsToDelete.isEmpty()) {
             DeleteObjectsRequest deleteRequest = DeleteObjectsRequest.builder()
-                    .bucket(BUCKET)
+                    .bucket(bucketName)
                     .delete(Delete.builder().objects(objectsToDelete).build())
                     .build();
             s3client.deleteObjects(deleteRequest);

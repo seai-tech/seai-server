@@ -2,6 +2,7 @@ package com.seai.marine.document.parser;
 
 import com.seai.exception.ReadDocumentException;
 import com.seai.marine.document.model.MarineDocument;
+import com.seai.spring.config.TrackExecution;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ public class DelegatingDocumentParser {
 
     private final List<DocumentParser> documentParsers;
 
+    @TrackExecution
     public MarineDocument parseDocument(List<String> lines) {
         List<String> words = lines.stream().filter(Objects::nonNull).toList();
         return documentParsers.stream()

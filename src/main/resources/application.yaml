@@ -6,3 +6,8 @@ spring:
   servlet:
     multipart:
       max-file-size: 30MB
+
+scanner:
+  aws:
+    bucket:
+      name: "marine-docs1-dev"
