@@ -1,6 +1,7 @@
 package com.seai.marine.document.model;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
@@ -9,6 +10,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
+@Getter
 public class MarineDocument {
     private UUID id;
     private UUID userId;
