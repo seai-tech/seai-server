@@ -2,12 +2,14 @@ package com.seai.marine.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
+@Setter
 public class User {
 
     private UUID id;
@@ -35,4 +37,6 @@ public class User {
     private Integer contractDuration;
 
     private String phone;
+
+    private Boolean reminder_subscription;
 }
