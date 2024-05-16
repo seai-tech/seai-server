@@ -21,6 +21,8 @@ import java.util.UUID;
 public class DocumentRepository {
 
     private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, user_id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ?";
+    private static final String FIND_DOCUMENTS_BY_EMAIL_QUERY = "SELECT d.id, d.user_id, d.name, d.number, d.issued_date, d.expiry_date, d.is_verified, d.created_date, d.path " +
+            "FROM documents d JOIN users_auth u ON d.user_id = u.id WHERE u.email = ?";
 
     private static final String FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE ID IN (:ids) and is_verified = true";
 
@@ -115,5 +117,11 @@ public class DocumentRepository {
                 getMarineDocumentRowMapper(),
                 userId.toString(),
                 documentId.toString());
+    }
+
+    public List<MarineDocument> findDocumentsByEmail(String username) {
+        return jdbcTemplate.query(FIND_DOCUMENTS_BY_EMAIL_QUERY,
+                getMarineDocumentRowMapper(),
+                username);
     }
 }
