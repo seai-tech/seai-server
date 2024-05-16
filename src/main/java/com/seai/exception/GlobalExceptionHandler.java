@@ -55,4 +55,9 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.FORBIDDEN)
                 .body(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Not permitted to perform this action"));
     }
+
+    @ExceptionHandler(ReminderStatusIsSameException.class)
+    public ResponseEntity<String> handleReminderStatusNotChangedException(ReminderStatusIsSameException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
