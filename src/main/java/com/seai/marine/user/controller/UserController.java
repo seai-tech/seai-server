@@ -1,5 +1,6 @@
 package com.seai.marine.user.controller;
 
+import com.seai.marine.notification.service.ReminderService;
 import com.seai.marine.user.UserService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
@@ -34,6 +35,7 @@ public class UserController {
     private final UserAuthenticationRepository userAuthenticationRepository;
     private final UserAuthenticationMapper userAuthenticationMapper;
     private final UserService userService;
+    private final ReminderService reminderService;
 
     @PutMapping("/users/{userId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
@@ -63,5 +65,6 @@ public class UserController {
         userAuthenticationRepository.save(userAuthentication, id);
         User user = userMapper.map(userRegisterRequest);
         userRepository.save(user, id);
+        reminderService.turnOnReminderSubscription(id, userRegisterRequest.getEmail());
     }
 }
