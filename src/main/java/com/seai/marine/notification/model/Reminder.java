@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Reminder {
-    private UUID id;
     private UUID userId;
     private String email;
 }
