@@ -37,6 +37,4 @@ public class User {
     private Integer contractDuration;
 
     private String phone;
-
-    private Boolean reminder_subscription;
 }
