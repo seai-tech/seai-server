@@ -22,16 +22,14 @@ public class UserRepository {
 
     private static final String FIND_USER_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank," +
             " present_employer, date_of_birth, manning_agents, status," +
-            " vessel_type, home_airport, readiness_date, contract_duration, phone, reminder_subscription FROM sailors WHERE user_id= ?";
+            " vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE user_id= ?";
 
      private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
-            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, reminder_subscription)" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_QUERY = "UPDATE sailors SET first_name=?, last_name=?," +
             " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=?, phone=? WHERE user_id=?";
-
-    private static final String UPDATE_USER_SUBSCRIPTION_QUERY = "UPDATE sailors SET reminder_subscription=? WHERE user_id=?";
 
     private static final String DELETE_USER_QUERY = "DELETE FROM sailors WHERE user_id=?";
 
@@ -64,8 +62,7 @@ public class UserRepository {
                 Optional.ofNullable(rs.getObject("readiness_date", java.sql.Date.class))
                         .map(s -> new Date(s.getTime())).orElse(null),
                 rs.getInt("contract_duration"),
-                rs.getString("phone"),
-                rs.getBoolean("reminder_subscription"));
+                rs.getString("phone"));
     }
 
     public void save(User user, UUID id) {
@@ -81,8 +78,7 @@ public class UserRepository {
                 user.getHomeAirport(),
                 user.getReadinessDate(),
                 user.getContractDuration(),
-                user.getPhone(),
-                user.getReminder_subscription());
+                user.getPhone());
     }
 
     public void update(UUID userId, User user) {
@@ -102,11 +98,6 @@ public class UserRepository {
                 userId.toString());
     }
 
-    public void updateReminderSubscription(UUID userId, boolean reminderSubscription) {
-        jdbcTemplate.update(UPDATE_USER_SUBSCRIPTION_QUERY,
-                reminderSubscription,
-                userId.toString());
-    }
 
     public void delete(UUID uuid) {
         jdbcTemplate.update(DELETE_USER_QUERY, uuid.toString());
