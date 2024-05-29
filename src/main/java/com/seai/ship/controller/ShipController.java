@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users/{userId}/ships")
+@RequestMapping("api/v1/ships")
 @RequiredArgsConstructor
 public class ShipController {
 
@@ -24,8 +24,7 @@ public class ShipController {
 
     @GetMapping
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public List<GetShipResponse> getShips(
-            @PathVariable UUID userId,
+    public List<GetShipResponse> getShips(@RequestParam UUID userId,
             @Parameter(description = "Vessel name") @RequestParam(required = false) String vesselName,
             @Parameter(description = "Owner of the ship") @RequestParam(required = false) String owner,
             @Parameter(description = "Ship type") @RequestParam(required = false) String shipType) {
@@ -34,25 +33,25 @@ public class ShipController {
 
     @GetMapping("/{shipId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public GetShipByIdResponse getShipById(@PathVariable UUID userId, @PathVariable UUID shipId) {
+    public GetShipByIdResponse getShipById(@PathVariable UUID shipId, @RequestParam UUID userId) {
         return shipService.getShipById(shipId);
     }
 
     @PutMapping("/{shipId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void updateShip(@PathVariable UUID userId, @RequestBody @Valid UpdateShipRequest updateShipRequest, @PathVariable UUID shipId) {
+    public void updateShip(@Valid @RequestBody UpdateShipRequest updateShipRequest, @PathVariable UUID shipId, @RequestParam UUID userId) {
         shipService.updateShip(shipId, updateShipRequest);
     }
 
     @PostMapping
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public CreateShipResponse createShip(@PathVariable UUID userId, @RequestBody @Valid CreateShipRequest createShipRequest) {
+    public CreateShipResponse createShip(@Valid @RequestBody CreateShipRequest createShipRequest, @RequestParam UUID userId) {
         return shipService.createShip(createShipRequest);
     }
 
     @DeleteMapping("{shipId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void deleteShip(@PathVariable UUID shipId, @PathVariable UUID userId) {
+    public void deleteShip(@PathVariable UUID shipId, @PathVariable @RequestParam UUID userId) {
         shipService.deleteShip(shipId);
     }
 }
