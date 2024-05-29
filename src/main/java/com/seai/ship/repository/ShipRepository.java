@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,25 +44,31 @@ public class ShipRepository {
 
     public List<Ship> findAll(String vesselName, String owner, String shipType) {
         StringBuilder queryBuilder = new StringBuilder(FIND_ALL_SHIPS_QUERY);
+        List<Object> queryParams = new ArrayList<>();
         if (vesselName != null || owner != null || shipType != null) {
             queryBuilder.append(" WHERE ");
             boolean firstCondition = true;
             if (vesselName != null) {
-                queryBuilder.append("vessel_name = '").append(vesselName).append("'");
+                queryBuilder.append("vessel_name = ?");
+                queryParams.add(vesselName);
                 firstCondition = false;
             }
             if (owner != null) {
                 if (!firstCondition) queryBuilder.append(" AND ");
-                queryBuilder.append("registered_owner = '").append(owner).append("'");
+                queryBuilder.append("registered_owner = ?");
+                queryParams.add(owner);
                 firstCondition = false;
             }
             if (shipType != null) {
                 if (!firstCondition) queryBuilder.append(" AND ");
-                queryBuilder.append("ship_type = '").append(shipType).append("'");
+                queryBuilder.append("ship_type = ?");
+                queryParams.add(shipType);
             }
         }
-        return jdbcTemplate.query(queryBuilder.toString(), getShipRowMapper());
+
+        return jdbcTemplate.query(queryBuilder.toString(), queryParams.toArray(), getShipRowMapper());
     }
+
 
     public Ship save(Ship ship) {
         UUID id = UUID.randomUUID();
