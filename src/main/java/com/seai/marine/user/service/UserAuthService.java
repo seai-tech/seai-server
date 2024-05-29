@@ -1,4 +1,4 @@
-package com.seai.marine.user.Service;
+package com.seai.marine.user.service;
 
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.mapper.UserAuthenticationMapper;

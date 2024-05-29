@@ -1,7 +1,6 @@
 package com.seai.marine.user.controller;
 
-import com.seai.marine.notification.service.ReminderService;
-import com.seai.marine.user.Service.UserService;
+import com.seai.marine.user.service.UserService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.GetUserResponse;

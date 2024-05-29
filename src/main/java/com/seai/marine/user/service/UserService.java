@@ -1,4 +1,4 @@
-package com.seai.marine.user.Service;
+package com.seai.marine.user.service;
 
 import com.seai.marine.document.repository.DocumentRepository;
 import com.seai.marine.document.service.DocumentFileService;
