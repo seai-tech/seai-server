@@ -17,7 +17,7 @@ public class DocumentScheduler {
     private final DocumentRepository documentRepository;
     private final EmailSender emailService;
 
-    @Scheduled(cron = "40 15 11 * * ?")
+    @Scheduled(cron = "${document.scheduler.cron}")
     public void checkCertificatesDaily() {
         LocalDate today = LocalDate.now();
         List<GetDocumentsForReminderResponse> documents = documentRepository.findDocumentsForUsersWithReminders();
