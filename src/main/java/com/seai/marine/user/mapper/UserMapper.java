@@ -14,5 +14,5 @@ public interface UserMapper {
 
     User map(UserUpdateRequest userRegisterRequest);
 
-    GetUserResponse map(User user);
+    GetUserResponse mapToGetUserResponse(User user);
 }
