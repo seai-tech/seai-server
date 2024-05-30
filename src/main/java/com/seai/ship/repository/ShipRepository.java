@@ -42,10 +42,10 @@ public class ShipRepository {
         }
     }
 
-    public List<Ship> findAll(String vesselName, String owner, String shipType) {
+    public List<Ship> findAll(String vesselName, Long imoNumber) {
         StringBuilder queryBuilder = new StringBuilder(FIND_ALL_SHIPS_QUERY);
         List<Object> queryParams = new ArrayList<>();
-        if (vesselName != null || owner != null || shipType != null) {
+        if (vesselName != null || imoNumber != null) {
             queryBuilder.append(" WHERE ");
             boolean firstCondition = true;
             if (vesselName != null) {
@@ -53,16 +53,10 @@ public class ShipRepository {
                 queryParams.add(vesselName);
                 firstCondition = false;
             }
-            if (owner != null) {
+            if (imoNumber != null) {
                 if (!firstCondition) queryBuilder.append(" AND ");
-                queryBuilder.append("registered_owner = ?");
-                queryParams.add(owner);
-                firstCondition = false;
-            }
-            if (shipType != null) {
-                if (!firstCondition) queryBuilder.append(" AND ");
-                queryBuilder.append("ship_type = ?");
-                queryParams.add(shipType);
+                queryBuilder.append("imo_number = ?");
+                queryParams.add(imoNumber);
             }
         }
 
