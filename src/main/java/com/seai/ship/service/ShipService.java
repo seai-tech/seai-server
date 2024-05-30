@@ -20,8 +20,8 @@ public class ShipService {
     private final ShipRepository shipRepository;
     private final ShipMapper shipMapper;
 
-    public List<GetShipResponse> getAll(String vesselName, String owner, String shipType) {
-        return shipRepository.findAll(vesselName, owner, shipType).stream()
+    public List<GetShipResponse> getAll(String vesselName, Long imoNumber) {
+        return shipRepository.findAll(vesselName, imoNumber).stream()
                 .map(shipMapper::mapToShip).toList();
     }
 
