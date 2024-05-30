@@ -42,6 +42,7 @@ public class UserService {
         userRepository.delete(uuid);
         userAuthenticationRepository.delete(uuid);
         documentFileService.deleteAllForUser(uuid);
+        reminderService.turnOffReminderSubscription(uuid);
     }
 
     public void updateUser(UserUpdateRequest updateUserRequest, UUID userId) {
