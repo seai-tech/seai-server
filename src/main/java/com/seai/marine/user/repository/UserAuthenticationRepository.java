@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -20,8 +19,6 @@ public class UserAuthenticationRepository {
 
     private static final String REGISTER_USER_QUERY = "INSERT INTO users_auth (id, email, password)" +
             " VALUES (?, ?, ?)";
-
-    private static final String FIND_ALL_USERS_QUERY = "SELECT id, email, password FROM users_auth";
 
     private static final String FIND_USER_BY_EMAIL_QUERY = "SELECT id, email, password FROM users_auth WHERE email= ?";
 
@@ -45,12 +42,6 @@ public class UserAuthenticationRepository {
         }
     }
 
-    public List<UserAuthentication> findAllUsers() {
-        return jdbcTemplate.query(FIND_ALL_USERS_QUERY, (rs, rowNum) -> new UserAuthentication(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("email"),
-                rs.getString("password")));
-    }
 
     public UserAuthentication findByEmail(String email) throws UsernameNotFoundException {
         try {
