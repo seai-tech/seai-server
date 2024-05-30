@@ -1,8 +1,8 @@
 package com.seai.marine.document.repository;
 
 import com.seai.exception.ResourceNotFoundException;
-import com.seai.marine.document.contract.response.GetDocumentsForReminderResponse;
 import com.seai.marine.document.model.MarineDocument;
+import com.seai.marine.document.model.MarineDocumentWithEmail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,17 +22,27 @@ import java.util.UUID;
 public class DocumentRepository {
 
     private static final String FIND_DOCUMENTS_BY_USER_ID_QUERY = "SELECT id, user_id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE user_id= ?";
-    private static final String FIND_DOCUMENTS_BY_EMAIL_QUERY = "SELECT d.id, d.user_id, d.name, d.number, d.issued_date, d.expiry_date, d.is_verified, d.created_date, d.path " +
-            "FROM documents d JOIN users_auth u ON d.user_id = u.id WHERE u.email = ?";
-    private static final String FIND_DOCUMENTS_BY_ID_QUERY = "SELECT id, user_id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE id= ?";
 
     private static final String FIND_DOCUMENTS_FOR_USERS_WITH_REMINDERS = """
-                SELECT d.id, d.user_id, d.name, d.number, d.issued_date, d.expiry_date, d.is_verified, d.created_date, d.path, r.email
-                FROM documents d
-                JOIN reminders r ON d.user_id = r.user_id
-                WHERE (d.expiry_date = current_date + interval '60 days'
-                       OR d.expiry_date = current_date)
-            """;
+    SELECT d.id, d.user_id, d.name, d.number, d.issued_date, d.expiry_date, d.is_verified, d.created_date, d.path, r.email
+    FROM documents d
+    JOIN reminders r ON d.user_id = r.user_id
+    WHERE d.expiry_date IN (
+        SELECT date_series
+        FROM generate_series(
+            current_date,
+            current_date + interval '1 year',
+            interval '1 month'
+        ) AS date_series
+        WHERE
+            (extract(day from current_date) <= extract(day from date_series)
+            AND extract(day from current_date) = extract(day from date_series))
+            OR (extract(day from current_date) > extract(day from date_series)
+            AND date_series = (date_trunc('month', date_series) + interval '1 month' - interval '1 day')::date)
+    )
+""";
+
+
 
     private static final String FIND_VERIFIED_DOCUMENTS_BY_MULTIPLE_IDS = "SELECT id, name, number, issued_date, expiry_date, is_verified, created_date, path FROM documents WHERE ID IN (:ids) and is_verified = true";
 
@@ -129,36 +139,27 @@ public class DocumentRepository {
                 documentId.toString());
     }
 
-    public List<MarineDocument> findDocumentsByEmail(String username) {
-        return jdbcTemplate.query(FIND_DOCUMENTS_BY_EMAIL_QUERY,
-                getMarineDocumentRowMapper(),
-                username);
-    }
 
-    public MarineDocument findDocumentsById(UUID documentId) {
-        return jdbcTemplate.queryForObject(FIND_DOCUMENTS_BY_ID_QUERY,
-                getMarineDocumentRowMapper(),
-                documentId.toString());
-    }
-
-    public List<GetDocumentsForReminderResponse> findDocumentsForUsersWithReminders() {
+    public List<MarineDocumentWithEmail> findDocumentsForUsersWithReminders() {
         return jdbcTemplate.query(FIND_DOCUMENTS_FOR_USERS_WITH_REMINDERS, getDocumentsForReminderResponseRowMapper());
     }
 
-    private static RowMapper<GetDocumentsForReminderResponse> getDocumentsForReminderResponseRowMapper() {
-        return (rs, rowNum) -> new GetDocumentsForReminderResponse(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("name"),
-                rs.getString("number"),
-                new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
-                Optional.ofNullable(rs.getObject("expiry_date", java.sql.Date.class))
-                        .map(d -> new Date(d.getTime())).orElse(null),
-                rs.getBoolean("is_verified"),
-                rs.getTimestamp("created_date").toInstant(),
-                UUID.fromString(rs.getString("user_id")),
-                rs.getString("path"),
-                rs.getString("email")
-        );
+    private static RowMapper<MarineDocumentWithEmail> getDocumentsForReminderResponseRowMapper() {
+        return (rs, rowNum) -> {
+            MarineDocument marineDocument = new MarineDocument(
+                    UUID.fromString(rs.getString("id")),
+                    UUID.fromString(rs.getString("user_id")),
+                    rs.getString("name"),
+                    rs.getString("number"),
+                    new Date(rs.getObject("issued_date", java.sql.Date.class).getTime()),
+                    Optional.ofNullable(rs.getObject("expiry_date", java.sql.Date.class))
+                            .map(d -> new Date(d.getTime())).orElse(null),
+                    rs.getBoolean("is_verified"),
+                    rs.getTimestamp("created_date").toInstant(),
+                    rs.getString("path")
+            );
+            String email = rs.getString("email");
+            return new MarineDocumentWithEmail(marineDocument, email);
+        };
     }
 }
-
