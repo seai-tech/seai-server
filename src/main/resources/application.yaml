@@ -20,8 +20,8 @@ spring:
             enable: true
 
 document:
-  enabled: true
   scheduler:
+      enabled: true
       cron: "00 00 08 * * ?"
 
 scanner:
