@@ -1,11 +1,28 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/seai?currentSchema=seai
-    username: admin
-    password: admin
+    username: postgres
+    password: postgres
   servlet:
     multipart:
       max-file-size: 30MB
+
+  mail:
+    host: smtp.privateemail.com
+    port: 587
+    username: test@seai.co
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+document:
+  enabled: true
+  scheduler:
+      cron: "00 00 08 * * ?"
 
 scanner:
   aws:

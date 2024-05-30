@@ -1,15 +1,9 @@
 package com.seai.marine.user.controller;
 
-import com.seai.marine.user.UserService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.GetUserResponse;
-import com.seai.marine.user.mapper.UserAuthenticationMapper;
-import com.seai.marine.user.mapper.UserMapper;
-import com.seai.marine.user.model.User;
-import com.seai.marine.user.model.UserAuthentication;
-import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.marine.user.repository.UserRepository;
+import com.seai.marine.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,18 +23,12 @@ import java.util.UUID;
 @RequestMapping("/api/v1")
 public class UserController {
 
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
-    private final UserAuthenticationRepository userAuthenticationRepository;
-    private final UserAuthenticationMapper userAuthenticationMapper;
     private final UserService userService;
 
     @PutMapping("/users/{userId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void updateUser(@RequestBody @Valid UserUpdateRequest userRegisterRequest, @PathVariable UUID userId) {
-        userRepository.findById(userId);
-        User user = userMapper.map(userRegisterRequest);
-        userRepository.update(userId, user);
+    public void updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @PathVariable UUID userId) {
+        userService.updateUser(userUpdateRequest, userId);
     }
 
     @DeleteMapping("/users/{userId}")
@@ -52,16 +40,11 @@ public class UserController {
     @GetMapping("/users/{userId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetUserResponse getUser(@PathVariable UUID userId) {
-        User user = userRepository.findById(userId);
-        return userMapper.map(user);
+        return userService.getUserById(userId);
     }
 
     @PostMapping("/users")
     public void createUser(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
-        UUID id = UUID.randomUUID();
-        UserAuthentication userAuthentication = userAuthenticationMapper.map(userRegisterRequest);
-        userAuthenticationRepository.save(userAuthentication, id);
-        User user = userMapper.map(userRegisterRequest);
-        userRepository.save(user, id);
+        userService.createUser(userRegisterRequest);
     }
 }

@@ -45,15 +45,15 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain usersFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/api/v1/users/**").csrf(AbstractHttpConfigurer::disable)
+        http.securityMatcher("/api/v1/users/**", "/api/v1/ships/**").csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST,"/api/v1/users", "/api/v1/users/authentication")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/users/authentication")
                         .permitAll()
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS,"/**")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
-                        .requestMatchers("/api/v1/users/**")
+                        .requestMatchers("/api/v1/users/**", "/api/v1/ships/**")
                         .authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(usersAuthenticationProvider()).addFilterBefore(
@@ -67,11 +67,11 @@ public class SecurityConfig {
     public SecurityFilterChain trainingCentersFilterChain(HttpSecurity http) throws Exception {
         http.securityMatcher("/api/v1/training-centers/**").csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(HttpMethod.POST,"/api/v1/training-centers", "/api/v1/training-centers/authentication")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/training-centers", "/api/v1/training-centers/authentication")
                         .permitAll()
-                        .requestMatchers("/swagger-ui/**","/v3/api-docs/**")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS,"/**")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
                         .permitAll()
                         .requestMatchers("/api/v1/training-centers/**")
                         .authenticated())

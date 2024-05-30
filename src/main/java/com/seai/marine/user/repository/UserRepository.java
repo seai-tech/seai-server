@@ -24,7 +24,7 @@ public class UserRepository {
             " present_employer, date_of_birth, manning_agents, status," +
             " vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE user_id= ?";
 
-    private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
+     private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
             " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone)" +
             " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -97,6 +97,7 @@ public class UserRepository {
                 user.getPhone(),
                 userId.toString());
     }
+
 
     public void delete(UUID uuid) {
         jdbcTemplate.update(DELETE_USER_QUERY, uuid.toString());
