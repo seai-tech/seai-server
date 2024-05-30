@@ -1,9 +1,10 @@
-package com.seai.marine.document.service;
+package com.seai.marine.notification.scheduler;
 
 import com.seai.marine.document.model.MarineDocumentWithEmail;
 import com.seai.marine.document.repository.DocumentRepository;
 import com.seai.marine.notification.email.EmailSender;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,13 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DocumentScheduler {
+@ConditionalOnProperty(prefix = "document.scheduler", name = "enabled", havingValue = "true")
+public class NotificationScheduler {
     private final DocumentRepository documentRepository;
     private final EmailSender emailService;
+
     @Scheduled(cron = "${document.scheduler.cron}")
-    public void checkCertificatesDaily() {
+    public void sendNotifications() {
         LocalDate today = LocalDate.now();
         List<MarineDocumentWithEmail> documents = documentRepository.findDocumentsForUsersWithReminders();
         for (MarineDocumentWithEmail document : documents) {

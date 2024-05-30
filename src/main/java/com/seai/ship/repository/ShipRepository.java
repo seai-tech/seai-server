@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -100,7 +101,7 @@ public class ShipRepository {
         return ship;
     }
 
-    public void update(Ship ship) {
+    public void update(Ship ship, UUID shipId) {
         jdbcTemplate.update(UPDATE_SHIP_QUERY,
                 ship.getImoNumber(),
                 ship.getVesselName(),
@@ -130,7 +131,7 @@ public class ShipRepository {
                 ship.getManagerAddress(),
                 ship.getManagerWebsite(),
                 ship.getManagerEmail(),
-                ship.getId());
+                shipId.toString());
     }
 
     public void delete(UUID id) {

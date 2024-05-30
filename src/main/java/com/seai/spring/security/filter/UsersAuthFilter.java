@@ -20,6 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class UsersAuthFilter extends OncePerRequestFilter {
 
+
     private final JwtService jwtService;
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -48,6 +49,6 @@ public class UsersAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getRequestURI().contains("users");
+        return !(request.getRequestURI().contains("users") || request.getRequestURI().contains("ships"));
     }
 }

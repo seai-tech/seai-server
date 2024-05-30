@@ -64,8 +64,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ProblemDetail> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
+        ex.getFieldErrors().forEach(e -> problemDetail.setProperty(e.getField(), e.getDefaultMessage()));
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(problemDetail);
     }
 }

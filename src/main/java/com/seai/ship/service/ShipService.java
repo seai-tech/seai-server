@@ -10,6 +10,7 @@ import com.seai.ship.model.Ship;
 import com.seai.ship.repository.ShipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class ShipService {
     public void updateShip(UUID shipId, UpdateShipRequest updateShipRequest) {
         getShipById(shipId);
         Ship ship = shipMapper.mapToShip(updateShipRequest);
-        shipRepository.update(ship);
+        shipRepository.update(ship, shipId);
     }
 
     public void deleteShip(UUID id) {
