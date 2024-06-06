@@ -44,6 +44,7 @@ public class ShipService {
     }
 
     public void deleteShip(UUID id) {
+        shipRepository.findById(id);
         shipRepository.delete(id);
     }
 }
