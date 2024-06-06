@@ -58,8 +58,11 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ReminderSubscriptionIsSameException.class)
-    public ResponseEntity<String> handleReminderStatusNotChangedException(ReminderSubscriptionIsSameException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ProblemDetail> handleReminderStatusNotChangedException(ReminderSubscriptionIsSameException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
