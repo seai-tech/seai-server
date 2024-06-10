@@ -1,7 +1,9 @@
 package com.seai.training_center.training_center.repository;
 
+import com.seai.exception.ResourceNotFoundException;
 import com.seai.training_center.training_center.model.TrainingCenter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -28,7 +30,11 @@ public class TrainingCenterRepository {
     }
 
     public TrainingCenter findById(UUID trainingCenterId) {
-        return jdbcTemplate.queryForObject(FIND_TRAINING_CENTER_QUERY, getTrainingCenterRowMapper(), trainingCenterId.toString());
+        try {
+            return jdbcTemplate.queryForObject(FIND_TRAINING_CENTER_QUERY, getTrainingCenterRowMapper(), trainingCenterId.toString());
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Training center with id " + trainingCenterId + " not found");
+        }
     }
 
     private RowMapper<TrainingCenter> getTrainingCenterRowMapper() {
