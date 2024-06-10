@@ -2,9 +2,7 @@ package com.seai.training_center.course.controller;
 
 import com.seai.training_center.course.contract.request.CreateCourseRequest;
 import com.seai.training_center.course.contract.response.GetCourseResponse;
-import com.seai.training_center.course.mapper.CourseMapper;
-import com.seai.training_center.course.model.Course;
-import com.seai.training_center.course.repository.CourseRepository;
+import com.seai.training_center.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,19 +19,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CourseController {
 
-    private final CourseMapper courseMapper;
-
-    private final CourseRepository courseRepository;
+    private final CourseService courseService;
 
     @PostMapping("/training-centers/{trainingCenterId}/courses")
     public void createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable UUID trainingCenterId) {
-        Course course = courseMapper.map(createCourseRequest);
-        courseRepository.save(course, trainingCenterId);
+        courseService.createCourse(createCourseRequest, trainingCenterId);
     }
 
     @GetMapping("/training-centers/courses")
     public List<GetCourseResponse> getAllCourses() {
-        List<Course> allCourses = courseRepository.findAll();
-        return allCourses.stream().map(courseMapper::map).toList();
+        return courseService.getAllCourses();
     }
 }
