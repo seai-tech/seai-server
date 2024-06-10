@@ -33,4 +33,9 @@ public class Course {
 
     private Currency currency;
 
+    private Integer maxSeats;
+
+    private String description;
+
+    private Boolean isPublished;
 }
