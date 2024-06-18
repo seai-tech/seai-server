@@ -7,14 +7,20 @@ import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.GetUserResponse;
 import com.seai.marine.user.mapper.UserMapper;
+import com.seai.marine.user.model.Experience;
+import com.seai.marine.user.model.Rank;
 import com.seai.marine.user.model.User;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
+import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -64,5 +70,54 @@ public class UserService {
         reminderService.turnOnReminderSubscription(id, userRegisterRequest.getEmail());
     }
 
+    public List<Experience> getUserExperience(UUID userId) {
+        List<Voyage> voyages = voyageRepository.findByUserId(userId);
+        List<Experience> experiences = new ArrayList<>();
+        int totalDaysOnBoard = 0;
+        int totalDaysOnShore = 0;
+//        Map<VesselType, Integer> vesselTypeDuration = new HashMap<>();
+        Map<Rank, Integer> rankDuration = new HashMap<>();
+        LocalDate previousLeavingDate = null;
+
+        for (Voyage voyage : voyages) {
+            Rank rank = voyage.getRank();
+//          VesselType vesselType = voyage.getVesselType();
+            LocalDate joiningDate = voyage.getJoiningDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate leavingDate = voyage.getLeavingDate() != null ?
+                    voyage.getLeavingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() :
+                    LocalDate.now();
+            int daysOnBoard = (int) ChronoUnit.DAYS.between(joiningDate, leavingDate);
+            totalDaysOnBoard += daysOnBoard;
+
+            rankDuration.put(rank, rankDuration.getOrDefault(rank, 0) + daysOnBoard);
+//            vesselTypeDuration.put(vesselType, vesselTypeDuration.getOrDefault(vesselType, 0) + daysOnBoard);
+
+            if (previousLeavingDate != null) {
+                int daysOnShore = (int) ChronoUnit.DAYS.between(previousLeavingDate, joiningDate);
+                totalDaysOnShore += daysOnShore;
+            }
+            previousLeavingDate = leavingDate;
+        }
+//        for (Map.Entry<VesselType, Integer> entry : vesselTypeDuration.entrySet()) {
+//            experiences.add(new Experience("Time on vessel type " + entry.getKey().toString(),
+//                    formatDuration(entry.getValue())));
+//        }
+        for (Map.Entry<Rank, Integer> entry : rankDuration.entrySet()) {
+            experiences.add(new Experience("Time on rank " + entry.getKey(), formatDuration(entry.getValue())));
+        }
+        experiences.add(new Experience("Total time on board", formatDuration(totalDaysOnBoard)));
+        experiences.add(new Experience("Total time on shore", formatDuration(totalDaysOnShore)));
+
+        return experiences;
+    }
+
+
+    public String formatDuration(int totalDays) {
+        int years = totalDays / 365;
+        int remainingDays = totalDays % 365;
+        int months = (int) Math.floor(remainingDays / 30.4375);
+        int days = remainingDays - (months * 30);
+        return years + " years, " + months + " months, " + days + " days";
+    }
 }
 
