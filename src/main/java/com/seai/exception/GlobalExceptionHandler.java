@@ -73,4 +73,12 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(problemDetail);
     }
+
+    @ExceptionHandler(MaxSeatsReachedException.class)
+    public ResponseEntity<ProblemDetail> handleMaxSeatsReachedException(MaxSeatsReachedException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
+    }
 }
