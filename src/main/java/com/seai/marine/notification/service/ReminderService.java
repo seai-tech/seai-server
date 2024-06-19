@@ -21,14 +21,13 @@ public class ReminderService {
     private final UserAuthenticationRepository authenticationRepository;
 
     public void updateReminderSubscription(UUID userId, UpdateReminderSubscriptionRequest request) {
-        if (request.getStatus() == ReminderStatus.ON) {
+        if (request.getStatus() == ReminderStatus.True) {
             UserAuthentication userAuthentication = authenticationRepository.findById(userId);
             turnOnReminderSubscription(userId, userAuthentication.getEmail());
         } else {
             turnOffReminderSubscription(userId);
         }
     }
-
 
     public void turnOnReminderSubscription(UUID userId, String email) {
         if (getUserReminderSubscription(userId).isPresent()) {
