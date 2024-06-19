@@ -27,4 +27,10 @@ public class GetCourseResponse {
     private BigDecimal price;
 
     private String currency;
+
+    private Integer maxSeats;
+
+    private String description;
+
+    private Boolean isPublished;
 }

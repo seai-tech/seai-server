@@ -1,7 +1,9 @@
 package com.seai.training_center.course.repository;
 
+import com.seai.exception.ResourceNotFoundException;
 import com.seai.training_center.course.model.Course;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,9 +20,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CourseRepository {
 
-    private static final String SAVE_COURSE_QUERY = "INSERT INTO courses (id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String SAVE_COURSE_QUERY = "INSERT INTO courses (id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency FROM courses";
+    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses";
+
+    private static final String FIND_COURSE_BY_ID_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE id=?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -34,13 +38,23 @@ public class CourseRepository {
                 Optional.ofNullable(course.getStartTime()).map(Time::valueOf).orElse(null),
                 Optional.ofNullable(course.getEndTime()).map(Time::valueOf).orElse(null),
                 course.getPrice(),
-                Optional.ofNullable(course.getCurrency()).map(Currency::getCurrencyCode).orElse(null));
+                Optional.ofNullable(course.getCurrency()).map(Currency::getCurrencyCode).orElse(null),
+                course.getMaxSeats(),
+                course.getDescription(),
+                course.getIsPublished());
     }
 
     public List<Course> findAll() {
         return jdbcTemplate.query(FIND_ALL_COURSES_QUERY, getCourseRowMapper());
     }
 
+    public Course getCourseById(UUID courseId) {
+        try {
+            return jdbcTemplate.queryForObject(FIND_COURSE_BY_ID_QUERY, getCourseRowMapper(), courseId.toString());
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Course with id " + courseId + " not found");
+        }
+    }
 
     private static RowMapper<Course> getCourseRowMapper() {
         return (rs, rowNum) -> new Course(
@@ -52,6 +66,9 @@ public class CourseRepository {
                 rs.getTime("start_time").toLocalTime(),
                 rs.getTime("end_time").toLocalTime(),
                 rs.getObject("price", BigDecimal.class),
-                Optional.ofNullable(rs.getString("currency")).map(Currency::getInstance).orElse(null));
+                Optional.ofNullable(rs.getString("currency")).map(Currency::getInstance).orElse(null),
+                rs.getInt("max_seats"),
+                rs.getString("description"),
+                rs.getBoolean("is_published"));
     }
 }

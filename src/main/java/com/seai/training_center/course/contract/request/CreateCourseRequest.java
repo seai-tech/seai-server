@@ -26,4 +26,10 @@ public class CreateCourseRequest {
     private BigDecimal price;
 
     private Currency currency;
+
+    private Integer maxSeats;
+
+    private String description;
+
+    private Boolean isPublished;
 }
