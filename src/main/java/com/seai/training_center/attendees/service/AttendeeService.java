@@ -29,8 +29,8 @@ public class AttendeeService {
 
 
     public void createAttendee(CreateAttendeeRequest createAttendeeRequest, UUID trainingCenterId, UUID courseId) {
-        courseService.validateCourse(trainingCenterId, courseId);
-        courseService.validateMaxSeats(courseId);
+        courseService.getCourseById(courseId, trainingCenterId);
+        courseService.validateMaxSeats(courseId, trainingCenterId);
         Attendee attendee = attendeeMapper.map(createAttendeeRequest);
         try {
             if (createAttendeeRequest.getUserId() != null) {
@@ -46,13 +46,13 @@ public class AttendeeService {
     }
 
     public List<GetAttendeeResponse> getAttendees (UUID trainingCenterId, UUID courseId){
-        courseService.validateCourse(trainingCenterId, courseId);
+        courseService.getCourseById(courseId, trainingCenterId);
         List<Attendee> allAttendees = attendeeRepository.findAll(courseId);
         return allAttendees.stream().map(attendeeMapper::map).toList();
     }
 
     public void updateAttendee(UpdateAttendeeRequest updateRequest, UUID trainingCenterId, UUID courseId, UUID attendeeId) {
-        courseService.validateCourse(trainingCenterId, courseId);
+        courseService.getCourseById(courseId, trainingCenterId);
         validateAttendee(courseId, attendeeId);
         Attendee existingAttendee = attendeeRepository.findById(attendeeId);
         Attendee attendee = attendeeMapper.map(updateRequest);
@@ -63,7 +63,7 @@ public class AttendeeService {
     }
 
     public void deleteAttendee(UUID trainingCenterId, UUID courseId, UUID attendeeId) {
-        courseService.validateCourse(trainingCenterId, courseId);
+        courseService.getCourseById(courseId, trainingCenterId);
         validateAttendee(courseId, attendeeId);
         attendeeRepository.delete(attendeeId);
     }

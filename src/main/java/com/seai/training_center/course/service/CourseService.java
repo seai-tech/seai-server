@@ -35,21 +35,19 @@ public class CourseService {
         return allCourses.stream().map(courseMapper::map).toList();
     }
 
-    public GetCourseResponse getCourseById(UUID courseId) {
-        Course course = courseRepository.getCourseById(courseId);
+    public List<GetCourseResponse> getAllCoursesForTrainingCenter(UUID trainingCenterId) {
+        List<Course> allCourses = courseRepository.findAllForTrainingCenter(trainingCenterId);
+        return allCourses.stream().map(courseMapper::map).toList();
+    }
+
+    public GetCourseResponse getCourseById(UUID courseId, UUID trainingCenterId) {
+        Course course = courseRepository.getCourseById(courseId, trainingCenterId);
         return courseMapper.map(course);
     }
 
-    public void validateCourse(UUID trainingCenterId, UUID courseId) {
-        trainingCenterRepository.findById(trainingCenterId);
-        GetCourseResponse course = getCourseById(courseId);
-        if (!course.getTrainingCenterId().equals(trainingCenterId)) {
-            throw new ResourceNotFoundException("Training Center ID does not match the Course's Training Center ID");
-        }
-    }
 
-    public void validateMaxSeats(UUID courseId) {
-        GetCourseResponse course = getCourseById(courseId);
+    public void validateMaxSeats(UUID courseId, UUID trainingCenterId) {
+        GetCourseResponse course = getCourseById(courseId, trainingCenterId);
         int currentAttendeeCount = attendeeRepository.countByCourseId(courseId);
         if (currentAttendeeCount >= course.getMaxSeats()) {
             throw new MaxSeatsReachedException("Cannot add attendee. Maximum number of seats reached for course: " + courseId);
