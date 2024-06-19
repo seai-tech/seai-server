@@ -3,6 +3,7 @@ package com.seai.marine.user.controller;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.GetUserResponse;
+import com.seai.marine.user.model.Experience;
 import com.seai.marine.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -46,5 +48,11 @@ public class UserController {
     @PostMapping("/users")
     public void createUser(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         userService.createUser(userRegisterRequest);
+    }
+
+    @GetMapping("/users/{userId}/experience")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    public List<Experience> getUserExperience(@PathVariable UUID userId) {
+        return userService.getUserExperience(userId);
     }
 }
