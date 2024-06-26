@@ -33,6 +33,6 @@ public class AttendeeController {
 
     @DeleteMapping("/{attendeeId}")
     public void deleteAttendee(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId, @PathVariable UUID attendeeId) {
-        attendeeService.deleteAttendee(trainingCenterId, courseId, attendeeId);
+        attendeeService.deleteAttendee(attendeeId);
     }
 }
