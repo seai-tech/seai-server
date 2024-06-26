@@ -37,9 +37,6 @@ public class ReminderService {
     }
 
     public void turnOffReminderSubscription(UUID userId) {
-        if (getUserReminderSubscription(userId).isEmpty()) {
-            throw new ReminderSubscriptionIsSameException("Reminder subscription is already inactive.");
-        }
         reminderRepository.deleteReminder(userId);
     }
 
