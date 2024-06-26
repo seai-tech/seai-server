@@ -1,8 +1,10 @@
 package com.seai.ship.repository;
 
+import com.seai.exception.DuplicatedResourceException;
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.ship.model.Ship;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -67,37 +69,41 @@ public class ShipRepository {
 
     public Ship save(Ship ship) {
         UUID id = UUID.randomUUID();
-        jdbcTemplate.update(SAVE_SHIP_QUERY,
-                id.toString(),
-                ship.getImoNumber(),
-                ship.getVesselName(),
-                ship.getShipType(),
-                ship.getFlag(),
-                ship.getHomeport(),
-                ship.getGrossTonnage(),
-                ship.getSummerDeadweight(),
-                ship.getLengthOverall(),
-                ship.getBeam(),
-                ship.getDraught(),
-                ship.getYearOfBuild(),
-                ship.getBuilder(),
-                ship.getPlaceOfBuild(),
-                ship.getYard(),
-                ship.getTeu(),
-                ship.getCrudeOil(),
-                ship.getGasCapacity(),
-                ship.getGrain(),
-                ship.getBale(),
-                ship.getClassificationSociety(),
-                ship.getRegisteredOwner(),
-                ship.getOwnerAddress(),
-                ship.getOwnerWebsite(),
-                ship.getOwnerEmail(),
-                ship.getManager(),
-                ship.getManagerAddress(),
-                ship.getManagerWebsite(),
-                ship.getManagerEmail());
-        ship.setId(id.toString());
+        try {
+            jdbcTemplate.update(SAVE_SHIP_QUERY,
+                    id.toString(),
+                    ship.getImoNumber(),
+                    ship.getVesselName(),
+                    ship.getShipType(),
+                    ship.getFlag(),
+                    ship.getHomeport(),
+                    ship.getGrossTonnage(),
+                    ship.getSummerDeadweight(),
+                    ship.getLengthOverall(),
+                    ship.getBeam(),
+                    ship.getDraught(),
+                    ship.getYearOfBuild(),
+                    ship.getBuilder(),
+                    ship.getPlaceOfBuild(),
+                    ship.getYard(),
+                    ship.getTeu(),
+                    ship.getCrudeOil(),
+                    ship.getGasCapacity(),
+                    ship.getGrain(),
+                    ship.getBale(),
+                    ship.getClassificationSociety(),
+                    ship.getRegisteredOwner(),
+                    ship.getOwnerAddress(),
+                    ship.getOwnerWebsite(),
+                    ship.getOwnerEmail(),
+                    ship.getManager(),
+                    ship.getManagerAddress(),
+                    ship.getManagerWebsite(),
+                    ship.getManagerEmail());
+            ship.setId(id.toString());
+    } catch (DuplicateKeyException e) {
+        throw new DuplicatedResourceException("Ship already exists");
+    }
         return ship;
     }
 
