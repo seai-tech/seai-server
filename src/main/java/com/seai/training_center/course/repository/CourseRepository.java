@@ -26,7 +26,7 @@ public class CourseRepository {
 
     private static final String FIND_ALL_COURSES_FOR_TRAINING_CENTER_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE training_center_id=?";
 
-    private static final String FIND_COURSE_BY_ID_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE id=? AND training_center_id=?";
+    private static final String FIND_COURSE_BY_ID_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE training_center_id=? AND id=?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -55,9 +55,9 @@ public class CourseRepository {
     }
 
 
-    public Course getCourseById(UUID courseId, UUID trainingCenterId) {
+    public Course getCourseById(UUID trainingCenterId, UUID courseId) {
         try {
-            return jdbcTemplate.queryForObject(FIND_COURSE_BY_ID_QUERY, getCourseRowMapper(), courseId.toString(), trainingCenterId.toString());
+            return jdbcTemplate.queryForObject(FIND_COURSE_BY_ID_QUERY, getCourseRowMapper(), trainingCenterId.toString(), courseId.toString());
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Course with id " + courseId + " not found");
         }
