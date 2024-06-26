@@ -22,8 +22,7 @@ import java.util.UUID;
 public class CourseService {
     private final CourseMapper courseMapper;
     private final CourseRepository courseRepository;
-    private final TrainingCenterRepository trainingCenterRepository;
-    private final AttendeeRepository attendeeRepository;
+        private final AttendeeRepository attendeeRepository;
 
     public void createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable UUID trainingCenterId) {
         Course course = courseMapper.map(createCourseRequest);
@@ -40,17 +39,16 @@ public class CourseService {
         return allCourses.stream().map(courseMapper::map).toList();
     }
 
-    public GetCourseResponse getCourseById(UUID courseId, UUID trainingCenterId) {
-        Course course = courseRepository.getCourseById(courseId, trainingCenterId);
+    public GetCourseResponse getCourseById(UUID trainingCenterId, UUID courseId) {
+        Course course = courseRepository.getCourseById(trainingCenterId, courseId);
         return courseMapper.map(course);
     }
 
 
-    public void validateMaxSeats(UUID courseId, UUID trainingCenterId) {
-        GetCourseResponse course = getCourseById(courseId, trainingCenterId);
-        int currentAttendeeCount = attendeeRepository.countByCourseId(courseId);
+    public void validateMaxSeats(GetCourseResponse course) {
+        int currentAttendeeCount = attendeeRepository.countByCourseId(course.getId());
         if (currentAttendeeCount >= course.getMaxSeats()) {
-            throw new MaxSeatsReachedException("Cannot add attendee. Maximum number of seats reached for course: " + courseId);
+            throw new MaxSeatsReachedException("Cannot add attendee. Maximum number of seats reached for course: " + course.getId());
         }
     }
 
