@@ -31,7 +31,6 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-
     @GetMapping("/training-centers/{trainingCenterId}/courses")
     public List<GetCourseResponse> getAllCoursesForTrainingCenter(@PathVariable UUID trainingCenterId) {
         return courseService.getAllCoursesForTrainingCenter(trainingCenterId);
@@ -39,6 +38,6 @@ public class CourseController {
 
     @GetMapping("/{trainingCenterId}/courses/{courseId}")
     public GetCourseResponse getCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        return courseService.getCourseById(courseId, trainingCenterId);
+        return courseService.getCourseById(trainingCenterId, courseId);
     }
 }
