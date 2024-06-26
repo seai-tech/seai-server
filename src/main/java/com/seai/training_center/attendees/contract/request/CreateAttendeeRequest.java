@@ -18,6 +18,5 @@ public class CreateAttendeeRequest {
 
         private Boolean isWaiting;
 
-        private UUID userId;
     }
 
