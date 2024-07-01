@@ -30,6 +30,8 @@ public class GetCourseResponse {
 
     private Integer maxSeats;
 
+    private Integer availableSeats;
+
     private String description;
 
     private Boolean isPublished;
