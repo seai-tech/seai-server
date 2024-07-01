@@ -1,15 +1,12 @@
 package com.seai.training_center.course.controller;
 
 import com.seai.training_center.course.contract.request.CreateCourseRequest;
+import com.seai.training_center.course.contract.request.UpdateCourseRequest;
+import com.seai.training_center.course.contract.response.CreateCourseResponse;
 import com.seai.training_center.course.contract.response.GetCourseResponse;
 import com.seai.training_center.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +19,8 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping("/training-centers/{trainingCenterId}/courses")
-    public void createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable UUID trainingCenterId) {
-        courseService.createCourse(createCourseRequest, trainingCenterId);
+    public CreateCourseResponse createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable UUID trainingCenterId) {
+        return courseService.createCourse(createCourseRequest, trainingCenterId);
     }
 
     @GetMapping("/training-centers/courses")
@@ -39,5 +36,15 @@ public class CourseController {
     @GetMapping("/{trainingCenterId}/courses/{courseId}")
     public GetCourseResponse getCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
         return courseService.getCourseById(trainingCenterId, courseId);
+    }
+
+    @PutMapping("/{trainingCenterId}/courses/{courseId}")
+    public void updateCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId, @RequestBody UpdateCourseRequest request) {
+        courseService.updateCourse(trainingCenterId, courseId, request);
+    }
+
+    @DeleteMapping("/{trainingCenterId}/courses/{courseId}")
+    public void deleteCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
+        courseService.deleteCourse(trainingCenterId, courseId);
     }
 }
