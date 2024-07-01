@@ -1,11 +1,11 @@
 package com.seai.training_center.course.contract.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.seai.training_center.course.model.CurrencyOptions;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
-import java.util.Currency;
 import java.util.Date;
 
 @Data
@@ -25,7 +25,7 @@ public class CreateCourseRequest {
 
     private BigDecimal price;
 
-    private Currency currency;
+    private CurrencyOptions currency;
 
     private Integer maxSeats;
 
