@@ -27,6 +27,8 @@ public class AttendeeRepository {
 
     private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE id=?";
 
+    private static final String DELETE_ALL_ATTENDEES_QUERY = "DELETE FROM attendees WHERE course_id=?";
+
     private static final String COUNT_ATTENDEES_BY_COURSE_ID_QUERY = "SELECT COUNT(*) FROM attendees WHERE course_id=?";
 
     private final JdbcTemplate jdbcTemplate;
@@ -74,6 +76,10 @@ public class AttendeeRepository {
 
     public void delete(UUID id) {
         jdbcTemplate.update(DELETE_ATTENDEE_QUERY, id.toString());
+    }
+
+    public void deleteAll(UUID id) {
+        jdbcTemplate.update(DELETE_ALL_ATTENDEES_QUERY, id.toString());
     }
 
     public int countByCourseId(UUID courseId) {
