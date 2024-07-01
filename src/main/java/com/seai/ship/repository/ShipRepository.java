@@ -102,7 +102,7 @@ public class ShipRepository {
                     ship.getManagerEmail());
             ship.setId(id.toString());
     } catch (DuplicateKeyException e) {
-        throw new DuplicatedResourceException("Ship already exists");
+        throw new DuplicatedResourceException("Ship with IMO number: " + ship.getImoNumber() + " already exists");
     }
         return ship;
     }
