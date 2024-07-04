@@ -10,8 +10,8 @@ spring:
   mail:
     host: smtp.privateemail.com
     port: 587
-    username: test@seai.co
-    password: test
+    username: contacts@seai.co
+    password: SEAIseai124
     properties:
       mail:
         smtp:
@@ -23,6 +23,12 @@ document:
   scheduler:
       enabled: true
       cron: "00 00 08 * * ?"
+
+token:
+  scheduler:
+    enabled: true
+    cron: "30 18 10 * * ?"
+
 
 scanner:
   aws:
