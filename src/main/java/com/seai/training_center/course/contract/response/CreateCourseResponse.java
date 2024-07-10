@@ -1,8 +1,6 @@
-package com.seai.training_center.course.model;
+package com.seai.training_center.course.contract.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -10,10 +8,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Course {
-
+public class CreateCourseResponse {
     private UUID id;
 
     private UUID trainingCenterId;
@@ -30,7 +25,7 @@ public class Course {
 
     private BigDecimal price;
 
-    private CurrencyOptions currency;
+    private String currency;
 
     private Integer maxSeats;
 

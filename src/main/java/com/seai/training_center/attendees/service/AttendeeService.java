@@ -67,6 +67,10 @@ public class AttendeeService {
         attendeeRepository.delete(attendeeId);
     }
 
+    public void deleteAllAttendees(UUID courseId) {
+        attendeeRepository.deleteAll(courseId);
+    }
+
     public void validateAttendee(UUID courseId, UUID attendeeId) {
         Attendee attendee = attendeeRepository.findById(attendeeId);
         if (attendee == null || !attendee.getCourseId().equals(courseId)) {

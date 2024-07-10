@@ -1,31 +1,31 @@
-package com.seai.training_center.course.model;
+package com.seai.training_center.course.contract.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.seai.training_center.course.model.CurrencyOptions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.Date;
-import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Course {
-
-    private UUID id;
-
-    private UUID trainingCenterId;
-
+@NoArgsConstructor
+@Getter
+public class UpdateCourseRequest {
     private String name;
 
     private Date startDate;
 
     private Date endDate;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime startTime;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime endTime;
 
     private BigDecimal price;
