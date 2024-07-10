@@ -2,6 +2,7 @@ package com.seai.marine.user.repository;
 
 import com.seai.exception.DuplicatedResourceException;
 import com.seai.exception.ResourceNotFoundException;
+import com.seai.marine.user.model.User;
 import com.seai.marine.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -26,7 +28,7 @@ public class UserAuthenticationRepository {
 
     private static final String DELETE_USER = "DELETE FROM users_auth WHERE id= ?";
 
-
+    private static final String UPDATE_USER_QUERY = "UPDATE users_auth SET email=?, password=? WHERE id=?";
 
     private final PasswordEncoder encoder;
 
@@ -40,6 +42,13 @@ public class UserAuthenticationRepository {
         } catch (DuplicateKeyException e) {
             throw new DuplicatedResourceException("User with email %s already exists", userAuthentication.getEmail());
         }
+    }
+
+    public void update(UserAuthentication user) {
+        jdbcTemplate.update(UPDATE_USER_QUERY,
+                user.getEmail(),
+                encoder.encode(user.getPassword()),
+                user.getId().toString());
     }
 
 
