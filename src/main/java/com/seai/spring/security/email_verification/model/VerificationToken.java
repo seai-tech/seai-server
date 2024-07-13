@@ -1,4 +1,4 @@
-package com.seai.spring.security.token.model;
+package com.seai.spring.security.email_verification.model;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConfirmationToken {
+public class VerificationToken {
     private UUID id;
     private String token;
     private LocalDateTime createdAt;
