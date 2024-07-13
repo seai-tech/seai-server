@@ -49,9 +49,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/api/v1/users", "/api/v1/users/authentication")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/users", "api/v1/users/confirm")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users", "api/v1/users/verify-email")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users", "api/v1/users/resend-confirmation")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users", "api/v1/users/resend-email-verification-token")
                         .permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll()
