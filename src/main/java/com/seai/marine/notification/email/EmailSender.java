@@ -18,14 +18,14 @@ public class EmailSender {
         this.mailSender = mailSender;
     }
 
-    public void sendSimpleMessage(String to, String subject, String text) {
+    public void sendSimpleMessage(String to, String subject, String htmlBody) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeHelper = new MimeMessageHelper(mimeMessage, true);
             mimeHelper.setFrom(fromEmail);
             mimeHelper.setTo(to);
             mimeMessage.setSubject(subject);
-            mimeMessage.setText(text);
+            mimeMessage.setContent(htmlBody, "text/html; charset=utf-8");
             mailSender.send(mimeMessage);
         } catch (Exception e) {
             throw new RuntimeException(e);
