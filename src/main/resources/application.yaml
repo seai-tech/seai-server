@@ -34,3 +34,10 @@ scanner:
   aws:
     bucket:
       name: "marine-docs1-dev"
+
+
+urls:
+  verify-token: "http://api.seai.co/swagger-ui/index.html#/email-verification-controller/verifyEmail"
+  verification-error: "http://api.seai.co/api/v1/users/verify-email/error?message="
+  verification-token-resend: "http://api.seai.co/swagger-ui/index.html#/email-verification-controller/resendEmailVerificationToken"
+  redirect-to-login: "https://api.seai.co/swagger-ui/index.html#/users-auth-controller/authenticateAndGetToken"
