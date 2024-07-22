@@ -1,4 +1,4 @@
-package com.seai.spring.security.password_reset.model;
+package com.seai.password_reset.model;
 
 import lombok.*;
 
@@ -16,5 +16,9 @@ public class PasswordResetToken {
     private LocalDateTime createdAt;
     private LocalDateTime expiredAt;
     private UUID userId;
+
+    public boolean isExpired() {
+        return expiredAt.isBefore(LocalDateTime.now());
+    }
 }
 
