@@ -1,12 +1,14 @@
-package com.seai.spring.security.password_reset.repository;
+package com.seai.password_reset.repository;
 
-import com.seai.spring.security.password_reset.model.PasswordResetToken;
+import com.seai.password_reset.model.PasswordResetToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Repository
@@ -17,7 +19,7 @@ public class PasswordResetRepository {
 
     private static final String FIND_TOKEN_QUERY = "SELECT * FROM password_reset_tokens WHERE token=?";
 
-    private static final String DELETE_TOKEN_QUERY = "DELETE FROM password_reset_tokens WHERE user_id=?";
+    private static final String DELETE_EXPIRED_TOKENS_QUERY = "DELETE FROM password_reset_tokens WHERE expired_at < ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -41,8 +43,8 @@ public class PasswordResetRepository {
         }
     }
 
-    public void delete(UUID id) {
-        jdbcTemplate.update(DELETE_TOKEN_QUERY, id.toString());
+    public void deleteExpiredTokens(LocalDateTime now) {
+        jdbcTemplate.update(DELETE_EXPIRED_TOKENS_QUERY, Timestamp.valueOf(now));
     }
 
 
