@@ -24,6 +24,11 @@ document:
       enabled: true
       cron: "00 00 08 * * ?"
 
+password-token:
+  scheduler:
+    enabled: true
+    cron: "00 00 08 * * ?"
+
 scanner:
   aws:
     bucket:
