@@ -28,7 +28,7 @@ public class UserAuthenticationRepository {
 
     private static final String DELETE_USER = "DELETE FROM users_auth WHERE id= ?";
 
-    private static final String UPDATE_USER_QUERY = "UPDATE users_auth SET email=?, password=? WHERE id=?";
+    private static final String UPDATE_USER_PASSWORD_QUERY = "UPDATE users_auth SET password=? WHERE id=?";
 
     private final PasswordEncoder encoder;
 
@@ -44,9 +44,8 @@ public class UserAuthenticationRepository {
         }
     }
 
-    public void update(UserAuthentication user) {
-        jdbcTemplate.update(UPDATE_USER_QUERY,
-                user.getEmail(),
+    public void updateUserPassword(UserAuthentication user) {
+        jdbcTemplate.update(UPDATE_USER_PASSWORD_QUERY,
                 encoder.encode(user.getPassword()),
                 user.getId().toString());
     }
