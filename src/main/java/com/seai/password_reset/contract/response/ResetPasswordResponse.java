@@ -1,4 +1,4 @@
-package com.seai.spring.security.password_reset.contract.response;
+package com.seai.password_reset.contract.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
