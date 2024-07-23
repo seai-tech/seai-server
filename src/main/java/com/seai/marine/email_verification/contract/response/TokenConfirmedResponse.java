@@ -1,4 +1,4 @@
-package com.seai.spring.security.email_verification.contract.response;
+package com.seai.marine.email_verification.contract.response;
 
 
 import lombok.AllArgsConstructor;

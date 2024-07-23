@@ -1,4 +1,4 @@
-package com.seai.spring.security.email_verification;
+package com.seai.marine.email_verification.service;
 
 import org.springframework.stereotype.Component;
 

@@ -19,6 +19,9 @@ spring:
           starttls:
             enable: true
 
+email-verification:
+  token-expiry-period-minutes: 43200 #1 month
+
 document:
   scheduler:
       enabled: true

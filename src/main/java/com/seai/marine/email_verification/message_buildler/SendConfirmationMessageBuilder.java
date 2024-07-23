@@ -1,10 +1,10 @@
-package com.seai.spring.security.email_verification.message_buildler;
+package com.seai.marine.email_verification.message_buildler;
 
 
 import com.seai.marine.notification.email.EmailSender;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.spring.security.email_verification.model.VerificationToken;
+import com.seai.marine.email_verification.model.VerificationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

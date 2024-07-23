@@ -1,7 +1,7 @@
-package com.seai.spring.security.email_verification.controller;
+package com.seai.marine.email_verification.controller;
 
-import com.seai.spring.security.email_verification.contract.response.TokenConfirmedResponse;
-import com.seai.spring.security.email_verification.service.EmailVerificationService;
+import com.seai.marine.email_verification.contract.response.TokenConfirmedResponse;
+import com.seai.marine.email_verification.service.EmailVerificationService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

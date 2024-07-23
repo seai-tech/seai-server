@@ -1,6 +1,6 @@
-package com.seai.spring.security.email_verification.repository;
+package com.seai.marine.email_verification.repository;
 
-import com.seai.spring.security.email_verification.model.VerificationToken;
+import com.seai.marine.email_verification.model.VerificationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

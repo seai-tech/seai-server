@@ -1,4 +1,4 @@
-package com.seai.spring.security.email_verification.message_buildler;
+package com.seai.marine.email_verification.message_buildler;
 
 
 import com.seai.marine.notification.email.EmailSender;

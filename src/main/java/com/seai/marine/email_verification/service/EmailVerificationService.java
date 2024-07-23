@@ -1,14 +1,13 @@
-package com.seai.spring.security.email_verification.service;
+package com.seai.marine.email_verification.service;
 
 import com.seai.exception.*;
+import com.seai.marine.email_verification.contract.response.TokenConfirmedResponse;
+import com.seai.marine.email_verification.message_buildler.ResendConfirmationMessageBuilder;
+import com.seai.marine.email_verification.message_buildler.SendConfirmationMessageBuilder;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.spring.security.email_verification.TokenGenerator;
-import com.seai.spring.security.email_verification.contract.response.TokenConfirmedResponse;
-import com.seai.spring.security.email_verification.message_buildler.ResendConfirmationMessageBuilder;
-import com.seai.spring.security.email_verification.message_buildler.SendConfirmationMessageBuilder;
-import com.seai.spring.security.email_verification.model.VerificationToken;
-import com.seai.spring.security.email_verification.repository.EmailVerificationRepository;
+import com.seai.marine.email_verification.model.VerificationToken;
+import com.seai.marine.email_verification.repository.EmailVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,12 +31,14 @@ public class EmailVerificationService {
     private String verificationErrorUrl;
     @Value("${urls.verification-token-resend}")
     private String verificationTokenResendUrl;
+    @Value("${email-verification.token-expiry-period-minutes}")
+    private Integer tokenExpiryPeriod;
 
 
     public void saveVerificationToken(VerificationToken token) {
         token.setId(UUID.randomUUID());
         token.setCreatedAt(LocalDateTime.now());
-        token.setExpiredAt(LocalDateTime.now().plusMinutes(15));
+        token.setExpiredAt(LocalDateTime.now().plusMinutes(tokenExpiryPeriod));
         emailVerificationRepository.save(token);
     }
 

@@ -1,4 +1,4 @@
-package com.seai.spring.security.email_verification.model;
+package com.seai.marine.email_verification.model;
 
 import lombok.*;
 
