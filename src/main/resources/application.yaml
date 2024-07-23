@@ -35,9 +35,8 @@ scanner:
     bucket:
       name: "marine-docs1-dev"
 
-
 urls:
-  verify-token: "http://api.seai.co/swagger-ui/index.html#/email-verification-controller/verifyEmail"
-  verification-error: "http://api.seai.co/api/v1/users/verify-email/error?message="
-  verification-token-resend: "http://api.seai.co/swagger-ui/index.html#/email-verification-controller/resendEmailVerificationToken"
-  redirect-to-login: "https://api.seai.co/swagger-ui/index.html#/users-auth-controller/authenticateAndGetToken"
+  verify-token: "https://api.seai.co/api/v1/users/verify-email?token="
+  verification-error: "https://app.seai.co/api/v1/users/verify-email/error?message=" #FIX WHEN WE HAVE FE TO REDIRECT TO SHOW THE MSSAGE
+  verification-token-resend: "https://api.seai.co/api/v1/users/resend-email-verification-token?email="
+  redirect-to-login: "https://app.seai.co/user/login"
