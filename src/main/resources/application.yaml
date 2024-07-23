@@ -10,8 +10,8 @@ spring:
   mail:
     host: smtp.privateemail.com
     port: 587
-    username: test@seai.co
-    password: test
+    username: contacts@seai.co
+    password: SEAIseai124
     properties:
       mail:
         smtp:
@@ -19,12 +19,27 @@ spring:
           starttls:
             enable: true
 
+email-verification:
+  token-expiry-period-minutes: 43200 #1 month
+
 document:
   scheduler:
       enabled: true
       cron: "00 00 08 * * ?"
 
+token:
+  scheduler:
+    enabled: true
+    cron: "30 18 10 * * ?"
+
+
 scanner:
   aws:
     bucket:
       name: "marine-docs1-dev"
+
+urls:
+  verify-token: "https://api.seai.co/api/v1/users/verify-email?token="
+  verification-error: "https://app.seai.co/api/v1/users/verify-email/error?message=" #FIX WHEN WE HAVE FE TO REDIRECT TO SHOW THE MSSAGE
+  verification-token-resend: "https://api.seai.co/api/v1/users/resend-email-verification-token?email="
+  redirect-to-login: "https://app.seai.co/user/login"

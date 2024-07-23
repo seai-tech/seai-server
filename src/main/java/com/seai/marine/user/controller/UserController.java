@@ -2,6 +2,7 @@ package com.seai.marine.user.controller;
 
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
+import com.seai.marine.user.contract.response.CreateUserResponse;
 import com.seai.marine.user.contract.response.GetUserResponse;
 import com.seai.marine.user.model.Experience;
 import com.seai.marine.user.service.UserService;
@@ -46,8 +47,8 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public void createUser(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
-        userService.createUser(userRegisterRequest);
+    public CreateUserResponse createUser(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
+        return userService.createUser(userRegisterRequest);
     }
 
     @GetMapping("/users/{userId}/experience")
