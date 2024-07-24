@@ -26,7 +26,9 @@ public class CourseRepository {
 
     private static final String FIND_ALL_COURSES_FOR_TRAINING_CENTER_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE training_center_id=?";
 
-    private static final String FIND_COURSE_BY_ID_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE training_center_id=? AND id=?";
+    private static final String FIND_USER_COURSES = "SELECT c.id, c.training_center_id, c.name, c.start_date, c.end_date, c.start_time, c.end_time, c.price, c.currency, c.max_seats, c.description, c.is_published FROM seai.attendees a JOIN seai.courses c ON a.course_id = c.id WHERE a.user_id = ?";
+
+    private static final String FIND_COURSE_BY_ID_QUERY = "SELECT id, training_center_id, name, start_date, end_date, start_time, end_time, price, currency, max_seats, description, is_published FROM courses WHERE id=?";
 
     private static final String UPDATE_COURSE_QUERY = "UPDATE courses SET name=?, start_date=?, end_date=?, start_time=?, end_time=?, price=?, currency=?, max_seats=?, description=?, is_published=? WHERE training_center_id=? AND id=?";
 
@@ -59,10 +61,14 @@ public class CourseRepository {
         return jdbcTemplate.query(FIND_ALL_COURSES_FOR_TRAINING_CENTER_QUERY, getCourseRowMapper(), trainingCenterId.toString());
     }
 
+    public List<Course> getUserCourses(UUID userId) {
+        return jdbcTemplate.query(FIND_USER_COURSES, getCourseRowMapper(), userId.toString());
+    }
 
-    public Course getCourseById(UUID trainingCenterId, UUID courseId) {
+
+    public Course getCourseById(UUID courseId) {
         try {
-            return jdbcTemplate.queryForObject(FIND_COURSE_BY_ID_QUERY, getCourseRowMapper(), trainingCenterId.toString(), courseId.toString());
+            return jdbcTemplate.queryForObject(FIND_COURSE_BY_ID_QUERY, getCourseRowMapper(), courseId.toString());
         } catch (EmptyResultDataAccessException e) {
             throw new ResourceNotFoundException("Course with id " + courseId + " not found");
         }
