@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -26,6 +27,8 @@ public class AttendeeRepository {
     private static final String FIND_ATTENDEE_BY_ID_QUERY = "SELECT id, name, email, telephone, remark, is_waiting, course_id, user_id FROM attendees WHERE id=?";
 
     private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE id=?";
+
+    private static final String DELETE_ATTENDEE_BY_USER_ID_QUERY = "DELETE FROM attendees WHERE course_id=? AND user_id=?";
 
     private static final String DELETE_ALL_ATTENDEES_QUERY = "DELETE FROM attendees WHERE course_id=?";
 
@@ -65,17 +68,17 @@ public class AttendeeRepository {
         return jdbcTemplate.query(FIND_ATTENDEES_QUERY, getAttendeeRowMapper(), courseId.toString());
     }
 
-    public Attendee findById(UUID id) throws ResourceNotFoundException {
-        try {
-            return jdbcTemplate.queryForObject(FIND_ATTENDEE_BY_ID_QUERY,
-                    getAttendeeRowMapper(), id.toString());
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ResourceNotFoundException("Attendee with id not found : " + id);
-        }
+    public Optional<Attendee> findById(UUID id) throws ResourceNotFoundException {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_ATTENDEE_BY_ID_QUERY,
+                getAttendeeRowMapper(), id.toString()));
     }
 
     public void delete(UUID id) {
         jdbcTemplate.update(DELETE_ATTENDEE_QUERY, id.toString());
+    }
+
+    public void deleteByUserId(UUID courseId, UUID userId) {
+        jdbcTemplate.update(DELETE_ATTENDEE_BY_USER_ID_QUERY, courseId.toString(), userId.toString());
     }
 
     public void deleteAll(UUID id) {
