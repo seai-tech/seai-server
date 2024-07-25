@@ -18,8 +18,8 @@ public class PasswordResetController {
     private final PasswordResetService passwordResetService;
 
 
-    @GetMapping("/forgot-password")
-    public ResetPasswordResponse requestReset(@RequestParam String email) {
+    @PostMapping("/forgot-password")
+    public ResetPasswordResponse requestReset(@RequestBody String email) {
         return passwordResetService.createPasswordResetToken(email);
     }
 

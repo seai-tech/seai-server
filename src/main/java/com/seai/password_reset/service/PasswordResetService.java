@@ -13,6 +13,7 @@ import com.seai.password_reset.model.PasswordResetToken;
 import com.seai.password_reset.contract.request.ChangePasswordRequest;
 import com.seai.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -36,6 +37,8 @@ public class PasswordResetService {
     private final VerificationMessageService verificationMessageService;
     private final ConfirmationMessageService confirmationMessageService;
     private final PasswordResetTokenGenerator tokenGenerator;
+    @Value("${password-verification.token-expiry-period-hours}")
+    private Integer tokenExpiryPeriod;
 
 
     public ResetPasswordResponse createPasswordResetToken(String email) {
@@ -45,7 +48,7 @@ public class PasswordResetService {
         passwordResetToken.setUserId(user.getId());
         passwordResetToken.setToken(tokenGenerator.generateToken(user.getEmail()));
         passwordResetToken.setCreatedAt(LocalDateTime.now());
-        passwordResetToken.setExpiredAt(LocalDateTime.now().plusDays(1));
+        passwordResetToken.setExpiredAt(LocalDateTime.now().plusHours(tokenExpiryPeriod));
         passwordResetRepository.save(passwordResetToken);
         verificationMessageService.sendResetLink(passwordResetToken, email);
         return new ResetPasswordResponse("Reset link has been sent to your email.");
@@ -104,7 +107,7 @@ public class PasswordResetService {
         }
     }
 
-    @Scheduled(cron = "${password-token.scheduler.cron}")
+    @Scheduled(cron = "${password-token-delete.scheduler.cron}")
     public void deleteExpiredTokens() {
         passwordResetRepository.deleteExpiredTokens(LocalDateTime.now());
     }

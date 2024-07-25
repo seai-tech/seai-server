@@ -33,10 +33,13 @@ token:
     cron: "30 18 10 * * ?"
 
 
-password-token:
+password-token-delete:
   scheduler:
     enabled: true
     cron: "00 00 08 * * ?"
+
+password-verification:
+  token-expiry-period-hours: 24
 
 scanner:
   aws:
@@ -48,3 +51,5 @@ urls:
   verification-error: "https://app.seai.co/api/v1/users/verify-email/error?message=" #FIX WHEN WE HAVE FE TO REDIRECT TO SHOW THE MSSAGE
   verification-token-resend: "https://api.seai.co/api/v1/users/resend-email-verification-token?email="
   redirect-to-login: "https://app.seai.co/user/login"
+
+
