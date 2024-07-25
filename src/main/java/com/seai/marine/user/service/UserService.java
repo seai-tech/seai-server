@@ -5,6 +5,7 @@ import com.seai.marine.document.service.DocumentFileService;
 import com.seai.marine.notification.service.ReminderService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
+import com.seai.marine.user.contract.response.CreateUserResponse;
 import com.seai.marine.user.contract.response.GetUserResponse;
 import com.seai.marine.user.mapper.UserMapper;
 import com.seai.marine.user.model.Experience;
@@ -63,12 +64,14 @@ public class UserService {
         return userMapper.mapToGetUserResponse(user);
     }
 
-    public void createUser(UserRegisterRequest userRegisterRequest) {
+    public CreateUserResponse createUser(UserRegisterRequest userRegisterRequest) {
         UUID id = UUID.randomUUID();
         userAuthService.save(userRegisterRequest, id);
         User user = userMapper.map(userRegisterRequest);
         userRepository.save(user, id);
+        user.setId(id);
         reminderService.turnOnReminderSubscription(id, userRegisterRequest.getEmail());
+        return new CreateUserResponse("Account created successfully, to complete your registration, please confirm your email address", user);
     }
 
     public List<Experience> getUserExperience(UUID userId) {
