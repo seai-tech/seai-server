@@ -3,7 +3,6 @@ package com.seai.training_center.attendees.service;
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.marine.user.service.UserService;
 import com.seai.training_center.attendees.contract.request.CreateAttendeeRequest;
 import com.seai.training_center.attendees.contract.request.UpdateAttendeeRequest;
 import com.seai.training_center.attendees.contract.response.GetAttendeeResponse;
@@ -16,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,7 +32,7 @@ public class AttendeeService {
 
 
     public void createAttendee(CreateAttendeeRequest createAttendeeRequest, UUID trainingCenterId, UUID courseId) {
-        GetCourseResponse course = courseService.getCourseById(trainingCenterId, courseId);
+        GetCourseResponse course = courseService.getValidatedCourse(trainingCenterId, courseId);
         courseService.validateMaxSeats(course);
         UserAuthentication user = null;
         try {
@@ -46,20 +46,21 @@ public class AttendeeService {
         attendeeRepository.save(attendee);
     }
 
-    public List<GetAttendeeResponse> getAttendees (UUID trainingCenterId, UUID courseId){
-        courseService.getCourseById(trainingCenterId, courseId);
+    public List<GetAttendeeResponse> getAttendees(UUID trainingCenterId, UUID courseId) {
+        courseService.getValidatedCourse(trainingCenterId, courseId);
         List<Attendee> allAttendees = attendeeRepository.findAll(courseId);
         return allAttendees.stream().map(attendeeMapper::map).toList();
     }
 
     public void updateAttendee(UpdateAttendeeRequest updateRequest, UUID trainingCenterId, UUID courseId, UUID attendeeId) {
-        courseService.getCourseById(trainingCenterId, courseId);
-        validateAttendee(courseId, attendeeId);
-        Attendee existingAttendee = attendeeRepository.findById(attendeeId);
+        courseService.getValidatedCourse(trainingCenterId, courseId);
+        Optional<Attendee> existingAttendee = Optional.ofNullable(attendeeRepository.findById(attendeeId).orElseThrow(() ->
+                new ResourceNotFoundException("Attendee with id " + attendeeId + " not found")));
+        validateAttendeeIsPartOfCourse(courseId, attendeeId);
         Attendee attendee = attendeeMapper.map(updateRequest);
-        attendee.setId(existingAttendee.getId());
+        attendee.setId(existingAttendee.get().getId());
         attendee.setCourseId(courseId);
-        attendee.setUserId(existingAttendee.getUserId());
+        attendee.setUserId(existingAttendee.get().getUserId());
         attendeeRepository.update(attendee);
     }
 
@@ -67,13 +68,13 @@ public class AttendeeService {
         attendeeRepository.delete(attendeeId);
     }
 
-    public void deleteAllAttendees(UUID courseId) {
-        attendeeRepository.deleteAll(courseId);
+    public void deleteUser(UUID courseId, UUID userId) {
+        attendeeRepository.deleteByUserId(courseId, userId);
     }
 
-    public void validateAttendee(UUID courseId, UUID attendeeId) {
-        Attendee attendee = attendeeRepository.findById(attendeeId);
-        if (attendee == null || !attendee.getCourseId().equals(courseId)) {
+    public void validateAttendeeIsPartOfCourse(UUID courseId, UUID attendeeId) {
+        Optional<Attendee> attendee = attendeeRepository.findById(attendeeId);
+        if (attendee.isEmpty() || !attendee.get().getCourseId().equals(courseId)) {
             throw new ResourceNotFoundException("Attendee with id: " + attendeeId + " is not part of course with id: " + courseId);
         }
     }

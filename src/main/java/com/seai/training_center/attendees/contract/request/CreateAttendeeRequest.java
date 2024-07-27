@@ -1,11 +1,14 @@
 package com.seai.training_center.attendees.contract.request;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.UUID;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class CreateAttendeeRequest {
 
         private String name;
