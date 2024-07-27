@@ -14,7 +14,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/")
 @RequiredArgsConstructor
-public class CourseController {
+public class TrainingCenterCourseController {
 
     private final CourseService courseService;
 
@@ -35,7 +35,7 @@ public class CourseController {
 
     @GetMapping("/{trainingCenterId}/courses/{courseId}")
     public GetCourseResponse getCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        return courseService.getCourseById(trainingCenterId, courseId);
+        return courseService.getValidatedCourse(trainingCenterId, courseId);
     }
 
     @PutMapping("/{trainingCenterId}/courses/{courseId}")
