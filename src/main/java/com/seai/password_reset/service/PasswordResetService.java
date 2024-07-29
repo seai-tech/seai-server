@@ -1,24 +1,20 @@
 package com.seai.password_reset.service;
 
-import com.seai.exception.DuplicatedResourceException;
 import com.seai.exception.PasswordException;
+import com.seai.exception.TokenException;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.password_reset.PasswordResetTokenGenerator;
 import com.seai.password_reset.contract.request.ForgotPasswordRequest;
 import com.seai.password_reset.contract.response.ResetPasswordResponse;
 import com.seai.password_reset.message_service.ConfirmationMessageService;
-import com.seai.password_reset.message_service.VerificationMessageService;
+import com.seai.password_reset.message_service.ResetMessageService;
 import com.seai.password_reset.model.PasswordResetToken;
 import com.seai.password_reset.contract.request.ChangePasswordRequest;
 import com.seai.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +30,7 @@ public class PasswordResetService {
     private final UserAuthenticationRepository userAuthenticationRepository;
     private final PasswordEncoder passwordEncoder;
     private final PasswordResetRepository passwordResetRepository;
-    private final VerificationMessageService verificationMessageService;
+    private final ResetMessageService resetMessageService;
     private final ConfirmationMessageService confirmationMessageService;
     private final PasswordResetTokenGenerator tokenGenerator;
     @Value("${password-verification.token-expiry-period-hours}")
@@ -50,7 +46,7 @@ public class PasswordResetService {
         passwordResetToken.setCreatedAt(LocalDateTime.now());
         passwordResetToken.setExpiredAt(LocalDateTime.now().plusHours(tokenExpiryPeriod));
         passwordResetRepository.save(passwordResetToken);
-        verificationMessageService.sendResetLink(passwordResetToken, email);
+        resetMessageService.sendResetLink(passwordResetToken, email);
         return new ResetPasswordResponse("Reset link has been sent to your email.");
     }
 
@@ -59,10 +55,10 @@ public class PasswordResetService {
         PasswordResetToken passwordResetToken = passwordResetRepository.findByToken(token);
         UserAuthentication userAuthentication = userAuthenticationRepository.findByEmail(tokenGenerator.extractEmail(token));
         if (passwordResetToken == null) {
-            throw new DuplicatedResourceException("Invalid token"); // will change to TokenException from emailVerification
+            throw new TokenException("Invalid token");
         }
         if (passwordResetToken.isExpired()) {
-            throw new DuplicatedResourceException("Token has expired"); // will change to  TokenException from emailVerification
+            throw new TokenException("Token has expired");
         }
         if (!forgotPasswordRequest.arePasswordsMatching()) {
             throw new PasswordException("Passwords do not match");
@@ -76,7 +72,6 @@ public class PasswordResetService {
 
     public ResetPasswordResponse changePassword(UUID userId, ChangePasswordRequest request) {
         UserAuthentication userAuthentication = userAuthenticationRepository.findById(userId);
-        checkIfCurrentUserIsAuthorized(userAuthentication.getEmail());
         validatePasswordChange(request, userAuthentication);
         userAuthentication.setPassword(request.getNewPassword());
         userAuthenticationRepository.updateUserPassword(userAuthentication);
@@ -91,19 +86,6 @@ public class PasswordResetService {
         }
         if (!changePasswordRequest.arePasswordsMatching()) {
             throw new PasswordException("Passwords do not match");
-        }
-    }
-
-    private void checkIfCurrentUserIsAuthorized(String email) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof UserDetails) {
-                String currentUserEmail = ((UserDetails) principal).getUsername();
-                if (!currentUserEmail.equals(email)) {
-                    throw new AccessDeniedException("You are not authorized to request a password reset for this account.");
-                }
-            }
         }
     }
 
