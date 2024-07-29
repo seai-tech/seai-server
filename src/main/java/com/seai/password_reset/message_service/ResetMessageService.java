@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class VerificationMessageService {
+public class ResetMessageService {
 
-    @Value("${password-urls.change-password}")
-    private String changePasswordUrl;
+    @Value("${password-urls.reset-password}")
+    private String resetPasswordUrl;
 
     private final EmailSender emailSender;
 
@@ -21,7 +21,7 @@ public class VerificationMessageService {
                 "This link will expire in 24 hours. You can change your password by clicking the link below:<br><br>" +
                 "<a href=\"%s\">Change password</a><br><br>" +
                 "If you did not request a password reset, please ignore this email or contact support if you have questions.<br><br>" +
-                "Thank you,<br>The SEAI Team", changePasswordUrl + token.getToken());
+                "Thank you,<br>The SEAI Team", resetPasswordUrl + token.getToken());
 
         emailSender.sendSimpleMessage(email, "SeAI Password Reset Request", message);
     }
