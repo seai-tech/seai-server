@@ -107,4 +107,12 @@ public class GlobalExceptionHandler {
     }
 
 
+
+    @ExceptionHandler(PasswordException.class)
+    public ResponseEntity<ProblemDetail> handlePasswordException(PasswordException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problemDetail);
+    }
 }
