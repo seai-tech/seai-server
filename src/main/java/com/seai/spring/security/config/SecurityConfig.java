@@ -2,6 +2,7 @@ package com.seai.spring.security.config;
 
 import com.seai.spring.security.filter.TrainingCentersAuthFilter;
 import com.seai.spring.security.filter.UsersAuthFilter;
+import com.seai.spring.security.service.ManningAgentDetailsServiceImpl;
 import com.seai.spring.security.service.TrainingCenterDetailsServiceImpl;
 import com.seai.spring.security.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,8 @@ public class SecurityConfig {
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
     private final TrainingCenterDetailsServiceImpl trainingCenterDetailsService;
+
+    private final ManningAgentDetailsServiceImpl manningAgentDetailsService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -86,6 +89,25 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(3)
+    public SecurityFilterChain manningAgentFilterChain(HttpSecurity http) throws Exception {
+        http.securityMatcher("/api/v1/manning-agents/**").csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers(HttpMethod.POST, "/api/v1/manning-agents", "/api/v1/manning-agents/authentication")
+                        .permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/manning-agents/**")
+                        .authenticated())
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(manningAgentAuthenticationProvider()).addFilterBefore(
+                        trainingCentersAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -112,10 +134,19 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationProvider manningAgentAuthenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(manningAgentDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return authenticationProvider;
+    }
+
+    @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(usersAuthenticationProvider());
         authenticationManagerBuilder.authenticationProvider(trainingCentersAuthenticationProvider());
+        authenticationManagerBuilder.authenticationProvider(manningAgentAuthenticationProvider());
         return authenticationManagerBuilder.build();
     }
 }
