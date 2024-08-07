@@ -13,18 +13,21 @@ public class ResendConfirmationMessageBuilder {
     @Value("${urls.verify-token}")
     private String verifyTokenUrl;
 
+    @Value("${email-verification.minutes-displayed-in-message}")
+    private String minutes;
+
     private final EmailSender emailSender;
 
     public void resendConfirmationMessage(String email, String token) {
         String url = verifyTokenUrl + token;
         String message = String.format(
                 "Dear Sailor,<br><br>" +
-                        "You requested a new confirmation link. To complete your registration, please confirm your email address within the next 15 minutes by clicking the button below:<br><br>" +
+                        "You requested a new confirmation link. To complete your registration, please confirm your email address within the next %s minutes by clicking the button below:<br><br>" +
                         "<a href=\"%s\">Verify Email</a><br><br>" +
                         "If you did not request this, please ignore this email.<br><br>" +
                         "Best regards,<br>" +
                         "The SeAI Team",
-                url
+                minutes, url
         );
         emailSender.sendSimpleMessage(email, "Email Verification", message);
     }
