@@ -5,6 +5,7 @@ import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.User;
 import com.seai.marine.user.model.VesselType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -33,7 +34,16 @@ public class ManningAgentSailorRepository {
     }
 
     public Optional<User> getSailorById(UUID manningAgentId, UUID userId) {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_SAILOR_BY_ID_QUERY, getSailorRowMapper(), manningAgentId.toString(), userId.toString()));
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_SAILOR_BY_ID_QUERY,
+                    getSailorRowMapper(),
+                    manningAgentId.toString(),
+                    userId.toString()
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public User createSailor(User user) {
