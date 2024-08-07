@@ -1,5 +1,6 @@
 package com.seai.spring.security.config;
 
+import com.seai.spring.security.filter.ManningAgentAuthFilter;
 import com.seai.spring.security.filter.TrainingCentersAuthFilter;
 import com.seai.spring.security.filter.UsersAuthFilter;
 import com.seai.spring.security.service.ManningAgentDetailsServiceImpl;
@@ -35,6 +36,8 @@ public class SecurityConfig {
     private final UsersAuthFilter usersAuthFilter;
 
     private final TrainingCentersAuthFilter trainingCentersAuthFilter;
+
+    private final ManningAgentAuthFilter manningAgentAuthFilter;
 
     private final UserDetailsServiceImpl userDetailsServiceImpl;
 
@@ -107,7 +110,7 @@ public class SecurityConfig {
                         .authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(manningAgentAuthenticationProvider()).addFilterBefore(
-                        trainingCentersAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        manningAgentAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
