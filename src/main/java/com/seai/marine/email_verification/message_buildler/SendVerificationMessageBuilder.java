@@ -14,6 +14,9 @@ public class SendVerificationMessageBuilder {
     @Value("${urls.verify-token}")
     private String verifyTokenUrl;
 
+    @Value("{email-verification.minutes-displayed-in-message}")
+    private String tokenMinutes;
+
     private final EmailSender emailSender;
 
     public void sendVerificationMessage(UserRegisterRequest userRegisterRequest, String email, String token) {
@@ -21,12 +24,12 @@ public class SendVerificationMessageBuilder {
                 "Dear %s, <br><br>" +
                         "Thank you for registering with SeAI. To complete your registration, please confirm your email address by clicking the button below:<br><br>" +
                         "<a href=\"%s\">Verify Email</a><br><br>" +
-                        "Confirmation token has 15 minutes expiration time.<br><br>" +
+                        "Confirmation token has %s minutes expiration time.<br><br>" +
                         "If you did not create an account with us, please ignore this email.<br><br>" +
                         "Best regards,<br>" +
                         "The SeAI.co Team",
         userRegisterRequest.getFirstName() + " " + userRegisterRequest.getLastName(),
-                verifyTokenUrl + token);
+                verifyTokenUrl + token, tokenMinutes);
         emailSender.sendSimpleMessage(email, "Email Verification", message);
     }
 }
