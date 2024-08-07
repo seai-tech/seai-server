@@ -21,6 +21,8 @@ public class PasswordResetRepository {
 
     private static final String DELETE_EXPIRED_TOKENS_QUERY = "DELETE FROM password_reset_tokens WHERE expired_at < ?";
 
+    private static final String DELETE_TOKENS_BY_USER_ID_QUERY = "DELETE FROM password_reset_tokens WHERE user_id=?";
+
     private final JdbcTemplate jdbcTemplate;
 
 
@@ -45,6 +47,10 @@ public class PasswordResetRepository {
 
     public void deleteExpiredTokens(LocalDateTime now) {
         jdbcTemplate.update(DELETE_EXPIRED_TOKENS_QUERY, Timestamp.valueOf(now));
+    }
+
+    public void deleteUserTokens(UUID userId) {
+        jdbcTemplate.update(DELETE_TOKENS_BY_USER_ID_QUERY, userId.toString());
     }
 
 
