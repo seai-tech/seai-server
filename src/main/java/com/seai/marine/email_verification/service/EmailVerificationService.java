@@ -10,12 +10,14 @@ import com.seai.marine.email_verification.model.VerificationToken;
 import com.seai.marine.email_verification.repository.EmailVerificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -47,22 +49,22 @@ public class EmailVerificationService {
         return emailVerificationRepository.findByToken(token);
     }
 
-
-    public String VerifyToken(String token) {
+    @Async
+    public CompletableFuture<String> verifyToken(String token) {
         Optional<VerificationToken> confirmationToken = getVerificationToken(token);
         if (confirmationToken.isEmpty()) {
-            return  verificationErrorUrl + "Token not found";
+            return CompletableFuture.completedFuture(verificationErrorUrl + "Token not found");
         }
         if (confirmationToken.get().getConfirmedAt() != null) {
-            return redirectToLoginUrl;
-        };
+            return CompletableFuture.completedFuture(redirectToLoginUrl);
+        }
         if (confirmationToken.get().getExpiredAt().isBefore(LocalDateTime.now())) {
-            return verificationTokenResendUrl;
+            return CompletableFuture.completedFuture(verificationTokenResendUrl);
         }
         confirmationToken.get().setConfirmedAt(LocalDateTime.now());
         emailVerificationRepository.update(confirmationToken.get());
         sendConfirmationMessageBuilder.sendConfirmationMessage(confirmationToken);
-        return redirectToLoginUrl;
+        return CompletableFuture.completedFuture(redirectToLoginUrl);
     }
 
 
@@ -81,8 +83,8 @@ public class EmailVerificationService {
         return confirmationToken.isPresent() && confirmationToken.get().getConfirmedAt() != null;
     }
 
-
-    public TokenConfirmedResponse resendEmailVerificationToken(String email) {
+    @Async
+    public CompletableFuture<TokenConfirmedResponse> resendEmailVerificationToken(String email) {
         UserAuthentication user = userAuthenticationRepository.findByEmail(email);
         Optional<VerificationToken> existingToken = findValidToken(user.getId());
         if (isEmailConfirmed(user.getId())) {
@@ -96,7 +98,7 @@ public class EmailVerificationService {
         verificationToken.setToken(tokenGenerator.generateToken());
         saveVerificationToken(verificationToken);
         resendConfirmationMessageBuilder.resendConfirmationMessage(email, verificationToken.getToken());
-        return new TokenConfirmedResponse("A new verification link has been sent to your email address.");
+        return CompletableFuture.completedFuture(new TokenConfirmedResponse("A new verification link has been sent to your email address."));
     }
 
     @Scheduled(cron = "${token.scheduler.cron}")
