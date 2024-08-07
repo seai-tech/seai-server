@@ -17,6 +17,7 @@ import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
+import com.seai.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,9 +49,12 @@ public class UserService {
 
     private final EmailVerificationRepository emailVerificationRepository;
 
+    private final PasswordResetRepository passwordResetRepository;
+
     @Transactional
     public void delete(UUID uuid) {
         reminderService.turnOffReminderSubscription(uuid);
+        passwordResetRepository.deleteUserTokens(uuid);
         emailVerificationRepository.deleteUserToken(uuid);
         voyageRepository.deleteAll(uuid);
         documentRepository.deleteAll(uuid);
