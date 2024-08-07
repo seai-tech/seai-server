@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,8 +17,8 @@ public class EmailVerificationController {
     private final EmailVerificationService emailVerificationService;
 
     @GetMapping("/verify-email")
-    public void verifyEmail(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
-        response.sendRedirect(emailVerificationService.VerifyToken(token));
+    public void verifyEmail(@RequestParam("token") String token, HttpServletResponse response) throws IOException, ExecutionException, InterruptedException {
+        response.sendRedirect(emailVerificationService.verifyToken(token).get());
     }
 
     @PostMapping("/resend-email-verification-token")
