@@ -18,6 +18,8 @@ public class CreateSailorRequest {
 
     private String lastName;
 
+    private String email;
+
     private Rank rank;
 
     private String presentEmployer;
