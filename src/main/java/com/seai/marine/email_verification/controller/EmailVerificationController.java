@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class EmailVerificationController {
     }
 
     @PostMapping("/resend-email-verification-token")
-    public TokenConfirmedResponse resendEmailVerificationToken(@RequestParam String email) {
+    public CompletableFuture<TokenConfirmedResponse> resendEmailVerificationToken(@RequestParam String email) {
         return emailVerificationService.resendEmailVerificationToken(email);
     }
 }
