@@ -34,7 +34,10 @@ public class ManningAgentVoyageService {
 
     public List<GetVoyageResponse> findAllByUser(UUID manningAgentId, UUID sailorId) {
         Optional<User> user = manningAgentSailorService.getSailorById(manningAgentId, sailorId);
-        return voyageRepository.findByUserId(user.get().getId()).stream().map(voyageMapper::map).toList();
+        return voyageRepository.findByUserId(user.get().getId())
+                .stream()
+                .map(voyageMapper::map)
+                .toList();
     }
 
     public void updateVoyage(UpdateVoyageRequest updateVoyageRequest, UUID manningAgentId, UUID sailorId, UUID voyageId) {
