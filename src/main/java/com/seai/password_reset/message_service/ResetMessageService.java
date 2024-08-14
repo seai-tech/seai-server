@@ -5,6 +5,8 @@ import com.seai.password_reset.model.PasswordResetToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @Service
 @RequiredArgsConstructor
@@ -17,15 +19,13 @@ public class ResetMessageService {
     private String hours;
 
     private final EmailSender emailSender;
+    private final TemplateEngine templateEngine;
 
     public void sendResetLink(PasswordResetToken token, String email) {
-        String message = String.format("Greetings Sailor,<br><br>" +
-                "We received a request to reset your password.<br><br>" +
-                "This link will expire in %s hours. You can change your password by clicking the link below:<br><br>" +
-                "<a href=\"%s\">Change password</a><br><br>" +
-                "If you did not request a password reset, please ignore this email or contact support if you have questions.<br><br>" +
-                "Thank you,<br>The SEAI Team", hours, resetPasswordUrl + token.getToken());
-
+        Context context = new Context();
+        context.setVariable("hours", hours);
+        context.setVariable("resetPasswordUrl", resetPasswordUrl + token.getToken());
+        String message = templateEngine.process("password_reset/reset_message_template.html", context);
         emailSender.sendSimpleMessage(email, "SeAI Password Reset Request", message);
     }
 }
