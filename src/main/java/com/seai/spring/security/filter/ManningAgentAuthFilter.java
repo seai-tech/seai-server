@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ManningAgentAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-
+    private static final String BEARER = "Bearer ";
     private final ManningAgentDetailsServiceImpl manningAgentDetailsService;
 
     @Override
@@ -29,11 +29,10 @@ public class ManningAgentAuthFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
+        if (authHeader != null && authHeader.startsWith(BEARER)) {
+            token = authHeader.substring(BEARER.length());
             username = jwtService.extractUsername(token);
         }
-
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = manningAgentDetailsService.loadUserByUsername(username);
