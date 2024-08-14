@@ -98,7 +98,8 @@ public class SecurityConfig {
     @Bean
     @Order(3)
     public SecurityFilterChain manningAgentFilterChain(HttpSecurity http) throws Exception {
-        http.securityMatcher("/api/v1/manning-agents/**").csrf(AbstractHttpConfigurer::disable)
+        http.securityMatcher("/api/v1/manning-agents/**")
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/api/v1/manning-agents", "/api/v1/manning-agents/authentication")
                         .permitAll()
@@ -109,7 +110,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/manning-agents/**")
                         .authenticated())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(manningAgentAuthenticationProvider()).addFilterBefore(
+                .authenticationProvider(manningAgentAuthenticationProvider())
+                .addFilterBefore(
                         manningAgentAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
