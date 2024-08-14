@@ -50,9 +50,4 @@ public class ManningAgentSailorService {
         manningAgentSailorRepository.delete(manningAgentId, sailorId);
         userAuthenticationRepository.delete(sailorId);
     }
-
-
-
-
-
 }
