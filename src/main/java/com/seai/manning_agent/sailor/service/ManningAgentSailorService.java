@@ -2,6 +2,8 @@ package com.seai.manning_agent.sailor.service;
 
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.manning_agent.sailor.contract.request.CreateSailorRequest;
+import com.seai.manning_agent.sailor.document.repository.ManningAgentDocumentRepository;
+import com.seai.manning_agent.sailor.document.service.ManningAgentDocumentFileService;
 import com.seai.manning_agent.sailor.mapper.SailorMapper;
 import com.seai.manning_agent.sailor.repository.ManningAgentSailorRepository;
 import com.seai.marine.user.model.User;
@@ -20,9 +22,9 @@ import java.util.UUID;
 public class ManningAgentSailorService {
 
     private final SailorMapper sailorMapper;
-
     private final ManningAgentSailorRepository manningAgentSailorRepository;
-
+    private final ManningAgentDocumentFileService documentFileService;
+    private final ManningAgentDocumentRepository documentRepository;
     private final UserAuthenticationRepository userAuthenticationRepository;
 
 
@@ -47,12 +49,9 @@ public class ManningAgentSailorService {
 
     @Transactional
     public void delete(UUID manningAgentId, UUID sailorId) {
+        documentFileService.deleteAllForUser(sailorId);
+        documentRepository.deleteAll(sailorId);
         manningAgentSailorRepository.delete(manningAgentId, sailorId);
         userAuthenticationRepository.delete(sailorId);
     }
-
-
-
-
-
 }
