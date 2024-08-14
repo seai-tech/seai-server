@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -50,6 +51,7 @@ public class EmailVerificationService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<String> verifyToken(String token) {
         Optional<VerificationToken> confirmationToken = getVerificationToken(token);
         if (confirmationToken.isEmpty()) {
@@ -84,6 +86,7 @@ public class EmailVerificationService {
     }
 
     @Async
+    @Transactional
     public CompletableFuture<TokenConfirmedResponse> resendEmailVerificationToken(String email) {
         UserAuthentication user = userAuthenticationRepository.findByEmail(email);
         Optional<VerificationToken> existingToken = findValidToken(user.getId());
