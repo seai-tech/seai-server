@@ -10,6 +10,4 @@ public interface ManningAgentMapper {
 
     ManningAgent map(CreateManningAgentRequest createManningAgentRequest);
 
-//    ManningAgent map(ManningAgentUpdateRequest manningAgentUpdateRequest);
-
 }
