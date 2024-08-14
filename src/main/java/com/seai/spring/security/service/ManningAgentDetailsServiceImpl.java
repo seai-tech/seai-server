@@ -24,7 +24,8 @@ public class ManningAgentDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<ManningAgentAuthentication> manningAgent = Optional.ofNullable(manningAgentAuthRepository.findByEmail(email).orElseThrow(() ->
                     new ResourceNotFoundException("User with email not found : " + email)));
-        return new SecurityUser(manningAgent.get().getId(), manningAgent.get().getEmail(), manningAgent.get().getPassword()
+        ManningAgentAuthentication manningAgentAuth = manningAgent.get();
+        return new SecurityUser(manningAgentAuth.getId(), manningAgentAuth.getEmail(), manningAgentAuth.getPassword()
                 , Collections.emptyList());
     }
 }
