@@ -25,27 +25,28 @@ import java.util.UUID;
 public class ManningAgentSailorController {
 
     private final ManningAgentSailorService manningAgentSailorService;
+    private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
     @GetMapping("{manningAgentId}/sailors")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public List<User> getAllSailors(@PathVariable UUID manningAgentId) {
         return manningAgentSailorService.getAllSailors(manningAgentId);
     }
 
     @GetMapping("{manningAgentId}/sailors/{sailorId}")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public Optional<User> getSailorById(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         return manningAgentSailorService.getSailorById(manningAgentId, sailorId);
     }
 
     @PostMapping("{manningAgentId}/sailors")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public User createSailor(@PathVariable UUID manningAgentId, @RequestBody @Valid CreateSailorRequest createSailorRequest) {
         return manningAgentSailorService.createSailor(manningAgentId, createSailorRequest);
     }
 
     @DeleteMapping("{manningAgentId}/sailors/{sailorId}")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public void deleteUser(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         manningAgentSailorService.delete(manningAgentId, sailorId);
     }

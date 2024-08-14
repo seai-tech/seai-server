@@ -17,27 +17,29 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ManningAgentVoyageController {
     private final ManningAgentVoyageService manningAgentVoyageService;
+    private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
+
 
     @PostMapping("{manningAgentId}/sailors/{sailorId}/voyages")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public Voyage createSailorVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @RequestBody CreateVoyageRequest voyageRequest) {
         return manningAgentVoyageService.createSailorVoyage(manningAgentId, sailorId, voyageRequest);
     }
 
     @GetMapping("{manningAgentId}/sailors/{sailorId}/voyages")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public List<GetVoyageResponse> findAllByUser(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         return manningAgentVoyageService.findAllByUser(manningAgentId, sailorId);
     }
 
     @PutMapping("{manningAgentId}/sailors/{sailorId}/voyages/{voyageId}")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public void updateVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID voyageId, @RequestBody UpdateVoyageRequest updateVoyageRequest) {
         manningAgentVoyageService.updateVoyage(updateVoyageRequest, manningAgentId, sailorId, voyageId);
     }
 
-    @DeleteMapping("{manningAgentId}/sailors/{sailorId}/voyages/{voyageId}-")
-    @PreAuthorize("#manningAgentId.equals(authentication.principal.id)")
+    @DeleteMapping("{manningAgentId}/sailors/{sailorId}/voyages/{voyageId}")
+    @PreAuthorize(AUTHORIZATION)
     public void deleteVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID voyageId) {
         manningAgentVoyageService.deleteVoyage(manningAgentId, sailorId, voyageId);
     }
