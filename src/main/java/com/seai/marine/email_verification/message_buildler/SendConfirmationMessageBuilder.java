@@ -8,6 +8,8 @@ import com.seai.marine.email_verification.model.VerificationToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import java.util.Optional;
 
@@ -19,22 +21,15 @@ public class SendConfirmationMessageBuilder {
     private String verifyTokenUrl;
 
     private final EmailSender emailSender;
-
     private final UserAuthenticationRepository userAuthenticationRepository;
+    private final TemplateEngine templateEngine;
+
 
     public void sendConfirmationMessage(Optional<VerificationToken> token) {
         UserAuthentication user = userAuthenticationRepository.findById(token.get().getUserId());
-        String message = String.format(
-                "Ahoy, Sailor!<br><br>" +
-                        "Congratulations! Your email has been successfully verified and your account is now ready for smooth sailing.<br><br>" +
-                        "We're thrilled to have you aboard the SeAI crew. Here are some tips to get you started:<br><br>" +
-                        "Explore the features: Navigate through our platform and discover all the awesome features we have to offer.<br>" +
-                        "Stay updated: Keep an eye on your inbox for the latest updates and exciting news.<br>" +
-                        "If you have any questions or need assistance, our support team is here to help. Just send us an email at support@seai.co.<br><br>" +
-                        "Wishing you calm seas and prosperous voyages!<br><br>" +
-                        "Best regards,<br>" +
-                        "The SeAI.co Crew"
-        );
+        Context context = new Context();
+        context.setVariable("verifyTokenUrl", verifyTokenUrl + token.get().getToken());
+        String message = templateEngine.process("email_verification/confirmation_message_template.html", context);
         emailSender.sendSimpleMessage(user.getEmail(), "Welcome Aboard!", message);
     }
 }
