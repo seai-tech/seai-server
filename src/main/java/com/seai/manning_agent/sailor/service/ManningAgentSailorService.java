@@ -35,6 +35,7 @@ public class ManningAgentSailorService {
                 -> new ResourceNotFoundException("Sailor with id: " + sailorId + " not found.")));
     }
 
+    @Transactional
     public User createSailor(UUID manningAgentId, CreateSailorRequest sailorRequest) {
         User sailor = sailorMapper.map(sailorRequest);
         sailor.setId(UUID.randomUUID());
