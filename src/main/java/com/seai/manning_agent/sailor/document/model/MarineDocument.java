@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@Getter
 public class MarineDocument {
     private final UUID id;
     private final UUID userId;
