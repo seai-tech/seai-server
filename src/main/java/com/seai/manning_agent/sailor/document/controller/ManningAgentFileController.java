@@ -10,26 +10,26 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/manning-agents")
+@RequestMapping("api/v1/manning-agents/{manningAgentId}/sailors/{sailorId}/documents/{documentId}/files")
 @RequiredArgsConstructor
 public class ManningAgentFileController {
 
     private final ManningAgentFileService documentFileService;
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
-    @PostMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}/files")
+    @PostMapping
     @PreAuthorize(AUTHORIZATION)
     public void upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentFileService.upload(multipartFile, manningAgentId, sailorId, documentId);
     }
 
-    @DeleteMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}/files")
+    @DeleteMapping
     @PreAuthorize(AUTHORIZATION)
     public void delete(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentFileService.delete(manningAgentId, sailorId, documentId);
     }
 
-    @GetMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}/files")
+    @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public ResponseEntity<byte[]> download(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         return documentFileService.download(manningAgentId, sailorId, documentId);
