@@ -9,11 +9,10 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
 @Getter
 public class MarineDocument {
-    private UUID id;
-    private UUID userId;
+    private final UUID id;
+    private final UUID userId;
     private String name;
     private String number;
     private Date issueDate;
