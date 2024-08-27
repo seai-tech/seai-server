@@ -15,50 +15,44 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/manning-agents")
+@RequestMapping("api/v1/manning-agents/{manningAgentId}/sailors/{sailorId}/documents")
 @RequiredArgsConstructor
 public class ManningAgentDocumentController {
 
     private final ManningAgentDocumentService documentService;
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
-    //OCR
-    @PostMapping(value = "{manningAgentId}/sailors/{sailorId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @PreAuthorize(AUTHORIZATION)
-    public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
-        return documentService.upload(multipartFile, manningAgentId, sailorId);
-    }
 
     //CREATE
-    @PostMapping("{manningAgentId}/sailors/{sailorId}/documents")
+    @PostMapping
     @PreAuthorize(AUTHORIZATION)
     public CreateDocumentResponse create(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @RequestBody CreateDocumentRequest createDocumentRequest) {
         return documentService.create(manningAgentId, sailorId, createDocumentRequest);
     }
 
     //READ
-    @GetMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}")
+    @GetMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public GetDocumentResponse find(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         return documentService.find(manningAgentId, sailorId, documentId);
     }
 
     //UPDATE
-    @PutMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}")
+    @PutMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public void update(@RequestBody UpdateDocumentRequest updateDocumentRequest, @PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentService.update(updateDocumentRequest, manningAgentId, sailorId, documentId);
     }
 
     //DELETE
-    @DeleteMapping("{manningAgentId}/sailors/{sailorId}/documents/{documentId}")
+    @DeleteMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public void delete(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentService.delete(manningAgentId, sailorId, documentId);
     }
 
     //FIND ALL
-    @GetMapping("{manningAgentId}/sailors/{sailorId}/documents")
+    @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<GetDocumentResponse> findAll(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         return documentService.findAll(manningAgentId, sailorId);
