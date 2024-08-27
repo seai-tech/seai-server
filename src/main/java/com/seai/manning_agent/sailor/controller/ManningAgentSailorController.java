@@ -21,31 +21,31 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/manning-agents")
+@RequestMapping("/api/v1/manning-agents/{manningAgentId}/sailors")
 public class ManningAgentSailorController {
 
     private final ManningAgentSailorService manningAgentSailorService;
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
-    @GetMapping("{manningAgentId}/sailors")
+    @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<User> getAllSailors(@PathVariable UUID manningAgentId) {
         return manningAgentSailorService.getAllSailors(manningAgentId);
     }
 
-    @GetMapping("{manningAgentId}/sailors/{sailorId}")
+    @GetMapping("/{sailorId}")
     @PreAuthorize(AUTHORIZATION)
     public Optional<User> getSailorById(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         return manningAgentSailorService.getSailorById(manningAgentId, sailorId);
     }
 
-    @PostMapping("{manningAgentId}/sailors")
+    @PostMapping("/sailors")
     @PreAuthorize(AUTHORIZATION)
     public User createSailor(@PathVariable UUID manningAgentId, @RequestBody @Valid CreateSailorRequest createSailorRequest) {
         return manningAgentSailorService.createSailor(manningAgentId, createSailorRequest);
     }
 
-    @DeleteMapping("{manningAgentId}/sailors/{sailorId}")
+    @DeleteMapping("/{sailorId}")
     @PreAuthorize(AUTHORIZATION)
     public void deleteUser(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         manningAgentSailorService.delete(manningAgentId, sailorId);
