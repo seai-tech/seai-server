@@ -2,7 +2,6 @@ package com.seai.manning_agent.sailor.document.model;
 
 import lombok.Data;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Date;
@@ -21,7 +20,7 @@ public class MarineDocument {
     private String path;
     private boolean isVerified;
 
-    public MarineDocument(UUID id, UUID userId, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
+    private MarineDocument(UUID id, UUID userId, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
         this.id = id;
         this.userId = userId;
         this.name = name;
