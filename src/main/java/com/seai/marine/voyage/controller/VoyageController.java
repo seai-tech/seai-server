@@ -30,9 +30,9 @@ public class VoyageController {
 
     @PostMapping("/users/{userId}/voyages")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void createVoyage(@RequestBody CreateVoyageRequest voyageRequest, @PathVariable UUID userId) {
+    public Voyage createVoyage(@RequestBody CreateVoyageRequest voyageRequest, @PathVariable UUID userId) {
         Voyage voyage = voyageMapper.map(voyageRequest);
-        voyageRepository.save(voyage, userId);
+        return voyageRepository.save(voyage, userId);
     }
 
     @GetMapping("/users/{userId}/voyages")

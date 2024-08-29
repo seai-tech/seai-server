@@ -24,6 +24,8 @@ public class EmailVerificationRepository {
 
     private static final String DELETE_EXPIRED_TOKENS_QUERY = "DELETE FROM confirmation_tokens WHERE expired_at < ? AND confirmed_at IS NULL";
 
+    private static final String DELETE_TOKENS_BY_USER_ID_QUERY = "DELETE FROM confirmation_tokens WHERE user_id=?";
+
     private static final String FIND_BY_USER_ID_QUERY = "SELECT * FROM confirmation_tokens WHERE user_id = ? AND confirmed_at IS NOT NULL";
 
     private static final String FIND_VALID_TOKENS_QUERY = "SELECT * FROM confirmation_tokens WHERE expired_at > ? AND confirmed_at IS NULL AND user_id = ?";
@@ -62,6 +64,10 @@ public class EmailVerificationRepository {
 
     public void deleteAllExpiredTokens(LocalDateTime now) {
         jdbcTemplate.update(DELETE_EXPIRED_TOKENS_QUERY, Timestamp.valueOf(now));
+    }
+
+    public void deleteUserToken(UUID userId) {
+        jdbcTemplate.update(DELETE_TOKENS_BY_USER_ID_QUERY, userId.toString());
     }
 
     public Optional<VerificationToken> findByUserId(UUID userId) {

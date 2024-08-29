@@ -30,9 +30,9 @@ public class VoyageRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public void save(Voyage voyage, UUID userId) {
+    public Voyage save(Voyage voyage, UUID userId) {
         jdbcTemplate.update(SAVE_VOYAGE_QUERY,
-                UUID.randomUUID(),
+                voyage.getId(),
                 userId,
                 voyage.getVesselName(),
                 Optional.ofNullable(voyage.getVesselType()).map(VesselType::name).orElse(null),
@@ -44,6 +44,7 @@ public class VoyageRepository {
                 Optional.ofNullable(voyage.getLeavingDate()).map(v -> Timestamp.from(v.toInstant())).orElse(null),
                 voyage.getRemarks(),
                 voyage.getFlag());
+        return voyage;
     }
 
 

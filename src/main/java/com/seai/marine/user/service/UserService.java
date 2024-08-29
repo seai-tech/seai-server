@@ -2,6 +2,7 @@ package com.seai.marine.user.service;
 
 import com.seai.marine.document.repository.DocumentRepository;
 import com.seai.marine.document.service.DocumentFileService;
+import com.seai.marine.email_verification.repository.EmailVerificationRepository;
 import com.seai.marine.notification.service.ReminderService;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.request.UserUpdateRequest;
@@ -16,8 +17,10 @@ import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
+import com.seai.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -44,13 +47,20 @@ public class UserService {
 
     private final ReminderService reminderService;
 
+    private final EmailVerificationRepository emailVerificationRepository;
+
+    private final PasswordResetRepository passwordResetRepository;
+
+    @Transactional
     public void delete(UUID uuid) {
+        reminderService.turnOffReminderSubscription(uuid);
+        passwordResetRepository.deleteUserTokens(uuid);
+        emailVerificationRepository.deleteUserToken(uuid);
         voyageRepository.deleteAll(uuid);
         documentRepository.deleteAll(uuid);
+        documentFileService.deleteAllForUser(uuid);
         userRepository.delete(uuid);
         userAuthenticationRepository.delete(uuid);
-        documentFileService.deleteAllForUser(uuid);
-        reminderService.turnOffReminderSubscription(uuid);
     }
 
     public void updateUser(UserUpdateRequest updateUserRequest, UUID userId) {

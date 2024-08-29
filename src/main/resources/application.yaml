@@ -6,6 +6,9 @@ spring:
   servlet:
     multipart:
       max-file-size: 30MB
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
 
   mail:
     host: smtp.privateemail.com
@@ -21,6 +24,7 @@ spring:
 
 email-verification:
   token-expiry-period-minutes: 43200 #1 month
+  minutes-displayed-in-message: 43200 #1 month
 
 document:
   scheduler:
@@ -40,6 +44,7 @@ password-token-delete:
 
 password-verification:
   token-expiry-period-hours: 24
+  hours-displayed-in-message: 24
 
 scanner:
   aws:

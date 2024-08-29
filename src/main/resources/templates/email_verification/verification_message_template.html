@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<p>Dear <span th:text="${fullName}">User</span>,<br><br></p>
+<p>Thank you for registering with SeAI. To complete your registration, please confirm your email address by clicking the button below:<br><br></p>
+<p><a th:href="@{${verifyTokenUrl}}">Verify Email</a><br><br></p>
+<p>Confirmation token has <span th:text="@{${tokenMinutes}}"></span> minutes expiration time.<br><br></p>
+<p>If you did not create an account with us, please ignore this email.<br><br></p>
+<p>Best regards,<br>The SeAI.co Team</p>
+</body>
+</html>
