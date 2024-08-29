@@ -34,7 +34,7 @@ public class ManningAgentSailorService {
 
     public Optional<User> getSailorById(UUID manningAgentId, UUID sailorId) {
         return Optional.ofNullable(manningAgentSailorRepository.getSailorById(manningAgentId, sailorId).orElseThrow(()
-                -> new ResourceNotFoundException("Sailor with id: " + sailorId + " not found.")));
+                -> new ResourceNotFoundException(String.format("SAILOR_ID=%s not found.", sailorId))));
     }
 
     @Transactional
@@ -49,10 +49,14 @@ public class ManningAgentSailorService {
     }
 
     @Transactional
-    public void delete(UUID manningAgentId, UUID sailorId) {
-        documentFileService.deleteAllForUser(sailorId);
+    public void deleteFromDatabase(UUID manningAgentId, UUID sailorId) {
         documentRepository.deleteAll(sailorId);
         manningAgentSailorRepository.delete(manningAgentId, sailorId);
         userAuthenticationRepository.delete(sailorId);
+    }
+
+    public void delete(UUID manningAgentId, UUID sailorId) {
+        deleteFromDatabase(manningAgentId, sailorId);
+        documentFileService.deleteAllForUser(sailorId);
     }
 }
