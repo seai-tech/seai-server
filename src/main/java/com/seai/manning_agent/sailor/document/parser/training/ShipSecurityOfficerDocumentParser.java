@@ -9,3 +9,4 @@ public class ShipSecurityOfficerDocumentParser extends AbstractTrainingDocumentP
         super("SHIP SECURITY OFFICER", "SHIP", "SECURITY");
     }
 }
+

@@ -9,3 +9,4 @@ public class MedicalFirstAidDocumentParser extends AbstractTrainingDocumentParse
         super("MEDICAL FIRST AID", "MEDICAL", "AID");
     }
 }
+
