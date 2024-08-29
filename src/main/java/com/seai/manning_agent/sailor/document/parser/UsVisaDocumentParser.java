@@ -14,11 +14,29 @@ public class UsVisaDocumentParser implements DocumentParser {
 
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
 
-    private static final Pattern DATE_PATTERN_2 = Pattern.compile(
-            "[A-Z]{2}\\d{4}$");
+    private static final Pattern DATE_PATTERN = Pattern.compile("[A-Z]{2}\\d{4}$");
+    private static final Pattern DOCUMENT_NUMBER_PATTERN = Pattern.compile("^[A-Z]\\d{7}$");
 
-    private static final Pattern DOCUMENT_NUMBER = Pattern.compile(
-            "^[A-Z]\\d{7}$");
+    private static final String documentType = "US VISA";
+
+    private static final int ISSUE_DATE_INDEX = 2;
+    private static final int VALID_UNTIL_INDEX = 3;
+    private static final int DOCUMENT_NUMBER_INDEX = 1;
+    private static final int DATE_LENGTH = 7;
+    private static final int DATE_DAY_END = 2;
+    private static final int DATE_MONTH_START = 2;
+    private static final int DATE_MONTH_END = 5;
+    private static final int DATE_YEAR_START = 5;
+    private static final int DATE_YEAR_END = 9;
+
+    private final Map<String, Integer> fieldLineMapping;
+
+    public UsVisaDocumentParser() {
+        fieldLineMapping = new HashMap<>();
+        fieldLineMapping.put("issueDate", ISSUE_DATE_INDEX);
+        fieldLineMapping.put("validUntil", VALID_UNTIL_INDEX);
+        fieldLineMapping.put("number", DOCUMENT_NUMBER_INDEX);
+    }
 
     @Override
     public boolean canParseDocument(List<String> lines) {
@@ -27,39 +45,47 @@ public class UsVisaDocumentParser implements DocumentParser {
     }
 
     @Override
+    @SneakyThrows
     public MarineDocument parseDocument(List<String> lines) {
-        String documentType = "US VISA";
-        UsVisaDate issueDate = new UsVisaDate(DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN_2.matcher(w).find(), lines, 2));
-        UsVisaDate validUntil = new UsVisaDate(DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN_2.matcher(w).find(), lines, 3));
-        String number = DocumentSeekUtil.findMatchFor(w -> DOCUMENT_NUMBER.matcher(w).matches(), reverse(lines), 1);
-        return MarineDocument.createNonVerifiedDocument(documentType, number, issueDate.asDate(), validUntil.asDate());
+        UsVisaDate issueDate = new UsVisaDate(DocumentSeekUtil.findNthMatch(
+                w -> DATE_PATTERN.matcher(w).find(), lines, fieldLineMapping.get("issueDate")));
+        UsVisaDate validUntil = new UsVisaDate(DocumentSeekUtil.findNthMatch(
+                w -> DATE_PATTERN.matcher(w).find(), lines, fieldLineMapping.get("validUntil")));
+        String number = DocumentSeekUtil.findNthMatch(
+                w -> DOCUMENT_NUMBER_PATTERN.matcher(w).matches(), reverse(lines), fieldLineMapping.get("number"));
+
+        return MarineDocument.createNonVerifiedDocument(
+                documentType,
+                number,
+                issueDate.asDate(),
+                validUntil.asDate());
     }
 
-    //Used to reverse and get first occurrence as we can have multiple matches for doc number regex
     private List<String> reverse(List<String> lines) {
-        ArrayList<String> words = new ArrayList<>(lines);
+        List<String> words = new ArrayList<>(lines);
         Collections.reverse(words);
         return words;
     }
 
     private static String formatDate(String str) {
         StringBuilder sb = new StringBuilder(str);
-        sb.insert(2, "-");
-        sb.insert(6, "-");
+        sb.insert(DATE_DAY_END, "-");
+        sb.insert(DATE_MONTH_END, "-");
         return sb.toString();
     }
 
     static class UsVisaDate {
-        String date;
-
-        String month;
-
-        String year;
+        private final String date;
+        private final String month;
+        private final String year;
 
         public UsVisaDate(String date) {
-            this.date = date.substring(0, 2).replaceAll("O", "0");
-            this.month = date.substring(2, 5).replaceAll("0", "O");
-            this.year = date.substring(5, 9);
+            if (date == null || date.length() != DATE_LENGTH) {
+                throw new IllegalArgumentException("Invalid date format: " + date);
+            }
+            this.date = date.substring(0, DATE_DAY_END).replace("O", "0");
+            this.month = date.substring(DATE_MONTH_START, DATE_MONTH_END).replace("0", "O");
+            this.year = date.substring(DATE_YEAR_START, DATE_YEAR_END);
         }
 
         @SneakyThrows

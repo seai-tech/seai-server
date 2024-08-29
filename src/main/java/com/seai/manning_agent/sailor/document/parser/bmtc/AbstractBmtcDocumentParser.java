@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 public abstract class AbstractBmtcDocumentParser implements DocumentParser {
 
     private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd.MM.yyyy");
-    private static final Pattern DATE_PATTERN = Pattern.compile(
-            "^\\d{2}\\.\\d{2}\\.\\d{4}$");
+    private static final Pattern DATE_PATTERN = Pattern.compile("^\\d{2}\\.\\d{2}\\.\\d{4}$");
+    private static final String NUMBER_PATTERN = "^\\d{3}$";
 
     private final String documentType;
     private final String[] matchers;
@@ -36,8 +36,8 @@ public abstract class AbstractBmtcDocumentParser implements DocumentParser {
     @SneakyThrows
     @Override
     public MarineDocument parseDocument(List<String> lines) {
-        String number = DocumentSeekUtil.findMatchForReversed(w -> w.matches("^\\d{3}$"), lines, 1);
-        String issueDate = DocumentSeekUtil.findMatchForReversed(w -> DATE_PATTERN.matcher(w).matches(), lines, 1);
-        return MarineDocument.createNonVerifiedDocument(documentType, number,  DATE_FORMATTER.parse(issueDate), null);
+        String number = DocumentSeekUtil.findNthMatchForReversed(w -> w.matches(NUMBER_PATTERN), lines, 1);
+        String issueDateString = DocumentSeekUtil.findNthMatchForReversed(w -> DATE_PATTERN.matcher(w).matches(), lines, 1);
+        return MarineDocument.createNonVerifiedDocument(documentType, number, DATE_FORMATTER.parse(issueDateString), null);
     }
 }

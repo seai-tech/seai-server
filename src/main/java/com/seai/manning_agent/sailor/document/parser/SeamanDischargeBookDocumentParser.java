@@ -6,7 +6,9 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Component("manningAgentSeamanDischargeBookDocumentParser")
@@ -16,19 +18,39 @@ public class SeamanDischargeBookDocumentParser implements DocumentParser {
 
     private static final Pattern DATE_PATTERN = Pattern.compile(
             "^\\d{2}\\.\\d{2}\\.\\d{4}$");
+    private static final Pattern DOCUMENT_NUMBER_PATTERN = Pattern.compile(
+            "^\\d{9}$");
+
+    private static final String DOCUMENT_TYPE = "SEAMAN'S DISCHARGE BOOK";
+
+    private final Map<String, Integer> fieldLineMapping;
+
+    public SeamanDischargeBookDocumentParser() {
+        fieldLineMapping = new HashMap<>();
+        fieldLineMapping.put("number", 1);
+        fieldLineMapping.put("issueDate", 2);
+        fieldLineMapping.put("validUntil", 3);
+    }
 
     @Override
     public boolean canParseDocument(List<String> lines) {
-        return lines.stream().anyMatch(l-> l.contains("SEAMAN")) && lines.stream().anyMatch(l-> l.contains("BOOK"));
+        return lines.stream().anyMatch(l -> l.contains("SEAMAN")) && lines.stream().anyMatch(l -> l.contains("BOOK"));
     }
 
-    @SneakyThrows
     @Override
+    @SneakyThrows
     public MarineDocument parseDocument(List<String> lines) {
-        String documentType = "SEAMAN'S DISCHARGE BOOK";
-        String number = DocumentSeekUtil.findMatchFor(w -> w.matches("^\\d{9}$"), lines, 1);
-        String issueDate = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 2);
-        String validUntil = DocumentSeekUtil.findMatchFor(w -> DATE_PATTERN.matcher(w).matches(), lines, 3);
-        return MarineDocument.createNonVerifiedDocument(documentType, number, DATE_FORMATTER.parse(issueDate), DATE_FORMATTER.parse(validUntil));
+        String number = DocumentSeekUtil.findNthMatch(
+                w -> DOCUMENT_NUMBER_PATTERN.matcher(w).matches(), lines, fieldLineMapping.get("number"));
+        String issueDate = DocumentSeekUtil.findNthMatch(
+                w -> DATE_PATTERN.matcher(w).matches(), lines, fieldLineMapping.get("issueDate"));
+        String validUntil = DocumentSeekUtil.findNthMatch(
+                w -> DATE_PATTERN.matcher(w).matches(), lines, fieldLineMapping.get("validUntil"));
+
+        return MarineDocument.createNonVerifiedDocument(
+                DOCUMENT_TYPE,
+                number,
+                DATE_FORMATTER.parse(issueDate),
+                DATE_FORMATTER.parse(validUntil));
     }
 }
