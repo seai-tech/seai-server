@@ -30,8 +30,6 @@ document:
   scheduler:
       enabled: true
       cron: "00 00 08 * * ?"
-  patterns:
-    certificateNumber: "^\\d{7}$"
 
 token:
   scheduler:
