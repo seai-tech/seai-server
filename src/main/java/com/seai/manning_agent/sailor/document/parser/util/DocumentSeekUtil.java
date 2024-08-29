@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 @UtilityClass
 public class DocumentSeekUtil {
 
-    public static String findMatchFor(Predicate<String> predicate, List<String> words, int occurrence) {
+    public static String findNthMatch(Predicate<String> predicate, List<String> words, int occurrence) {
         int occur = 0;
         for (String word : words) {
             if (predicate.test(word)) {
@@ -24,7 +24,7 @@ public class DocumentSeekUtil {
         throw new ReadDocumentException("Could not extract document data");
     }
 
-    public static String findMatchForReversed(Predicate<String> predicate, List<String> words, int occurrence) {
+    public static String findNthMatchForReversed(Predicate<String> predicate, List<String> words, int occurrence) {
         int occur = 0;
         List<String> reversed = new ArrayList<>(words);
         Collections.reverse(reversed);
