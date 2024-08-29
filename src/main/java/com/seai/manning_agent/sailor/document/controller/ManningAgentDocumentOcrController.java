@@ -17,7 +17,6 @@ public class ManningAgentDocumentOcrController {
     private final ManningAgentDocumentService documentService;
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
-    //OCR
     @PostMapping(value = "{manningAgentId}/sailors/{sailorId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize(AUTHORIZATION)
     public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {

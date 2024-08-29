@@ -74,7 +74,6 @@ public class DocumentFileService {
                 .map(object -> ObjectIdentifier.builder().key(object.key()).build())
                 .collect(Collectors.toList());
 
-        // Delete objects
         if (!objectsToDelete.isEmpty()) {
             DeleteObjectsRequest deleteRequest = DeleteObjectsRequest.builder()
                     .bucket(bucketName)
