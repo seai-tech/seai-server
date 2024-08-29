@@ -19,7 +19,7 @@ public class MarineDocument {
     private String path;
     private boolean isVerified;
 
-    private MarineDocument(UUID id, UUID userId, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
+    public MarineDocument(UUID id, UUID userId, String name, String number, Date issueDate, Date expiryDate, boolean isVerified, Instant createdDate, String path) {
         this.id = id;
         this.userId = userId;
         this.name = name;
