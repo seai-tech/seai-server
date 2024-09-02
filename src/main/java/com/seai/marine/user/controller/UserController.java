@@ -5,18 +5,15 @@ import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.CreateUserResponse;
 import com.seai.marine.user.contract.response.GetUserResponse;
 import com.seai.marine.user.model.Experience;
+import com.seai.marine.user.service.UserPhotoService;
 import com.seai.marine.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +24,8 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
+
+    private final UserPhotoService userPhotoService;
 
     @PutMapping("/users/{userId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
@@ -55,5 +54,23 @@ public class UserController {
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public List<Experience> getUserExperience(@PathVariable UUID userId) {
         return userService.getUserExperience(userId);
+    }
+
+    @PutMapping(value = "/users/{userId}/photo", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    public void updatePhoto(@PathVariable UUID userId, @RequestParam("file") MultipartFile multipartFile) {
+        userPhotoService.updatePhoto(userId, multipartFile);
+    }
+
+    @GetMapping("/users/{userId}/photo")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    public ResponseEntity<byte[]> download(@PathVariable UUID userId) {
+        return userPhotoService.downloadPhoto(userId);
+    }
+
+    @DeleteMapping("/users/{userId}/photo")
+    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    public void deletePhoto(@PathVariable UUID userId) {
+        userPhotoService.deletePhoto(userId);
     }
 }
