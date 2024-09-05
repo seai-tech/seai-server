@@ -25,20 +25,22 @@ public class UserController {
 
     private final UserService userService;
 
+    private static final String AUTHORIZATION = "#userId.equals(authentication.principal.id)";
+
     @PutMapping("/users/{userId}")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public void updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @PathVariable UUID userId) {
         userService.updateUser(userUpdateRequest, userId);
     }
 
     @DeleteMapping("/users/{userId}")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public void deleteUser(@PathVariable UUID userId) {
         userService.delete(userId);
     }
 
     @GetMapping("/users/{userId}")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public GetUserResponse getUser(@PathVariable UUID userId) {
         return userService.getUserById(userId);
     }
@@ -49,7 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}/experience")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    @PreAuthorize(AUTHORIZATION)
     public List<Experience> getUserExperience(@PathVariable UUID userId) {
         return userService.getUserExperience(userId);
     }
