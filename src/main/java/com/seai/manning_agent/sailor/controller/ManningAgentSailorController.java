@@ -50,4 +50,10 @@ public class ManningAgentSailorController {
     public void deleteUser(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         manningAgentSailorService.delete(manningAgentId, sailorId);
     }
+
+    @GetMapping("{manningAgentId}/sailors/display-id/{sailorDisplayId}")
+    @PreAuthorize(AUTHORIZATION)
+    public Optional<User> getSailorByDisplayId(@PathVariable UUID manningAgentId, @PathVariable String sailorDisplayId) {
+        return manningAgentSailorService.getSailorByDisplayId(manningAgentId ,sailorDisplayId);
+    }
 }
