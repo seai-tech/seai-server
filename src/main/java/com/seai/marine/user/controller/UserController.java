@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -72,5 +73,10 @@ public class UserController {
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void deletePhoto(@PathVariable UUID userId) {
         userPhotoService.deletePhoto(userId);
+    }
+
+    @GetMapping("/users/display-id/{displayId}")
+    public Optional<GetUserResponse> getUserByDisplayId(String displayId) {
+        return userService.getUserByDisplayId(displayId);
     }
 }
