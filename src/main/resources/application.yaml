@@ -30,6 +30,16 @@ user:
   photo:
     cache:
       maxAge: 1
+  prefix:
+    display-id: "S"
+
+manning-agent:
+  prefix:
+    display-id: "M"
+
+training-center:
+  prefix:
+    display-id: "T"
 
 document:
   scheduler:
