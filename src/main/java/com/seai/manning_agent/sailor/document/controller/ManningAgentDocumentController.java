@@ -23,35 +23,30 @@ public class ManningAgentDocumentController {
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
 
-    //CREATE
     @PostMapping
     @PreAuthorize(AUTHORIZATION)
     public CreateDocumentResponse create(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @RequestBody CreateDocumentRequest createDocumentRequest) {
         return documentService.create(manningAgentId, sailorId, createDocumentRequest);
     }
 
-    //READ
     @GetMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public GetDocumentResponse find(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         return documentService.find(manningAgentId, sailorId, documentId);
     }
 
-    //UPDATE
     @PutMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public void update(@RequestBody UpdateDocumentRequest updateDocumentRequest, @PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentService.update(updateDocumentRequest, manningAgentId, sailorId, documentId);
     }
 
-    //DELETE
     @DeleteMapping("/{documentId}")
     @PreAuthorize(AUTHORIZATION)
     public void delete(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID documentId) {
         documentService.delete(manningAgentId, sailorId, documentId);
     }
 
-    //FIND ALL
     @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<GetDocumentResponse> findAll(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
