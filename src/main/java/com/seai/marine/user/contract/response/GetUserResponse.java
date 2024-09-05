@@ -35,4 +35,6 @@ public class GetUserResponse {
     private Integer contractDuration;
 
     private String phone;
+
+    private String displayId;
 }

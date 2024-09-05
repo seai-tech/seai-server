@@ -19,11 +19,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ManningAgentSailorRepository {
 
-    private static final String REGISTER_SAILOR_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String REGISTER_SAILOR_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, display_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    private static final String FIND_SAILOR_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank,present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE manning_agents=? AND user_id= ?";
+    private static final String FIND_SAILOR_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank,present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, display_id FROM sailors WHERE manning_agents=? AND user_id= ?";
 
-    private static final String FIND_ALL_SAILORS_FOR_MANNING_CENTER = "SELECT user_id, first_name, last_name,rank,present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE manning_agents=?";
+    private static final String FIND_SAILOR_BY_DISPLAY_ID_QUERY = "SELECT user_id, first_name, last_name,rank,present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, display_id FROM sailors WHERE manning_agents=? AND display_id= ?";
+
+    private static final String FIND_ALL_SAILORS_FOR_MANNING_CENTER = "SELECT user_id, first_name, last_name,rank,present_employer, date_of_birth, manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, display_id FROM sailors WHERE manning_agents=?";
 
     private static final String DELETE_SAILOR_QUERY = "DELETE FROM sailors WHERE manning_agents=? AND user_id=?";
 
@@ -46,6 +48,19 @@ public class ManningAgentSailorRepository {
         }
     }
 
+    public Optional<User> findSailorByDisplayId(UUID manningAgentId, String userId) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_SAILOR_BY_DISPLAY_ID_QUERY,
+                    getSailorRowMapper(),
+                    manningAgentId.toString(),
+                    userId
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public User createSailor(User user) {
         jdbcTemplate.update(REGISTER_SAILOR_QUERY,
                 user.getId(),
@@ -60,7 +75,8 @@ public class ManningAgentSailorRepository {
                 user.getHomeAirport(),
                 user.getReadinessDate(),
                 user.getContractDuration(),
-                user.getPhone());
+                user.getPhone(),
+                user.getDisplayId());
         return user;
     }
 
@@ -70,7 +86,8 @@ public class ManningAgentSailorRepository {
 
 
     private RowMapper<User> getSailorRowMapper() {
-        return (rs, rowNum) -> new User(UUID.fromString(rs.getString("user_id")),
+        return (rs, rowNum) -> new User(
+                UUID.fromString(rs.getString("user_id")),
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 Optional.ofNullable(rs.getString("rank"))
@@ -87,6 +104,7 @@ public class ManningAgentSailorRepository {
                 Optional.ofNullable(rs.getObject("readiness_date", java.sql.Date.class))
                         .map(s -> new Date(s.getTime())).orElse(null),
                 rs.getInt("contract_duration"),
-                rs.getString("phone"));
+                rs.getString("phone"),
+                rs.getString("display_id"));
     }
 }

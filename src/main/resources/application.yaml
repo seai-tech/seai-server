@@ -26,6 +26,21 @@ email-verification:
   token-expiry-period-minutes: 43200 #1 month
   minutes-displayed-in-message: 43200 #1 month
 
+user:
+  photo:
+    cache:
+      maxAge: 1
+  prefix:
+    display-id: "S"
+
+manning-agent:
+  prefix:
+    display-id: "M"
+
+training-center:
+  prefix:
+    display-id: "T"
+
 document:
   scheduler:
       enabled: true

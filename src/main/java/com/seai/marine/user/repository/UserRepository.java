@@ -1,6 +1,6 @@
 package com.seai.marine.user.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.Rank;
 import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.User;
@@ -22,14 +22,19 @@ public class UserRepository {
 
     private static final String FIND_USER_BY_ID_QUERY = "SELECT user_id, first_name, last_name,rank," +
             " present_employer, date_of_birth, manning_agents, status," +
-            " vessel_type, home_airport, readiness_date, contract_duration, phone FROM sailors WHERE user_id= ?";
+            " vessel_type, home_airport, readiness_date, contract_duration, phone, display_id FROM sailors WHERE user_id= ?";
+
+    private static final String FIND_USER_BY_DISPLAY_ID_QUERY = "SELECT user_id, first_name, last_name,rank," +
+            " present_employer, date_of_birth, manning_agents, status," +
+            " vessel_type, home_airport, readiness_date, contract_duration, phone, display_id FROM sailors WHERE display_id= ?";
+
 
      private static final String REGISTER_USER_QUERY = "INSERT INTO sailors (user_id, first_name, last_name, rank, present_employer, date_of_birth," +
-            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone)" +
-            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            " manning_agents, status, vessel_type, home_airport, readiness_date, contract_duration, phone, display_id)" +
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_USER_QUERY = "UPDATE sailors SET first_name=?, last_name=?," +
-            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=?, phone=? WHERE user_id=?";
+            " rank=?, present_employer=?, date_of_birth=?, manning_agents=?, status=?, vessel_type=?, home_airport=?, readiness_date=?, contract_duration=?, phone=?, display_id=? WHERE user_id=?";
 
     private static final String DELETE_USER_QUERY = "DELETE FROM sailors WHERE user_id=?";
 
@@ -41,6 +46,17 @@ public class UserRepository {
                     getUserRowMapper(), id.toString());
         } catch (EmptyResultDataAccessException ex) {
             throw new ResourceNotFoundException("User with id not found : " + id);
+        }
+    }
+
+    public Optional<User> findByDisplayId(String displayId) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_USER_BY_DISPLAY_ID_QUERY,
+                    getUserRowMapper(),
+                    displayId));
+        } catch (EmptyResultDataAccessException ex) {
+            return Optional.empty();
         }
     }
 
@@ -62,11 +78,13 @@ public class UserRepository {
                 Optional.ofNullable(rs.getObject("readiness_date", java.sql.Date.class))
                         .map(s -> new Date(s.getTime())).orElse(null),
                 rs.getInt("contract_duration"),
-                rs.getString("phone"));
+                rs.getString("phone"),
+                rs.getString("display_id"));
     }
 
-    public void save(User user, UUID id) {
-        jdbcTemplate.update(REGISTER_USER_QUERY, id,
+    public void save(User user) {
+        jdbcTemplate.update(REGISTER_USER_QUERY,
+                user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
                 Optional.ofNullable(user.getRank()).map(Enum::toString).orElse(null),
@@ -78,7 +96,8 @@ public class UserRepository {
                 user.getHomeAirport(),
                 user.getReadinessDate(),
                 user.getContractDuration(),
-                user.getPhone());
+                user.getPhone(),
+                user.getDisplayId());
     }
 
     public void update(UUID userId, User user) {
@@ -95,6 +114,7 @@ public class UserRepository {
                 user.getReadinessDate(),
                 user.getContractDuration(),
                 user.getPhone(),
+                user.getDisplayId(),
                 userId.toString());
     }
 

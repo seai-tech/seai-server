@@ -1,7 +1,7 @@
 package com.seai.password_reset.service;
 
-import com.seai.exception.PasswordException;
-import com.seai.exception.TokenException;
+import com.seai.common.exception.PasswordException;
+import com.seai.common.exception.TokenException;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.password_reset.PasswordResetTokenGenerator;

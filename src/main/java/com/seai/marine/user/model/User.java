@@ -37,4 +37,6 @@ public class User {
     private Integer contractDuration;
 
     private String phone;
+
+    private String displayId;
 }

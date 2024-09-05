@@ -1,6 +1,6 @@
 package com.seai.marine.notification.service;
 
-import com.seai.exception.ReminderSubscriptionIsSameException;
+import com.seai.common.exception.ReminderSubscriptionIsSameException;
 import com.seai.marine.notification.contract.request.UpdateReminderSubscriptionRequest;
 import com.seai.marine.notification.model.Reminder;
 import com.seai.marine.notification.model.ReminderStatus;

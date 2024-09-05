@@ -1,7 +1,7 @@
 package com.seai.ship.repository;
 
-import com.seai.exception.DuplicatedResourceException;
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.DuplicatedResourceException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.ship.model.Ship;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;

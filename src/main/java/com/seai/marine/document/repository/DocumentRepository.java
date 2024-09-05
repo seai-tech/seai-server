@@ -1,6 +1,6 @@
 package com.seai.marine.document.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.document.model.MarineDocument;
 import com.seai.marine.document.model.MarineDocumentWithEmail;
 import lombok.RequiredArgsConstructor;

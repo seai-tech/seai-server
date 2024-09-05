@@ -1,11 +1,10 @@
 package com.seai.training_center.attendees.repository;
 
-import com.seai.exception.DuplicatedResourceException;
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.DuplicatedResourceException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.training_center.attendees.model.Attendee;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

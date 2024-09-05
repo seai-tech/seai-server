@@ -1,6 +1,6 @@
 package com.seai.training_center.online_course.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.training_center.online_course.model.OnlineCourse;
 import lombok.RequiredArgsConstructor;
 import org.postgresql.util.PGInterval;

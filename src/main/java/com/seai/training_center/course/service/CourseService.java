@@ -1,7 +1,7 @@
 package com.seai.training_center.course.service;
 
-import com.seai.exception.MaxSeatsReachedException;
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.MaxSeatsReachedException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.training_center.attendees.repository.AttendeeRepository;
 import com.seai.training_center.course.contract.request.CreateCourseRequest;
 import com.seai.training_center.course.contract.request.UpdateCourseRequest;

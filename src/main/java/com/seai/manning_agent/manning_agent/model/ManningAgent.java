@@ -20,4 +20,6 @@ public class ManningAgent {
     private String telephone1;
 
     private String telephone2;
+
+    private String displayId;
 }
