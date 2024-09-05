@@ -1,6 +1,5 @@
 package com.seai.training_center.training_center.repository;
 
-import com.seai.exception.ResourceNotFoundException;
 import com.seai.training_center.training_center.model.TrainingCenter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -8,15 +7,18 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
 public class TrainingCenterRepository {
 
-    private static final String SAVE_TRAINING_CENTER_QUERY = "INSERT INTO training_centers (id, organization_name, telephone_1, telephone_2, telephone_3) VALUES (?, ?, ?, ?, ?)";
+    private static final String SAVE_TRAINING_CENTER_QUERY = "INSERT INTO training_centers (id, organization_name, telephone_1, telephone_2, telephone_3, display_id) VALUES (?, ?, ?, ?, ?, ?)";
 
-    private static final String FIND_TRAINING_CENTER_QUERY = "SELECT id, organization_name, telephone_1, telephone_2, telephone_3 FROM training_centers WHERE id=?";
+    private static final String FIND_TRAINING_CENTER_QUERY = "SELECT id, organization_name, telephone_1, telephone_2, telephone_3, display_id FROM training_centers WHERE id=?";
+
+    private static final String FIND_TRAINING_CENTER_BY_DISPLAY_ID_QUERY = "SELECT id, organization_name, telephone_1, telephone_2, telephone_3, display_id FROM training_centers WHERE display_id=?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -26,14 +28,30 @@ public class TrainingCenterRepository {
                 trainingCenter.getNameOfOrganization(),
                 trainingCenter.getTelephone1(),
                 trainingCenter.getTelephone2(),
-                trainingCenter.getTelephone3());
+                trainingCenter.getTelephone3(),
+                trainingCenter.getDisplayId());
     }
 
-    public TrainingCenter findById(UUID trainingCenterId) {
+    public Optional<TrainingCenter> findById(UUID trainingCenterId) {
         try {
-            return jdbcTemplate.queryForObject(FIND_TRAINING_CENTER_QUERY, getTrainingCenterRowMapper(), trainingCenterId.toString());
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_TRAINING_CENTER_QUERY,
+                    getTrainingCenterRowMapper(),
+                    trainingCenterId.toString()));
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Training center with id " + trainingCenterId + " not found");
+            return Optional.empty();
+        }
+    }
+
+    public Optional<TrainingCenter> findTrainingCenterByDisplayId(String displayId) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_TRAINING_CENTER_BY_DISPLAY_ID_QUERY,
+                    getTrainingCenterRowMapper(),
+                    displayId
+            ));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 
@@ -42,7 +60,8 @@ public class TrainingCenterRepository {
                 rs.getString("organization_name"),
                 rs.getString("telephone_1"),
                 rs.getString("telephone_2"),
-                rs.getString("telephone_3"));
+                rs.getString("telephone_3"),
+                rs.getString("display_id"));
 
     }
 }
