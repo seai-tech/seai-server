@@ -4,9 +4,12 @@ import com.seai.manning_agent.manning_agent.contract.request.CreateManningAgentR
 import com.seai.manning_agent.manning_agent.model.ManningAgent;
 import com.seai.manning_agent.manning_agent.service.ManningAgentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -18,5 +21,10 @@ public class ManningAgentController {
     @PostMapping
     public ManningAgent createManningAgent(CreateManningAgentRequest createManningAgentRequest) {
         return manningAgentService.createManningAgent(createManningAgentRequest);
+    }
+
+    @GetMapping("/{displayId}")
+    public Optional<ManningAgent> getManningAgentByDisplayId(String manningAgentId) {
+        return manningAgentService.getManningAgentByDisplayId(manningAgentId);
     }
 }
