@@ -1,5 +1,7 @@
 package com.seai.marine.user.service;
 
+import com.seai.common.display_id_service.DisplayIdService;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.document.repository.DocumentRepository;
 import com.seai.marine.document.service.DocumentFileService;
 import com.seai.marine.email_verification.repository.EmailVerificationRepository;
@@ -9,16 +11,14 @@ import com.seai.marine.user.contract.request.UserUpdateRequest;
 import com.seai.marine.user.contract.response.CreateUserResponse;
 import com.seai.marine.user.contract.response.GetUserResponse;
 import com.seai.marine.user.mapper.UserMapper;
-import com.seai.marine.user.model.Experience;
-import com.seai.marine.user.model.Rank;
-import com.seai.marine.user.model.User;
-import com.seai.marine.user.model.VesselType;
+import com.seai.marine.user.model.*;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
 import com.seai.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +51,11 @@ public class UserService {
 
     private final PasswordResetRepository passwordResetRepository;
 
+    private final DisplayIdService displayIdService;
+
+    @Value("${user.prefix.display-id}")
+    private String sailorDisplayIdPrefix;
+
     @Transactional
     public void delete(UUID uuid) {
         reminderService.turnOffReminderSubscription(uuid);
@@ -74,13 +79,21 @@ public class UserService {
         return userMapper.mapToGetUserResponse(user);
     }
 
+    public Optional<GetUserResponse> getUserByDisplayId(String userId) throws ResourceNotFoundException {
+        User user = userRepository.findByDisplayId(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with display id not found: " + userId));
+        return Optional.ofNullable(userMapper.mapToGetUserResponse(user));
+    }
+
+    @Transactional
     public CreateUserResponse createUser(UserRegisterRequest userRegisterRequest) {
-        UUID id = UUID.randomUUID();
-        userAuthService.save(userRegisterRequest, id);
+        UUID userId = UUID.randomUUID();
         User user = userMapper.map(userRegisterRequest);
-        userRepository.save(user, id);
-        user.setId(id);
-        reminderService.turnOnReminderSubscription(id, userRegisterRequest.getEmail());
+        user.setId(userId);
+        user.setDisplayId(displayIdService.generateDisplayId(sailorDisplayIdPrefix, null));
+        userAuthService.save(userRegisterRequest, userId);
+        userRepository.save(user);
+        reminderService.turnOnReminderSubscription(userId, userRegisterRequest.getEmail());
         return new CreateUserResponse("Account created successfully, to complete your registration, please confirm your email address", user);
     }
 
@@ -96,7 +109,7 @@ public class UserService {
 
         for (Voyage voyage : voyages) {
             Rank rank = voyage.getRank();
-          VesselType vesselType = voyage.getVesselType();
+            VesselType vesselType = voyage.getVesselType();
             LocalDate joiningDate = voyage.getJoiningDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate leavingDate = voyage.getLeavingDate() != null ?
                     voyage.getLeavingDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate() :
@@ -125,7 +138,6 @@ public class UserService {
 
         return experiences;
     }
-
 
     public String formatDuration(int totalDays) {
         int years = totalDays / 365;
