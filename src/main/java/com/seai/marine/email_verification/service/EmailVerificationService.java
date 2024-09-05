@@ -1,6 +1,6 @@
 package com.seai.marine.email_verification.service;
 
-import com.seai.exception.*;
+import com.seai.common.exception.TokenException;
 import com.seai.marine.email_verification.contract.response.TokenConfirmedResponse;
 import com.seai.marine.email_verification.message_buildler.ResendConfirmationMessageBuilder;
 import com.seai.marine.email_verification.message_buildler.SendConfirmationMessageBuilder;

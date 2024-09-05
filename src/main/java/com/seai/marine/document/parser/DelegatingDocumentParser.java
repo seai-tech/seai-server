@@ -1,6 +1,6 @@
 package com.seai.marine.document.parser;
 
-import com.seai.exception.ReadDocumentException;
+import com.seai.common.exception.ReadDocumentException;
 import com.seai.marine.document.model.MarineDocument;
 import com.seai.spring.config.TrackExecution;
 import lombok.RequiredArgsConstructor;

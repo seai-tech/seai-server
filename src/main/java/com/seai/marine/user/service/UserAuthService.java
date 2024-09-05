@@ -1,17 +1,17 @@
 package com.seai.marine.user.service;
 
-import com.seai.exception.ConfirmationException;
+import com.seai.common.exception.ConfirmationException;
+import com.seai.marine.email_verification.message_buildler.SendVerificationMessageBuilder;
+import com.seai.marine.email_verification.model.VerificationToken;
+import com.seai.marine.email_verification.service.TokenGenerator;
 import com.seai.marine.user.contract.request.UserAuthenticationRequest;
 import com.seai.marine.user.contract.request.UserRegisterRequest;
 import com.seai.marine.user.contract.response.UserAuthenticationResponse;
 import com.seai.marine.user.mapper.UserAuthenticationMapper;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.marine.email_verification.service.TokenGenerator;
-import com.seai.marine.email_verification.message_buildler.SendVerificationMessageBuilder;
 import com.seai.spring.security.model.SecurityUser;
 import com.seai.spring.security.service.JwtService;
-import com.seai.marine.email_verification.model.VerificationToken;
 import com.seai.marine.email_verification.service.EmailVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,12 +27,18 @@ import java.util.UUID;
 public class UserAuthService {
 
     private final UserAuthenticationRepository userAuthenticationRepository;
+
     private final UserAuthenticationMapper userAuthenticationMapper;
+
     private final EmailVerificationService emailVerificationService;
+
     private final AuthenticationManager usersAuthenticationProvider;
-    private final JwtService jwtService;
+
     private final TokenGenerator tokenGenerator;
+
     private final SendVerificationMessageBuilder sendVerificationMessageBuilder;
+
+    private final JwtService jwtService;
 
 
     public void save(UserRegisterRequest userRegisterRequest, UUID id) {

@@ -1,6 +1,6 @@
 package com.seai.marine.document.parser.util;
 
-import com.seai.exception.ReadDocumentException;
+import com.seai.common.exception.ReadDocumentException;
 import lombok.experimental.UtilityClass;
 
 import java.util.ArrayList;

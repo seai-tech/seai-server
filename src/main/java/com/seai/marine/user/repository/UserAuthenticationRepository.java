@@ -1,8 +1,7 @@
 package com.seai.marine.user.repository;
 
-import com.seai.exception.DuplicatedResourceException;
-import com.seai.exception.ResourceNotFoundException;
-import com.seai.marine.user.model.User;
+import com.seai.common.exception.DuplicatedResourceException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -12,7 +11,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

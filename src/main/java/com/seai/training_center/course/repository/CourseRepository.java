@@ -1,6 +1,6 @@
 package com.seai.training_center.course.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.training_center.course.model.Course;
 import com.seai.training_center.course.model.CurrencyOptions;
 import lombok.RequiredArgsConstructor;

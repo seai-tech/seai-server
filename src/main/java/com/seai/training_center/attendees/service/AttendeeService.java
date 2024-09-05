@@ -1,6 +1,6 @@
 package com.seai.training_center.attendees.service;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.training_center.attendees.contract.request.CreateAttendeeRequest;

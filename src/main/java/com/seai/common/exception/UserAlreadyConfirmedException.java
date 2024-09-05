@@ -1,4 +1,4 @@
-package com.seai.exception;
+package com.seai.common.exception;
 
 public class UserAlreadyConfirmedException extends GeneralException{
 

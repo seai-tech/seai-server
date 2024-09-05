@@ -1,6 +1,6 @@
 package com.seai.training_center.training_center.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.marine.user.model.UserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
