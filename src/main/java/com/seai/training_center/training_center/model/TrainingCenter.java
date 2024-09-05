@@ -18,4 +18,6 @@ public class TrainingCenter {
     private String telephone2;
 
     private String telephone3;
+
+    private String displayId;
 }
