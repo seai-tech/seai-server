@@ -49,7 +49,7 @@ public class ManningAgentSailorService {
     }
 
     @Transactional
-    public void deleteFromDatabase(UUID manningAgentId, UUID sailorId) {
+    private void deleteFromDatabase(UUID manningAgentId, UUID sailorId) {
         documentRepository.deleteAll(sailorId);
         manningAgentSailorRepository.delete(manningAgentId, sailorId);
         userAuthenticationRepository.delete(sailorId);
