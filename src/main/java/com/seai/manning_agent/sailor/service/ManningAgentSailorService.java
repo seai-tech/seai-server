@@ -38,12 +38,12 @@ public class ManningAgentSailorService {
 
     public Optional<User> getSailorById(UUID manningAgentId, UUID sailorId) {
         return Optional.ofNullable(manningAgentSailorRepository.getSailorById(manningAgentId, sailorId).orElseThrow(()
-                -> new ResourceNotFoundException("Sailor with id: " + sailorId + " not found.")));
+                -> new ResourceNotFoundException("SAILOR_ID={" + sailorId + "} not found.")));
     }
 
     public Optional<User> getSailorByDisplayId(UUID manningAgentId, String sailorId) {
         return Optional.ofNullable(manningAgentSailorRepository.findSailorByDisplayId(manningAgentId, sailorId).orElseThrow(()
-                -> new ResourceNotFoundException("Sailor with id: " + sailorId + " not found.")));
+                -> new ResourceNotFoundException("SAILOR_DISPLAY_ID={" + sailorId + "} not found.")));
     }
 
     @Transactional

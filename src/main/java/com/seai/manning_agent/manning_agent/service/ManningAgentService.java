@@ -47,6 +47,6 @@ public class ManningAgentService {
 
     public Optional<ManningAgent> getManningAgentByDisplayId(String displayId) {
         return Optional.ofNullable(manningAgentRepository.findByDisplayId(displayId).orElseThrow(() ->
-                new ResourceNotFoundException("Manning agent with display id " + displayId + "not found")));
+                new ResourceNotFoundException("MANNING_AGENT_DISPLAY_ID={" + displayId + "} not found")));
     }
 }

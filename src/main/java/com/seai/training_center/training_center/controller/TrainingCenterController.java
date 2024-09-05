@@ -18,22 +18,22 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/training-centers")
 public class TrainingCenterController {
 
     private final TrainingCenterService trainingCenterService;
 
-    @GetMapping("/training-centers/{trainingCenterId}")
+    @GetMapping("/{trainingCenterId}")
     public Optional<GetTrainingCenterResponse> getTrainingCenterById(@PathVariable UUID trainingCenterId) {
         return trainingCenterService.getTrainingCenterById(trainingCenterId);
     }
 
-    @GetMapping("/training-centers/display-id/{trainingCenterDisplayId}")
+    @GetMapping("/display-id/{trainingCenterDisplayId}")
     public Optional<GetTrainingCenterResponse> getTrainingCenterByDisplayId(@PathVariable String trainingCenterDisplayId) {
         return trainingCenterService.getTrainingCenterByDisplayId(trainingCenterDisplayId);
     }
 
-    @PostMapping("/training-centers")
+    @PostMapping
     public TrainingCenter createTrainingCenter(@RequestBody @Valid CreateTrainingCenterRequest createTrainingCenterRequest) {
         return trainingCenterService.createTrainingCenter(createTrainingCenterRequest);
     }

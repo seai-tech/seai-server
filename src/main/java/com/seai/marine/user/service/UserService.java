@@ -79,9 +79,9 @@ public class UserService {
         return userMapper.mapToGetUserResponse(user);
     }
 
-    public Optional<GetUserResponse> getUserByDisplayId(String userId) throws ResourceNotFoundException {
-        User user = userRepository.findByDisplayId(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User with display id not found: " + userId));
+    public Optional<GetUserResponse> getUserByDisplayId(String displayId) throws ResourceNotFoundException {
+        User user = userRepository.findByDisplayId(displayId)
+                .orElseThrow(() -> new ResourceNotFoundException("USER_DISPLAY_ID={" + displayId + "} not found."));
         return Optional.ofNullable(userMapper.mapToGetUserResponse(user));
     }
 

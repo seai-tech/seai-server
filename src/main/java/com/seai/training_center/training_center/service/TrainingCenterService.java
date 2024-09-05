@@ -36,13 +36,13 @@ public class TrainingCenterService {
 
     public Optional<GetTrainingCenterResponse> getTrainingCenterById(UUID trainingCenterId ) throws ResourceNotFoundException {
         TrainingCenter trainingCenter = trainingCenterRepository.findById(trainingCenterId).orElseThrow(() ->
-                new ResourceNotFoundException("Training center with id" + trainingCenterId + "not found"));
+                new ResourceNotFoundException("TRAINING_CENTER_ID={" + trainingCenterId + "} not found."));
         return Optional.ofNullable(trainingCenterMapper.map(trainingCenter));
     }
 
     public Optional<GetTrainingCenterResponse> getTrainingCenterByDisplayId(String displayId ) throws ResourceNotFoundException {
         TrainingCenter trainingCenter = trainingCenterRepository.findTrainingCenterByDisplayId(displayId).orElseThrow(() ->
-                new ResourceNotFoundException("Training center with display id" + displayId + "not found"));
+                new ResourceNotFoundException("TRAINING_CENTER_ID={" + displayId + "} not found."));
         return Optional.ofNullable(trainingCenterMapper.map(trainingCenter));
     }
 
