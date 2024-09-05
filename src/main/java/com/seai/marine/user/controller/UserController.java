@@ -25,8 +25,6 @@ public class UserController {
 
     private final UserService userService;
 
-    private final UserPhotoService userPhotoService;
-
     @PutMapping("/users/{userId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void updateUser(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @PathVariable UUID userId) {
@@ -56,21 +54,4 @@ public class UserController {
         return userService.getUserExperience(userId);
     }
 
-    @PutMapping(value = "/users/{userId}/photo", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void updatePhoto(@PathVariable UUID userId, @RequestParam("file") MultipartFile multipartFile) {
-        userPhotoService.updatePhoto(userId, multipartFile);
-    }
-
-    @GetMapping("/users/{userId}/photo")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public ResponseEntity<byte[]> download(@PathVariable UUID userId) {
-        return userPhotoService.downloadPhoto(userId);
-    }
-
-    @DeleteMapping("/users/{userId}/photo")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void deletePhoto(@PathVariable UUID userId) {
-        userPhotoService.deletePhoto(userId);
-    }
 }
