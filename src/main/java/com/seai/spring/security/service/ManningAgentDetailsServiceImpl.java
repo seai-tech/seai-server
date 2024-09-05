@@ -1,6 +1,6 @@
 package com.seai.spring.security.service;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.common.exception.ResourceNotFoundException;
 import com.seai.manning_agent.manning_agent.model.ManningAgentAuthentication;
 import com.seai.manning_agent.manning_agent.repository.ManningAgentAuthRepository;
 import com.seai.spring.security.model.SecurityUser;
