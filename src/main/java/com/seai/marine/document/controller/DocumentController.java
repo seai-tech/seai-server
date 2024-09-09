@@ -36,7 +36,6 @@ public class DocumentController {
     private final DocumentFileService documentFileService;
     private final DocumentMapper documentMapper;
 
-    //OCR
     @PostMapping(value = "/users/{userId}/ocr", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetDocumentResponse upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID userId) {
@@ -46,7 +45,6 @@ public class DocumentController {
         return documentMapper.map(marineDocument);
     }
 
-    //CREATE
     @PostMapping("/users/{userId}/documents")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public CreateDocumentResponse create(@PathVariable UUID userId, @RequestBody CreateDocumentRequest createDocumentRequest) {
@@ -57,14 +55,12 @@ public class DocumentController {
         return documentMapper.mapCreate(documentRepository.save(verifiedDocument, userId));
     }
 
-    //READ
     @GetMapping("/users/{userId}/documents/{documentId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public GetDocumentResponse find(@PathVariable UUID userId, @PathVariable UUID documentId) {
         return documentMapper.map(documentRepository.find(userId, documentId));
     }
 
-    //UPDATE
     @PutMapping("/users/{userId}/documents/{documentId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void update(@RequestBody UpdateDocumentRequest updateDocumentRequest, @PathVariable UUID userId, @PathVariable UUID documentId) {
@@ -72,7 +68,6 @@ public class DocumentController {
         documentRepository.update(marineDocument, userId, documentId);
     }
 
-    //DELETE
     @DeleteMapping("/users/{userId}/documents/{documentId}")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public void delete(@PathVariable UUID userId, @PathVariable UUID documentId) {
@@ -81,7 +76,6 @@ public class DocumentController {
         documentRepository.delete(documentId, userId);
     }
 
-    //FIND ALL
     @GetMapping("/users/{userId}/documents")
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public List<GetDocumentResponse> findAll(@PathVariable UUID userId) {

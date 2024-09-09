@@ -1,0 +1,19 @@
+package com.seai.manning_agent.sailor.document.contract.response;
+
+import lombok.Data;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.UUID;
+
+@Data
+public class CreateDocumentResponse {
+
+    private UUID id;
+    private String name;
+    private String number;
+    private Date issueDate;
+    private Date expiryDate;
+    private Instant createdDate;
+    private boolean isVerified;
+}

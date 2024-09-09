@@ -13,32 +13,32 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/manning-agents")
+@RequestMapping("api/v1/manning-agents/{manningAgentId}/sailors/{sailorId}/voyages")
 @RequiredArgsConstructor
 public class ManningAgentVoyageController {
     private final ManningAgentVoyageService manningAgentVoyageService;
     private static final String AUTHORIZATION = "#manningAgentId.equals(authentication.principal.id)";
 
 
-    @PostMapping("{manningAgentId}/sailors/{sailorId}/voyages")
+    @PostMapping
     @PreAuthorize(AUTHORIZATION)
     public Voyage createSailorVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @RequestBody CreateVoyageRequest voyageRequest) {
         return manningAgentVoyageService.createSailorVoyage(manningAgentId, sailorId, voyageRequest);
     }
 
-    @GetMapping("{manningAgentId}/sailors/{sailorId}/voyages")
+    @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<GetVoyageResponse> findAllByUser(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId) {
         return manningAgentVoyageService.findAllByUser(manningAgentId, sailorId);
     }
 
-    @PutMapping("{manningAgentId}/sailors/{sailorId}/voyages/{voyageId}")
+    @PutMapping("/{voyageId}")
     @PreAuthorize(AUTHORIZATION)
     public void updateVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID voyageId, @RequestBody UpdateVoyageRequest updateVoyageRequest) {
         manningAgentVoyageService.updateVoyage(updateVoyageRequest, manningAgentId, sailorId, voyageId);
     }
 
-    @DeleteMapping("{manningAgentId}/sailors/{sailorId}/voyages/{voyageId}")
+    @DeleteMapping("/{voyageId}")
     @PreAuthorize(AUTHORIZATION)
     public void deleteVoyage(@PathVariable UUID manningAgentId, @PathVariable UUID sailorId, @PathVariable UUID voyageId) {
         manningAgentVoyageService.deleteVoyage(manningAgentId, sailorId, voyageId);
