@@ -1,9 +1,11 @@
 package com.seai.training_center.online_course.repository;
 
-import com.seai.exception.ResourceNotFoundException;
+import com.seai.training_center.course.model.Course;
+import com.seai.training_center.course.model.CurrencyOptions;
 import com.seai.training_center.online_course.model.OnlineCourse;
 import lombok.RequiredArgsConstructor;
 import org.postgresql.util.PGInterval;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,51 +20,66 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OnlineCourseRepository {
 
-    private UUID id;
+    private static final String SAVE_COURSE_QUERY = "INSERT INTO online_courses (id, training_center_id, name, description, path, duration) VALUES (?, ?, ?, ?, ?, ?)";
 
-    private String name;
+    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses";
 
-    private String description;
+    private static final String FIND_COURSE_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE id=? AND training_center_id=?";
 
-    private Duration duration;
+    private static final String FIND_ALL_FOR_TRAINING_CENTER_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE training_center_id=?";
 
-    private String path;
+    private static final String UPDATE_COURSE_QUERY = "UPDATE online_courses SET name=?, description=?,  path=?, duration=? WHERE training_center_id=? AND id=?";
 
-    private static final String SAVE_COURSE_QUERY = "INSERT INTO online_courses (id, training_center_id, name, description, duration, path) VALUES (?, ?, ?, ?, ?, ?)";
-
-    private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, description, duration, path FROM online_courses";
-
-    private static final String FIND_COURSE_QUERY = "SELECT id, training_center_id, name, description, duration, path FROM online_courses WHERE id=? AND training_center_id=?";
-
-    private static final String FIND_ALL_FOR_TRAINING_CENTER_QUERY = "SELECT id, training_center_id, name, description, duration, path FROM online_courses WHERE training_center_id=?";
-
+    private static final String DELETE_COURSE_QUERY = "DELETE FROM online_courses WHERE id=? AND training_center_id =?";
 
     private final JdbcTemplate jdbcTemplate;
 
 
-    public OnlineCourse find(UUID trainingCenterId, UUID courseId) {
+    public Optional<OnlineCourse> findById(UUID trainingCenterId, UUID courseId) {
         try {
-            return jdbcTemplate.queryForObject(FIND_COURSE_QUERY, getCourseRowMapper(), courseId.toString(), trainingCenterId.toString());
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Unable to find online course with id " + courseId);
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_COURSE_QUERY,
+                    getCourseRowMapper(),
+                    courseId.toString(),
+                    trainingCenterId.toString()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 
-
     public List<OnlineCourse> find(UUID trainingCenterId) {
-        return jdbcTemplate.query(FIND_ALL_FOR_TRAINING_CENTER_QUERY, getCourseRowMapper(), trainingCenterId.toString());
+        return jdbcTemplate.query(FIND_ALL_FOR_TRAINING_CENTER_QUERY,
+                getCourseRowMapper(),
+                trainingCenterId.toString());
     }
 
     public void save(OnlineCourse course, UUID trainingCenterId) {
         course.setPath(String.format("%s/%s/%s", trainingCenterId, course.getName(), course.getId()));
         Duration.of(0, ChronoUnit.SECONDS);
         jdbcTemplate.update(SAVE_COURSE_QUERY,
-                UUID.randomUUID(),
+                course.getId(),
                 trainingCenterId,
                 course.getName(),
                 course.getDescription(),
+                course.getPath(),
+                Optional.ofNullable(course.getDuration()).map(d-> new PGInterval(0, 0, 0, 0, 0, d.getSeconds())).orElse(null));
+    }
+
+    public void update(UUID trainingCenterId, UUID courseId, OnlineCourse course) {
+        jdbcTemplate.update(UPDATE_COURSE_QUERY,
+                course.getName(),
+                course.getDescription(),
+                course.getPath(),
                 Optional.ofNullable(course.getDuration()).map(d-> new PGInterval(0, 0, 0, 0, 0, d.getSeconds())).orElse(null),
-                course.getPath());
+                trainingCenterId.toString(),
+                courseId.toString());
+    }
+
+    public void delete(UUID trainingCenterId, UUID courseId) {
+        jdbcTemplate.update(DELETE_COURSE_QUERY,
+                courseId.toString(),
+                trainingCenterId.toString()
+        );
     }
 
     public List<OnlineCourse> findAll() {
@@ -75,8 +92,9 @@ public class OnlineCourseRepository {
                 UUID.fromString(rs.getString("training_center_id")),
                 rs.getString("name"),
                 rs.getString("description"),
-                Optional.ofNullable(rs.getObject("duration", PGInterval.class)).map(i-> Duration.of(convertPGIntervalToSeconds(i), ChronoUnit.SECONDS)).orElse(null),
-                rs.getString("path"));
+                rs.getString("path"),
+                Optional.ofNullable(rs.getObject("duration", PGInterval.class)).map(i-> Duration.of(convertPGIntervalToSeconds(i), ChronoUnit.SECONDS)).orElse(null)
+        );
     }
 
     private static long convertPGIntervalToSeconds(PGInterval pgInterval) {
