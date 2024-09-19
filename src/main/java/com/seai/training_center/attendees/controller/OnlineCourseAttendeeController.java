@@ -41,6 +41,6 @@ public class OnlineCourseAttendeeController {
     @DeleteMapping("/{attendeeId}")
     @PreAuthorize(AUTHORIZATION)
     public void deleteAttendee(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId, @PathVariable UUID attendeeId) {
-        onlineCourseAttendeeService.deleteAttendee(attendeeId);
+        onlineCourseAttendeeService.deleteAttendee(attendeeId, courseId);
     }
 }
