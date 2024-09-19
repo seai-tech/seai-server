@@ -66,8 +66,8 @@ public class OnlineCourseAttendeeService {
         return attendee;
     }
 
-    public void deleteAttendee(UUID attendeeId) {
-        onlineCourseAttendeeRepository.delete(attendeeId);
+    public void deleteAttendee(UUID attendeeId, UUID courseId) {
+        onlineCourseAttendeeRepository.delete(attendeeId, courseId);
     }
 
     public void validateAttendeeIsPartOfCourse(UUID courseId, Attendee attendee) {
