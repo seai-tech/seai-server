@@ -23,7 +23,44 @@ public class DisplayIdService {
 
     private final ManningAgentSailorRepository manningAgentSailorRepository;
 
+    public class DisplayIdService {
+
+    private final UserRepository userRepository;
+    private final TrainingCenterRepository trainingCenterRepository;
+    private final ManningAgentRepository manningAgentRepository;
+    private final ManningAgentSailorRepository manningAgentSailorRepository;
+    
+    private final Random random;  // Injected for testability (can use SecureRandom or ThreadLocalRandom in production)
+
     public String generateDisplayId(String prefix, UUID manningAgentId) {
+        while (true) {
+            String displayId = prefix + generateRandomNumber();
+
+            boolean exists = checkIfDisplayIdExists(prefix, manningAgentId, displayId);
+
+            if (!exists) {
+                return displayId;
+            }
+        }
+    }
+
+    // Random number generator for IDs using injected Random instance
+    private int generateRandomNumber() {
+        return random.nextInt(9000000) + 1000000;  // Generates a 7-digit number
+    }
+
+    private boolean checkIfDisplayIdExists(String prefix, UUID manningAgentId, String displayId) {
+        // Same logic as before for checking if the displayId exists
+        return switch (prefix) {
+            case "S" -> manningAgentId != null 
+                ? manningAgentSailorRepository.findSailorByDisplayId(manningAgentId, displayId).isPresent()
+                : userRepository.findByDisplayId(displayId).isPresent();
+            case "T" -> trainingCenterRepository.findTrainingCenterByDisplayId(displayId).isPresent();
+            case "M" -> manningAgentRepository.findByDisplayId(displayId).isPresent();
+            default -> false;
+        };
+    }
+}
         int randomNumber = new Random().nextInt(9000000) + 1000000;
         String displayId = prefix + randomNumber;
 
