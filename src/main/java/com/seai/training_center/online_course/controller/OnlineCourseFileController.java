@@ -1,7 +1,5 @@
 package com.seai.training_center.online_course.controller;
 
-import com.seai.training_center.online_course.model.OnlineCourse;
-import com.seai.training_center.online_course.repository.OnlineCourseRepository;
 import com.seai.training_center.online_course.service.OnlineCourseFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
@@ -25,25 +23,21 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("/api/v1/training-centers")
 public class OnlineCourseFileController {
 
-    private final OnlineCourseRepository onlineCourseRepository;
     private final OnlineCourseFileService onlineCourseFileService;
 
     @PostMapping("/{trainingCenterId}/online-courses/{courseId}/files")
     public void upload(@RequestParam("file") MultipartFile multipartFile, @PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseRepository.find(trainingCenterId, courseId);
-        onlineCourseFileService.upload(multipartFile, onlineCourse.getPath());
+        onlineCourseFileService.upload(multipartFile, trainingCenterId, courseId);
     }
 
     @DeleteMapping("/{trainingCenterId}/online-courses/{courseId}/files")
     public void delete(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseRepository.find(trainingCenterId, courseId);
-        onlineCourseFileService.delete(onlineCourse.getPath());
+        onlineCourseFileService.delete(trainingCenterId, courseId);
     }
 
     @GetMapping("/{trainingCenterId}/online-courses/{courseId}/files")
     public ResponseEntity<byte[]> download(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseRepository.find(trainingCenterId, courseId);
-        byte[] bytes = onlineCourseFileService.download(onlineCourse);
+        byte[] bytes = onlineCourseFileService.download(trainingCenterId, courseId);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);
