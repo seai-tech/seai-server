@@ -76,10 +76,6 @@ public class OnlineCourseAttendeeRepository {
         jdbcTemplate.update(DELETE_ATTENDEE_QUERY, id.toString());
     }
 
-    public void deleteByUserId(UUID courseId, UUID userId) {
-        jdbcTemplate.update(DELETE_ATTENDEE_BY_USER_ID_QUERY, courseId.toString(), userId.toString());
-    }
-
     public void deleteAll(UUID id) {
         jdbcTemplate.update(DELETE_ALL_ATTENDEES_QUERY, id.toString());
     }
