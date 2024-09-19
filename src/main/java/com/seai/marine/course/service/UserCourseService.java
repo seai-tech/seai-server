@@ -5,7 +5,7 @@ import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.service.UserService;
 import com.seai.training_center.attendees.contract.request.CreateAttendeeRequest;
-import com.seai.training_center.attendees.service.AttendeeService;
+import com.seai.training_center.attendees.service.CourseAttendeeService;
 import com.seai.training_center.course.contract.response.GetCourseResponse;
 import com.seai.training_center.course.mapper.CourseMapper;
 import com.seai.training_center.course.model.Course;
@@ -25,7 +25,7 @@ public class UserCourseService {
     private final CourseRepository courseRepository;
     private final UserService userService;
     private final CourseService courseService;
-    private final AttendeeService attendeeService;
+    private final CourseAttendeeService courseAttendeeService;
     private final UserAuthenticationRepository userAuthenticationRepository;
     private final CourseMapper courseMapper;
 
@@ -49,10 +49,10 @@ public class UserCourseService {
         UserAuthentication userAuthentication = userAuthenticationRepository.findById(userId);
         GetCourseResponse course = courseService.getCourseById(courseId);
         courseService.validateMaxSeats(course);
-        attendeeService.createAttendee(new CreateAttendeeRequest(user.getFirstName(), userAuthentication.getEmail(), user.getPhone(), "", true), course.getTrainingCenterId(), course.getId());
+        courseAttendeeService.createAttendee(new CreateAttendeeRequest(user.getFirstName(), userAuthentication.getEmail(), user.getPhone(), "", true), course.getTrainingCenterId(), course.getId());
     }
 
     public void leaveCourse(UUID userId, UUID courseId) {
-        attendeeService.deleteUser(courseId, userId);
+        courseAttendeeService.deleteUser(courseId, userId);
     }
 }
