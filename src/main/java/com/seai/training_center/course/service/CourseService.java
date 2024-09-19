@@ -2,7 +2,7 @@ package com.seai.training_center.course.service;
 
 import com.seai.exception.MaxSeatsReachedException;
 import com.seai.exception.ResourceNotFoundException;
-import com.seai.training_center.attendees.repository.AttendeeRepository;
+import com.seai.training_center.attendees.repository.CourseAttendeeRepository;
 import com.seai.training_center.course.contract.request.CreateCourseRequest;
 import com.seai.training_center.course.contract.request.UpdateCourseRequest;
 import com.seai.training_center.course.contract.response.CreateCourseResponse;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class CourseService {
     private final CourseMapper courseMapper;
     private final CourseRepository courseRepository;
-    private final AttendeeRepository attendeeRepository;
+    private final CourseAttendeeRepository courseAttendeeRepository;
 
     public CreateCourseResponse createCourse(@RequestBody CreateCourseRequest createCourseRequest, @PathVariable UUID trainingCenterId) {
         Course course = courseMapper.map(createCourseRequest);
@@ -63,12 +63,12 @@ public class CourseService {
     }
 
     public int getAvailable(Course course) {
-        int currentAttendeeCount = attendeeRepository.countByCourseId(course.getId());
+        int currentAttendeeCount = courseAttendeeRepository.countByCourseId(course.getId());
         return course.getMaxSeats() - currentAttendeeCount;
     }
 
     public void validateMaxSeats(GetCourseResponse course) {
-        int currentAttendeeCount = attendeeRepository.countByCourseId(course.getId());
+        int currentAttendeeCount = courseAttendeeRepository.countByCourseId(course.getId());
         if (currentAttendeeCount >= course.getMaxSeats()) {
             throw new MaxSeatsReachedException("Cannot add attendee. Maximum number of seats reached for course: " + course.getId());
         }
@@ -77,7 +77,7 @@ public class CourseService {
     public void updateCourse(UUID trainingCenterId, UUID courseId, UpdateCourseRequest updateCourseRequest) {
         GetCourseResponse courseResponse = getValidatedCourse(trainingCenterId, courseId);
         Course updatedCourse = courseMapper.map(updateCourseRequest);
-        int currentAttendeeCount = attendeeRepository.countByCourseId(courseId);
+        int currentAttendeeCount = courseAttendeeRepository.countByCourseId(courseResponse.getId());
         if (updatedCourse.getMaxSeats() < currentAttendeeCount) {
             throw new MaxSeatsReachedException("Cannot update course. Maximum number of seats is less than the current number of attendees");
         }
@@ -85,14 +85,14 @@ public class CourseService {
     }
 
     public void deleteCourse(UUID trainingCenterId, UUID courseId) {
-        attendeeRepository.deleteAll(courseId);
+        courseAttendeeRepository.deleteAll(courseId);
         courseRepository.delete(trainingCenterId, courseId);
     }
 
     public GetCourseResponse getValidatedCourse(UUID trainingCenterId, UUID courseId) {
         GetCourseResponse course = getCourseById(courseId);
         if (course == null || !course.getTrainingCenterId().equals(trainingCenterId)) {
-            throw new ResourceNotFoundException("Course with id: " + courseId + " is not part of training center with id: " + trainingCenterId);
+            throw new ResourceNotFoundException("COURSE_ID={" + courseId + "} is not part of TRAINING_CENTER_ID={" + trainingCenterId + "}");
         }
         return course;
     }
