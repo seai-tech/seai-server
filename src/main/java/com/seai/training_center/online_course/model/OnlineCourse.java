@@ -18,8 +18,7 @@ public class OnlineCourse {
 
     private String description;
 
-    private Duration duration;
-
     private String path;
 
+    private Duration duration;
 }
