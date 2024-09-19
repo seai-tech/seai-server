@@ -9,6 +9,7 @@ import com.seai.manning_agent.manning_agent.repository.ManningAgentRepository;
 import com.seai.manning_agent.manning_agent.repository.ManningAgentAuthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class ManningAgentService {
 
     private final ManningAgentAuthMapper manningAgentAuthMapper;
 
-
+    @Transactional
     public ManningAgent createManningAgent(CreateManningAgentRequest createManningAgentRequest) {
         ManningAgent manningAgent = manningAgentMapper.map(createManningAgentRequest);
         manningAgent.setId(UUID.randomUUID());
