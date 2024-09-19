@@ -2,6 +2,7 @@ package com.seai.training_center.online_course.service;
 
 import com.seai.exception.ResourceNotFoundException;
 import com.seai.training_center.online_course.model.OnlineCourse;
+import com.seai.training_center.online_course.repository.OnlineCourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class OnlineCourseFileService {
@@ -22,24 +26,38 @@ public class OnlineCourseFileService {
 
     private final S3Client s3client;
 
+    private final OnlineCourseRepository onlineCourseRepository;
+
+
     @SneakyThrows
-    public void upload(MultipartFile multipartFile, String path) {
+    public void upload(MultipartFile multipartFile, UUID trainingCenterId, UUID courseId) {
+        OnlineCourse onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId).
+                orElseThrow(() -> new ResourceNotFoundException("COURSE_ID={" + courseId + "} not found."));
+
         RequestBody requestBody = RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize());
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(BUCKET)
                 .contentType(multipartFile.getContentType())
                 .contentLength(multipartFile.getSize())
-                .key(path)
+                .key(onlineCourse.getPath())
                 .build();
         s3client.putObject(putObjectRequest, requestBody);
     }
 
-    public void delete(String path) {
-        s3client.deleteObject(b-> b.bucket(BUCKET).key(path));
+    public void delete(UUID trainingCenterId, UUID courseId) {
+        Optional<OnlineCourse> onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId);
+
+        if (onlineCourse.isEmpty()) {
+            return;
+        }
+        s3client.deleteObject(b -> b.bucket(BUCKET).key(onlineCourse.get().getPath()));
     }
 
     @SneakyThrows
-    public byte[] download(OnlineCourse onlineCourse) {
+    public byte[] download(UUID trainingCenterId, UUID courseId) {
+        OnlineCourse onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("COURSE_ID={" + courseId + "} not found."));
+
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(BUCKET)
@@ -48,7 +66,7 @@ public class OnlineCourseFileService {
             ResponseBytes<GetObjectResponse> bytes = s3client.getObject(getObjectRequest, ResponseTransformer.toBytes());
             return bytes.asByteArray();
         } catch (Exception e) {
-            throw new ResourceNotFoundException("File for online course not found: " + onlineCourse.getId());
+            throw new ResourceNotFoundException("ONLINE_COURSE_FILE_ID={" + onlineCourse.getId() + "} not found.");
         }
     }
 }
