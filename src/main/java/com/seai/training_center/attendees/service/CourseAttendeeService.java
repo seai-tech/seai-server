@@ -65,8 +65,8 @@ public class CourseAttendeeService {
         courseAttendeeRepository.update(attendee);
     }
 
-    public void deleteAttendee(UUID attendeeId) {
-        courseAttendeeRepository.delete(attendeeId);
+    public void deleteAttendee(UUID attendeeId, UUID courseId) {
+        courseAttendeeRepository.delete(attendeeId, courseId);
     }
 
     public void deleteUser(UUID courseId, UUID userId) {

@@ -25,7 +25,7 @@ public class CourseAttendeeRepository {
 
     private static final String FIND_ATTENDEE_BY_ID_QUERY = "SELECT id, name, email, telephone, remark, is_waiting, course_id, user_id, online_course_id FROM attendees WHERE id=?";
 
-    private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE id=?";
+    private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE id=? AND course_id=?";
 
     private static final String DELETE_ATTENDEE_BY_USER_ID_QUERY = "DELETE FROM attendees WHERE course_id=? AND user_id=?";
 
@@ -74,8 +74,10 @@ public class CourseAttendeeRepository {
                 getAttendeeRowMapper(), id.toString()));
     }
 
-    public void delete(UUID id) {
-        jdbcTemplate.update(DELETE_ATTENDEE_QUERY, id.toString());
+    public void delete(UUID id, UUID courseId) {
+        jdbcTemplate.update(DELETE_ATTENDEE_QUERY,
+                id.toString(),
+                courseId.toString());
     }
 
     public void deleteByUserId(UUID courseId, UUID userId) {
