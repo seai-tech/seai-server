@@ -26,13 +26,12 @@ public class OnlineCourseFileService {
 
     private final S3Client s3client;
 
-    private final OnlineCourseRepository onlineCourseRepository;
+    private final OnlineCourseService onlineCourseService;
 
 
     @SneakyThrows
     public void upload(MultipartFile multipartFile, UUID trainingCenterId, UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId).
-                orElseThrow(() -> new ResourceNotFoundException("COURSE_ID={" + courseId + "} not found."));
+        OnlineCourse onlineCourse = onlineCourseService.getTrainingCenterCourseById(trainingCenterId, courseId);
 
         RequestBody requestBody = RequestBody.fromInputStream(multipartFile.getInputStream(), multipartFile.getSize());
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -45,19 +44,15 @@ public class OnlineCourseFileService {
     }
 
     public void delete(UUID trainingCenterId, UUID courseId) {
-        Optional<OnlineCourse> onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId);
-
-        if (onlineCourse.isEmpty()) {
-            return;
-        }
-        s3client.deleteObject(b -> b.bucket(BUCKET).key(onlineCourse.get().getPath()));
+        try {
+            OnlineCourse onlineCourse = onlineCourseService.getTrainingCenterCourseById(trainingCenterId, courseId);
+            s3client.deleteObject(b -> b.bucket(BUCKET).key(onlineCourse.getPath()));
+        } catch (ResourceNotFoundException ignore) {}
     }
 
     @SneakyThrows
     public byte[] download(UUID trainingCenterId, UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("COURSE_ID={" + courseId + "} not found."));
-
+        OnlineCourse onlineCourse = onlineCourseService.getTrainingCenterCourseById(trainingCenterId, courseId);
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(BUCKET)
