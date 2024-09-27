@@ -25,7 +25,7 @@ public class OnlineCourseAttendeeRepository {
 
     private static final String FIND_ATTENDEE_BY_ID_QUERY = "SELECT id, name, email, telephone, remark, is_waiting, course_id, user_id, online_course_id FROM attendees WHERE id=?";
 
-    private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE id=? AND course_id=?";
+    private static final String DELETE_ATTENDEE_QUERY = "DELETE FROM attendees WHERE user_id=? AND online_course_id=?";
 
     private static final String DELETE_ALL_ATTENDEES_QUERY = "DELETE FROM attendees WHERE online_course_id=?";
 
