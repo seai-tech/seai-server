@@ -37,18 +37,24 @@ public class OnlineCourseService {
         return onlineCourseMapper.mapToCreateResponse(onlineCourse);
     }
 
-    public List<GetOnlineCourseResponse> getAllOnlineCourses (UUID trainingCenterId) {
+    public List<GetOnlineCourseResponse> getAllOnlineCoursesForTrainingCenter (UUID trainingCenterId) {
         return onlineCourseRepository.find(trainingCenterId).stream().map(onlineCourseMapper::mapToGetResponse).toList();
     }
 
-    public OnlineCourse getOnlineCourseById(UUID trainingCenterId, UUID courseId) throws ResourceNotFoundException {
-         OnlineCourse onlineCourse = onlineCourseRepository.findById(trainingCenterId, courseId).
+    public OnlineCourse getOnlineCourseById(UUID courseId) throws ResourceNotFoundException {
+         OnlineCourse onlineCourse = onlineCourseRepository.findById(courseId).
+                orElseThrow(() -> new ResourceNotFoundException("ONLINE_COURSE_ID={" + courseId + "} not found."));
+        return onlineCourse;
+    }
+
+    public OnlineCourse getTrainingCenterCourseById(UUID trainingCenterId, UUID courseId) throws ResourceNotFoundException {
+         OnlineCourse onlineCourse = onlineCourseRepository.findTrainingCenterCourseById(trainingCenterId, courseId).
                 orElseThrow(() -> new ResourceNotFoundException("ONLINE_COURSE_ID={" + courseId + "} not found."));
         return onlineCourse;
     }
 
     public UpdateOnlineCourseResponse updateCourse(UUID trainingCenterId, UUID courseId, UpdateOnlineCourseRequest updateCourseRequest) {
-        OnlineCourse onlineCourse = getOnlineCourseById(trainingCenterId, courseId);
+        OnlineCourse onlineCourse = getOnlineCourseById(courseId);
         OnlineCourse updatedCourse = onlineCourseMapper.map(updateCourseRequest);
         updatedCourse.setId(onlineCourse.getId());
         onlineCourseRepository.update(trainingCenterId, courseId, updatedCourse);
