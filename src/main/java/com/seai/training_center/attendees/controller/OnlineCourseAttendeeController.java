@@ -29,13 +29,13 @@ public class OnlineCourseAttendeeController {
     @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<Attendee> getAttendees(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        return onlineCourseAttendeeService.getAttendees(trainingCenterId, courseId);
+        return onlineCourseAttendeeService.getAttendees(courseId);
     }
 
     @PutMapping("/{attendeeId}")
     @PreAuthorize(AUTHORIZATION)
     public Attendee updateAttendee(@RequestBody UpdateAttendeeRequest updateRequest, @PathVariable UUID trainingCenterId, @PathVariable UUID courseId, @PathVariable UUID attendeeId) {
-        return onlineCourseAttendeeService.updateAttendee(updateRequest, trainingCenterId, courseId, attendeeId);
+        return onlineCourseAttendeeService.updateAttendee(updateRequest,trainingCenterId, courseId, attendeeId);
     }
 
     @DeleteMapping("/{attendeeId}")
