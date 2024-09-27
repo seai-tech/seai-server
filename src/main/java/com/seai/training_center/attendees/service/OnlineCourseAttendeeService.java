@@ -30,9 +30,9 @@ public class OnlineCourseAttendeeService {
 
     private final UserAuthenticationRepository userAuthenticationRepository;
 
-
+    @Transactional
     public Attendee createAttendee(CreateAttendeeRequest createAttendeeRequest, UUID trainingCenterId, UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseService.getOnlineCourseById(trainingCenterId, courseId);
+        OnlineCourse onlineCourse = onlineCourseService.getTrainingCenterCourseById(trainingCenterId, courseId);
         UserAuthentication user = null;
         try {
             user = userAuthenticationRepository.findByEmail(createAttendeeRequest.getEmail());
@@ -46,14 +46,14 @@ public class OnlineCourseAttendeeService {
         return attendee;
     }
 
-    public List<Attendee> getAttendees(UUID trainingCenterId, UUID courseId) {
-        OnlineCourse onlineCourse = onlineCourseService.getOnlineCourseById(trainingCenterId, courseId);
+    public List<Attendee> getAttendees(UUID courseId) {
+        OnlineCourse onlineCourse = onlineCourseService.getOnlineCourseById(courseId);
         return onlineCourseAttendeeRepository.findAll(onlineCourse.getId());
     }
 
     @Transactional
-    public Attendee updateAttendee(UpdateAttendeeRequest updateRequest, UUID trainingCenterId, UUID courseId, UUID attendeeId) {
-        OnlineCourse onlineCourse = onlineCourseService.getOnlineCourseById(trainingCenterId, courseId);
+    public Attendee updateAttendee(UpdateAttendeeRequest updateRequest, UUID trainingCenterID, UUID courseId, UUID attendeeId) {
+        OnlineCourse onlineCourse = onlineCourseService.getTrainingCenterCourseById(trainingCenterID, courseId);
         Optional<Attendee> existingAttendee = Optional.ofNullable(onlineCourseAttendeeRepository.findById(attendeeId).orElseThrow(() ->
                 new ResourceNotFoundException("Attendee with id " + attendeeId + " not found")));
         validateAttendeeIsPartOfCourse(courseId, existingAttendee.get());
