@@ -57,8 +57,8 @@ public class UserService {
         passwordResetRepository.deleteUserTokens(uuid);
         emailVerificationRepository.deleteUserToken(uuid);
         voyageRepository.deleteAll(uuid);
-        documentRepository.deleteAll(uuid);
         documentFileService.deleteAllForUser(uuid);
+        documentRepository.deleteAll(uuid);
         userRepository.delete(uuid);
         userAuthenticationRepository.delete(uuid);
     }

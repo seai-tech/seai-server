@@ -25,4 +25,6 @@ public class Attendee {
     private UUID courseId;
 
     private UUID userId;
+
+    private UUID onlineCourseId;
 }
