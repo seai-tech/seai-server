@@ -33,14 +33,14 @@ public class OnlineCourseController {
 
     @GetMapping
     @PreAuthorize(AUTHORIZATION)
-    public List<GetOnlineCourseResponse> getAllOnlineCourses(@PathVariable UUID trainingCenterId) {
-        return onlineCourseService.getAllOnlineCourses(trainingCenterId);
+    public List<GetOnlineCourseResponse> getAllOnlineCoursesForTrainingCenter(@PathVariable UUID trainingCenterId) {
+        return onlineCourseService.getAllOnlineCoursesForTrainingCenter(trainingCenterId);
     }
 
     @GetMapping("/{courseId}")
     @PreAuthorize(AUTHORIZATION)
     public GetOnlineCourseResponse getOnlineCourse(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
-        return onlineCourseMapper.mapToGetResponse(onlineCourseService.getOnlineCourseById(trainingCenterId, courseId));
+        return onlineCourseMapper.mapToGetResponse(onlineCourseService.getTrainingCenterCourseById(trainingCenterId, courseId));
     }
 
     @PutMapping("/{courseId}")
