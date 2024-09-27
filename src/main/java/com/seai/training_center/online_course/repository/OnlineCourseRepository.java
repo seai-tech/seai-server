@@ -24,7 +24,9 @@ public class OnlineCourseRepository {
 
     private static final String FIND_ALL_COURSES_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses";
 
-    private static final String FIND_COURSE_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE id=? AND training_center_id=?";
+    private static final String FIND_COURSE_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE id=?";
+
+    private static final String FIND_TRAINING_CENTER_COURSE_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE id=? AND training_center_id=?";
 
     private static final String FIND_ALL_FOR_TRAINING_CENTER_QUERY = "SELECT id, training_center_id, name, description, path, duration FROM online_courses WHERE training_center_id=?";
 
@@ -32,16 +34,30 @@ public class OnlineCourseRepository {
 
     private static final String DELETE_COURSE_QUERY = "DELETE FROM online_courses WHERE id=? AND training_center_id =?";
 
+    private static final String FIND_USER_COURSES = "SELECT c.id, c.training_center_id, c.name, c.description, c.path, c.duration FROM seai.attendees a JOIN seai.online_courses c ON a.online_course_id = c.id WHERE a.user_id = ?";
+
     private final JdbcTemplate jdbcTemplate;
 
 
-    public Optional<OnlineCourse> findById(UUID trainingCenterId, UUID courseId) {
+    public Optional<OnlineCourse> findById(UUID courseId) {
         try {
             return Optional.ofNullable(jdbcTemplate.queryForObject(
                     FIND_COURSE_QUERY,
                     getCourseRowMapper(),
-                    courseId.toString(),
-                    trainingCenterId.toString()));
+                    courseId.toString()));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<OnlineCourse> findTrainingCenterCourseById(UUID trainingCenterId, UUID courseId) {
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    FIND_TRAINING_CENTER_COURSE_QUERY,
+                    getCourseRowMapper(),
+                    trainingCenterId.toString(),
+                    courseId.toString()
+            ));
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
@@ -51,6 +67,10 @@ public class OnlineCourseRepository {
         return jdbcTemplate.query(FIND_ALL_FOR_TRAINING_CENTER_QUERY,
                 getCourseRowMapper(),
                 trainingCenterId.toString());
+    }
+
+    public List<OnlineCourse> getUserCourses(UUID userId) {
+        return jdbcTemplate.query(FIND_USER_COURSES, getCourseRowMapper(), userId.toString());
     }
 
     public void save(OnlineCourse course, UUID trainingCenterId) {
