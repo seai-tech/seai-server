@@ -17,7 +17,7 @@ import com.seai.marine.user.repository.UserAuthenticationRepository;
 import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
-import com.seai.password_reset.repository.PasswordResetRepository;
+import com.seai.service.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
