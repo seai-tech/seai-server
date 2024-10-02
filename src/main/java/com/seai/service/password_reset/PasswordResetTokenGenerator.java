@@ -1,4 +1,4 @@
-package com.seai.password_reset;
+package com.seai.service.password_reset;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

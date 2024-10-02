@@ -1,4 +1,4 @@
-package com.seai.password_reset.message_service;
+package com.seai.service.password_reset.message_service;
 
 import com.seai.marine.notification.email.EmailSender;
 import lombok.RequiredArgsConstructor;

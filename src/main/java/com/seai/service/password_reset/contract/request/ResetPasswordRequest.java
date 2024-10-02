@@ -1,4 +1,4 @@
-package com.seai.password_reset.contract.request;
+package com.seai.service.password_reset.contract.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
