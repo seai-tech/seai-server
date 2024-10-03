@@ -32,6 +32,7 @@ public class VoyageController {
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public Voyage createVoyage(@RequestBody CreateVoyageRequest voyageRequest, @PathVariable UUID userId) {
         Voyage voyage = voyageMapper.map(voyageRequest);
+        voyage.setId(UUID.randomUUID());
         return voyageRepository.save(voyage, userId);
     }
 
