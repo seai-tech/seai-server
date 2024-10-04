@@ -43,7 +43,7 @@ public class OnlineCourseFileController {
     @GetMapping("/{trainingCenterId}/online-courses/{courseId}/files")
     public ResponseEntity<byte[]> download(@PathVariable UUID trainingCenterId, @PathVariable UUID courseId) {
         OnlineCourse onlineCourse = onlineCourseRepository.find(trainingCenterId, courseId);
-        byte[] bytes = onlineCourseFileService.download(onlineCourse);
+        byte[] bytes = onlineCourseFileService.download(onlineCourse.getPath());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);
