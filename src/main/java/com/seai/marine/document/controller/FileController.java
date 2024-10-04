@@ -25,7 +25,9 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("api/v1")
 @RequiredArgsConstructor
 public class FileController {
+
     private final DocumentRepository documentRepository;
+
     private final DocumentFileService documentFileService;
 
     @PostMapping("/users/{userId}/documents/{documentId}/files")
@@ -46,7 +48,7 @@ public class FileController {
     @PreAuthorize("#userId.equals(authentication.principal.id)")
     public ResponseEntity<byte[]> download(@PathVariable UUID userId, @PathVariable UUID documentId) {
         MarineDocument document = documentRepository.find(userId, documentId);
-        byte[] bytes = documentFileService.download(document);
+        byte[] bytes = documentFileService.download(document.getPath());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);
