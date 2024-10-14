@@ -22,7 +22,9 @@ public class VoyageRepository {
 
     private static final String UPDATE_VOYAGE_QUERY = "UPDATE voyages SET vessel_name=?, vessel_type=?, rank=?, imo_number=?, joining_port=?, joining_date=?, leaving_port=?, leaving_date=?, remarks=?, flag=? WHERE user_id=? AND id=?";
 
-    private static final String FIND_VOYAGES_BY_USER_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks, flag FROM voyages WHERE user_id= ?";
+    private static final String FIND_VOYAGES_BY_USER_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks, flag FROM voyages WHERE user_id=?";
+
+    private static final String FIND_VOYAGE_BY_ID_QUERY = "SELECT id, vessel_name, vessel_type, rank, imo_number, joining_port, joining_date, leaving_port, leaving_date, remarks, flag FROM voyages WHERE id=? AND user_id=?";
 
     private static final String DELETE_VOYAGES_QUERY = "DELETE FROM voyages WHERE user_id=?  AND id=?";
 
@@ -48,7 +50,7 @@ public class VoyageRepository {
     }
 
 
-    public void update(Voyage voyage, UUID userId, UUID id) {
+    public Voyage update(Voyage voyage, UUID userId, UUID id) {
         jdbcTemplate.update(UPDATE_VOYAGE_QUERY,
                 voyage.getVesselName(),
                 Optional.ofNullable(voyage.getVesselType()).map(VesselType::name).orElse(null),
@@ -62,6 +64,7 @@ public class VoyageRepository {
                 voyage.getFlag(),
                 userId.toString(),
                 id.toString());
+        return voyage;
     }
 
     public List<Voyage> findByUserId(UUID userId) {
@@ -82,6 +85,25 @@ public class VoyageRepository {
                         rs.getString("flag")),
                 userId.toString());
 
+    }
+
+    public Optional<Voyage> findById(UUID userId, UUID voyageId) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(FIND_VOYAGE_BY_ID_QUERY,
+                (rs, rowNum) -> new Voyage(UUID.fromString(rs.getString("id")),
+                        rs.getString("vessel_name"),
+                        VesselType.fromName(rs.getString("vessel_type")),
+                        Rank.fromName(rs.getString("rank")),
+                        rs.getString("imo_number"),
+                        rs.getString("joining_port"),
+                        new Date(rs.getObject("joining_date", java.sql.Date.class).getTime()),
+                        rs.getString("leaving_port"),
+                        Optional.ofNullable(rs.getObject("leaving_date", java.sql.Date.class))
+                                .map(d -> new Date(d.getTime()))
+                                .orElse(null),
+                        rs.getString("remarks"),
+                        rs.getString("flag")),
+                userId.toString(),
+                voyageId.toString()));
     }
 
     public void delete(UUID userId, UUID voyageId) {

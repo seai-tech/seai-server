@@ -1,17 +1,17 @@
-package com.seai.password_reset.service;
+package com.seai.service.password_reset.service;
 
 import com.seai.exception.PasswordException;
 import com.seai.exception.TokenException;
 import com.seai.marine.user.model.UserAuthentication;
 import com.seai.marine.user.repository.UserAuthenticationRepository;
-import com.seai.password_reset.PasswordResetTokenGenerator;
-import com.seai.password_reset.contract.request.ForgotPasswordRequest;
-import com.seai.password_reset.contract.response.ResetPasswordResponse;
-import com.seai.password_reset.message_service.ConfirmationMessageService;
-import com.seai.password_reset.message_service.ResetMessageService;
-import com.seai.password_reset.model.PasswordResetToken;
-import com.seai.password_reset.contract.request.ChangePasswordRequest;
-import com.seai.password_reset.repository.PasswordResetRepository;
+import com.seai.service.password_reset.PasswordResetTokenGenerator;
+import com.seai.service.password_reset.contract.request.ForgotPasswordRequest;
+import com.seai.service.password_reset.contract.response.ResetPasswordResponse;
+import com.seai.service.password_reset.message_service.ConfirmationMessageService;
+import com.seai.service.password_reset.message_service.ResetMessageService;
+import com.seai.service.password_reset.model.PasswordResetToken;
+import com.seai.service.password_reset.contract.request.ChangePasswordRequest;
+import com.seai.service.password_reset.repository.PasswordResetRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;

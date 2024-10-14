@@ -1,6 +1,6 @@
-package com.seai.password_reset.repository;
+package com.seai.service.password_reset.repository;
 
-import com.seai.password_reset.model.PasswordResetToken;
+import com.seai.service.password_reset.model.PasswordResetToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;

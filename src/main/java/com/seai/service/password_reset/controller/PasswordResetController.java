@@ -1,10 +1,10 @@
-package com.seai.password_reset.controller;
+package com.seai.service.password_reset.controller;
 
-import com.seai.password_reset.contract.request.ForgotPasswordRequest;
-import com.seai.password_reset.contract.request.ResetPasswordRequest;
-import com.seai.password_reset.contract.response.ResetPasswordResponse;
-import com.seai.password_reset.service.PasswordResetService;
-import com.seai.password_reset.contract.request.ChangePasswordRequest;
+import com.seai.service.password_reset.contract.request.ForgotPasswordRequest;
+import com.seai.service.password_reset.contract.request.ResetPasswordRequest;
+import com.seai.service.password_reset.contract.response.ResetPasswordResponse;
+import com.seai.service.password_reset.service.PasswordResetService;
+import com.seai.service.password_reset.contract.request.ChangePasswordRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

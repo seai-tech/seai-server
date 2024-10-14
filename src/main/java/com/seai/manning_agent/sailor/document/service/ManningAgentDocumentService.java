@@ -69,7 +69,7 @@ public class ManningAgentDocumentService {
         }
         try {
             MarineDocument document = documentRepository.find(sailor.get().getId(), documentId);
-            documentFileService.deleteDocument(document.getPath());
+            documentFileService.delete(document.getPath());
             documentRepository.delete(documentId, sailor.get().getId());
         } catch (ResourceNotFoundException ignored) {
         }

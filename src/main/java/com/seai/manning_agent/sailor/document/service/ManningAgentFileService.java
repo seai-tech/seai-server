@@ -34,13 +34,13 @@ public class ManningAgentFileService {
     public void delete(UUID manningAgentId, UUID sailorId, UUID documentId) {
         Optional<User> sailor = manningAgentSailorService.getSailorById(manningAgentId, sailorId);
         MarineDocument document = documentRepository.find(sailor.get().getId(), documentId);
-        documentFileService.deleteDocument(document.getPath());
+        documentFileService.delete(document.getPath());
     }
 
     public ResponseEntity<byte[]> download(UUID manningAgentId, UUID sailorId, UUID documentId) {
         Optional<User> sailor = manningAgentSailorService.getSailorById(manningAgentId, sailorId);
         MarineDocument document = documentRepository.find(sailor.get().getId(), documentId);
-        byte[] bytes = documentFileService.download(document);
+        byte[] bytes = documentFileService.download(document.getPath());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.IMAGE_JPEG);
         httpHeaders.setContentLength(bytes.length);

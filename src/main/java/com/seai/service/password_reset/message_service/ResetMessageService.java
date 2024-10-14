@@ -1,7 +1,7 @@
-package com.seai.password_reset.message_service;
+package com.seai.service.password_reset.message_service;
 
 import com.seai.marine.notification.email.EmailSender;
-import com.seai.password_reset.model.PasswordResetToken;
+import com.seai.service.password_reset.model.PasswordResetToken;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.seai.password_reset.contract.response;
+package com.seai.service.password_reset.contract.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

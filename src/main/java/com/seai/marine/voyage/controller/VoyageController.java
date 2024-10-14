@@ -3,9 +3,8 @@ package com.seai.marine.voyage.controller;
 import com.seai.marine.voyage.contract.request.CreateVoyageRequest;
 import com.seai.marine.voyage.contract.request.UpdateVoyageRequest;
 import com.seai.marine.voyage.contract.response.GetVoyageResponse;
-import com.seai.marine.voyage.mapper.VoyageMapper;
 import com.seai.marine.voyage.model.Voyage;
-import com.seai.marine.voyage.repository.VoyageRepository;
+import com.seai.marine.voyage.service.VoyageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,36 +20,41 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/users/{userId}/voyages")
 @RequiredArgsConstructor
 public class VoyageController {
 
-    private final VoyageMapper voyageMapper;
-    private final VoyageRepository voyageRepository;
+    private final VoyageService voyageService;
 
-    @PostMapping("/users/{userId}/voyages")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    private static final String AUTHORIZATION = "#userId.equals(authentication.principal.id)";
+
+    @PostMapping
+    @PreAuthorize(AUTHORIZATION)
     public Voyage createVoyage(@RequestBody CreateVoyageRequest voyageRequest, @PathVariable UUID userId) {
-        Voyage voyage = voyageMapper.map(voyageRequest);
-        return voyageRepository.save(voyage, userId);
+        return voyageService.createVoyage(voyageRequest, userId);
     }
 
-    @GetMapping("/users/{userId}/voyages")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public List<GetVoyageResponse> findAllByUser(@PathVariable UUID userId) {
-        return voyageRepository.findByUserId(userId).stream().map(voyageMapper::map).toList();
+    @GetMapping("/all")
+    @PreAuthorize(AUTHORIZATION)
+    public List<GetVoyageResponse> getAllForUser(@PathVariable UUID userId) {
+        return voyageService.getAllForUser(userId);
     }
 
-    @PutMapping("/users/{userId}/voyages/{voyageId}")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
-    public void updateVoyage(@RequestBody UpdateVoyageRequest updateVoyageRequest, @PathVariable UUID userId, @PathVariable UUID voyageId) {
-        Voyage voyage = voyageMapper.map(updateVoyageRequest);
-        voyageRepository.update(voyage, userId, voyageId);
+    @GetMapping("/{voyageId}")
+    @PreAuthorize(AUTHORIZATION)
+    public GetVoyageResponse getVoyageById(@PathVariable UUID userId, @PathVariable UUID voyageId) {
+        return voyageService.getById(userId, voyageId);
     }
 
-    @DeleteMapping("/users/{userId}/voyages/{voyageId}")
-    @PreAuthorize("#userId.equals(authentication.principal.id)")
+    @PutMapping("/{voyageId}")
+    @PreAuthorize(AUTHORIZATION)
+    public Voyage updateVoyage(@RequestBody UpdateVoyageRequest updateVoyageRequest, @PathVariable UUID userId, @PathVariable UUID voyageId) {
+        return voyageService.update(updateVoyageRequest, userId, voyageId);
+    }
+
+    @DeleteMapping("/{voyageId}")
+    @PreAuthorize(AUTHORIZATION)
     public void deleteVoyage(@PathVariable UUID userId, @PathVariable UUID voyageId) {
-        voyageRepository.delete(userId, voyageId);
+        voyageService.delete(userId, voyageId);
     }
 }

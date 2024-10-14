@@ -1,4 +1,4 @@
-package com.seai.password_reset.model;
+package com.seai.service.password_reset.model;
 
 import lombok.*;
 
