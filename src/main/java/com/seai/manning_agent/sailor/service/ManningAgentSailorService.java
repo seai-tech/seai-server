@@ -55,6 +55,7 @@ public class ManningAgentSailorService {
         userAuthenticationRepository.delete(sailorId);
     }
 
+    @Transactional
     public void delete(UUID manningAgentId, UUID sailorId) {
         deleteFromDatabase(manningAgentId, sailorId);
         documentFileService.deleteAllForUser(sailorId);
