@@ -57,13 +57,13 @@ scanner:
       name: "marine-docs1-dev"
 
 urls:
-  verify-token: "https://api.seai.co/api/v1/users/verify-email?token="
-  verification-error: "https://app.seai.co/api/v1/users/verify-email/error?message=" #FIX WHEN WE HAVE FE TO REDIRECT TO SHOW THE MSSAGE
-  verification-token-resend: "https://api.seai.co/api/v1/users/resend-email-verification-token?email="
-  redirect-to-login: "https://app.seai.co/user/login"
+  verify-token: "https://app-dev.seai.co/api/v1/users/verify-email?token="
+  verification-error: "https://app-dev.seai.co/api/v1/users/verify-email/error?message=" #FIX WHEN WE HAVE FE TO REDIRECT TO SHOW THE MSSAGE
+  verification-token-resend: "https://app-dev.seai.co/api/v1/users/resend-email-verification-token?email="
+  redirect-to-login: "https://app-dev.seai.co/login"
 
 password-urls:
-  reset-password: "https://api.seai.co/api/v1/users/reset-password?token="
+  reset-password: "https://app-dev.seai.co/api/v1/users/reset-password?token="
 
 
 
