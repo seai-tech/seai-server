@@ -1,8 +1,10 @@
 package com.seai.marine.user.contract.response;
 
+import com.seai.marine.user.model.Nationality;
 import com.seai.marine.user.model.Rank;
 import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.VesselType;
+import com.seai.marine.next_of_kin.model.NextOfKin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -35,4 +37,11 @@ public class GetUserResponse {
     private Integer contractDuration;
 
     private String phone;
+
+    private String address;
+
+    private Nationality nationality;
+
+    private NextOfKin nextOfKin;
 }
+

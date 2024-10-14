@@ -37,4 +37,8 @@ public class User {
     private Integer contractDuration;
 
     private String phone;
+
+    private String address;
+
+    private Nationality nationality;
 }

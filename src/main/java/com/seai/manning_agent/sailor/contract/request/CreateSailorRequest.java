@@ -1,5 +1,6 @@
 package com.seai.manning_agent.sailor.contract.request;
 
+import com.seai.marine.user.model.Nationality;
 import com.seai.marine.user.model.Rank;
 import com.seai.marine.user.model.Status;
 import com.seai.marine.user.model.VesselType;
@@ -37,4 +38,8 @@ public class CreateSailorRequest {
     private Integer contractDuration;
 
     private String phone;
+
+    private String address;
+
+    private Nationality nationality;
 }

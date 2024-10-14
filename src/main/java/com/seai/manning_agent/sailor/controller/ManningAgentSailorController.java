@@ -39,7 +39,7 @@ public class ManningAgentSailorController {
         return manningAgentSailorService.getSailorById(manningAgentId, sailorId);
     }
 
-    @PostMapping("/sailors")
+    @PostMapping
     @PreAuthorize(AUTHORIZATION)
     public User createSailor(@PathVariable UUID manningAgentId, @RequestBody @Valid CreateSailorRequest createSailorRequest) {
         return manningAgentSailorService.createSailor(manningAgentId, createSailorRequest);
