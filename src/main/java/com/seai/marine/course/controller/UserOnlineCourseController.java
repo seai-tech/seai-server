@@ -19,12 +19,6 @@ public class UserOnlineCourseController {
 
     private final String AUTHORIZATION = "#userId.equals(authentication.principal.id)";
 
-    @GetMapping("/all")
-    @PreAuthorize(AUTHORIZATION)
-    public List<OnlineCourse> getAllCourses(@PathVariable UUID userId) {
-        return userOnlineCourseService.getAllCourses();
-    }
-
     @GetMapping
     @PreAuthorize(AUTHORIZATION)
     public List<OnlineCourse> getUserCourses(@PathVariable UUID userId) {
