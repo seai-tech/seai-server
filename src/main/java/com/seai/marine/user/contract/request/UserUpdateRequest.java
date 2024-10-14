@@ -1,8 +1,6 @@
 package com.seai.marine.user.contract.request;
 
-import com.seai.marine.user.model.Rank;
-import com.seai.marine.user.model.Status;
-import com.seai.marine.user.model.VesselType;
+import com.seai.marine.user.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +35,8 @@ public class UserUpdateRequest {
     private Integer contractDuration;
 
     private String phone;
+
+    private String address;
+
+    private Nationality nationality;
 }

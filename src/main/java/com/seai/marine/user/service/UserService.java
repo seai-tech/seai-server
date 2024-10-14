@@ -18,6 +18,8 @@ import com.seai.marine.user.repository.UserRepository;
 import com.seai.marine.voyage.model.Voyage;
 import com.seai.marine.voyage.repository.VoyageRepository;
 import com.seai.password_reset.repository.PasswordResetRepository;
+import com.seai.marine.next_of_kin.model.NextOfKin;
+import com.seai.marine.next_of_kin.repository.NextOfKinRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,8 +53,12 @@ public class UserService {
 
     private final PasswordResetRepository passwordResetRepository;
 
+    private final NextOfKinRepository nextOfKinRepository;
+
+
     @Transactional
     public void delete(UUID uuid) {
+        nextOfKinRepository.deleteByUserId(uuid);
         reminderService.turnOffReminderSubscription(uuid);
         passwordResetRepository.deleteUserTokens(uuid);
         emailVerificationRepository.deleteUserToken(uuid);
@@ -71,15 +77,18 @@ public class UserService {
 
     public GetUserResponse getUserById(UUID userId) {
         User user = userRepository.findById(userId);
-        return userMapper.mapToGetUserResponse(user);
+        GetUserResponse userResponse = userMapper.mapToGetUserResponse(user);
+        Optional<NextOfKin> nextOfKin = nextOfKinRepository.findByUserId(userId);
+        nextOfKin.ifPresent(userResponse::setNextOfKin);
+        return userResponse;
     }
 
     public CreateUserResponse createUser(UserRegisterRequest userRegisterRequest) {
         UUID id = UUID.randomUUID();
         userAuthService.save(userRegisterRequest, id);
         User user = userMapper.map(userRegisterRequest);
-        userRepository.save(user, id);
         user.setId(id);
+        userRepository.save(user);
         reminderService.turnOnReminderSubscription(id, userRegisterRequest.getEmail());
         return new CreateUserResponse("Account created successfully, to complete your registration, please confirm your email address", user);
     }
