@@ -1,8 +1,8 @@
 package com.seai.marine.course.controller;
 
 
-import com.seai.marine.course.service.UserCourseService;
-import com.seai.training_center.course.contract.response.GetCourseResponse;
+import com.seai.marine.course.service.UserOnlineCourseService;
+import com.seai.training_center.online_course.model.OnlineCourse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,35 +11,30 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("api/v1/users/{userId}/courses")
+@RequestMapping("api/v1/users/{userId}/online-courses")
 @RequiredArgsConstructor
-public class UserCourseController {
+public class UserOnlineCourseController {
 
-    private final UserCourseService userCourseService;
+    private final UserOnlineCourseService userOnlineCourseService;
 
     private final String AUTHORIZATION = "#userId.equals(authentication.principal.id)";
 
-    @GetMapping("/all")
-    @PreAuthorize(AUTHORIZATION)
-    public List<GetCourseResponse> getAllCourses(@PathVariable UUID userId) {
-        return userCourseService.getAllCourses();
-    }
-
     @GetMapping
     @PreAuthorize(AUTHORIZATION)
-    public List<GetCourseResponse> getUserCourses(@PathVariable UUID userId) {
-        return userCourseService.getUserCourses(userId);
+    public List<OnlineCourse> getUserCourses(@PathVariable UUID userId) {
+        return userOnlineCourseService.getUserCourses(userId);
     }
 
     @PostMapping("/{courseId}")
     @PreAuthorize(AUTHORIZATION)
     public void attendToCourse(@PathVariable UUID userId, @PathVariable UUID courseId) {
-        userCourseService.attendToCourse(userId, courseId);
+        userOnlineCourseService.attendToCourse(userId, courseId);
     }
 
     @DeleteMapping("/{courseId}")
     @PreAuthorize(AUTHORIZATION)
     public void leaveCourse(@PathVariable UUID userId, @PathVariable UUID courseId) {
-        userCourseService.leaveCourse(userId, courseId);
+        userOnlineCourseService.leaveCourse(userId, courseId);
     }
+
 }
